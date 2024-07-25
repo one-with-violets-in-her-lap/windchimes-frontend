@@ -1,6 +1,6 @@
 import type { ThemeDefinition } from 'vuetify'
 
-export const monoTheme: ThemeDefinition = {
+export const teaGreenTheme: ThemeDefinition = {
     dark: false,
     colors: {
         background: '#FFFFFF',

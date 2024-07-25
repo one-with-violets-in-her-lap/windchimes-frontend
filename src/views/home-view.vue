@@ -1,9 +1,5 @@
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <template>
-    <VBtn color="primary" @click="">
-        delete
-    </VBtn>
+    <VBtn prepend-icon="mdi-delete" color="error" rounded flat>Delete</VBtn>
 </template>
