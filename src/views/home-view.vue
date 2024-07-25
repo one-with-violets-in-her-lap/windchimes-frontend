@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <div class="">
-        123
-    </div>
+    <VBtn color="primary" @click="">
+        delete
+    </VBtn>
 </template>
