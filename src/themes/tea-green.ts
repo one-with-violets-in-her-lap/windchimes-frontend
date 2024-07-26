@@ -5,6 +5,7 @@ export const teaGreenTheme: ThemeDefinition = {
     colors: {
         background: '#FFFFFF',
         surface: '#FFFFFF',
+        'surface-darken-1': '#f7f7f7',
         primary: '#8DE599',
         'primary-darken-1': '#68CC76',
         secondary: '#8DE599',

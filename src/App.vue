@@ -1,9 +1,25 @@
-<script setup lang="ts">
-import { RouterView } from 'vue-router'
-</script>
+<script setup lang="ts"></script>
 
 <template>
-    <RouterView />
+    <div class="root-container">
+        <main class="main-content-container">
+            <RouterView />
+        </main>
+    </div>
 </template>
 
-<style scoped></style>
+<style>
+@import url('@/assets/styles/typography.css');
+
+.root-container {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.main-content-container {
+    flex-grow: 1;
+    padding: 15px 12px;
+    background-color: rgb(var(--v-theme-background));
+}
+</style>
