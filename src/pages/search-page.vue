@@ -1,27 +1,33 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import type { Track } from '@/types/track'
+import { useRoute } from 'vue-router'
 
 const foundTracks = reactive<{
     loading: boolean
-    data: Track[] | null
+    data: any[] | null
 }>({
     loading: true,
     data: null,
 })
 
-setTimeout(() => {
-    foundTracks.data = [
-        {
+const searchQuery = useRoute().query['query']?.toString()
+
+fetch(
+    `https://api-v2.soundcloud.com/search?q=${searchQuery}' +
+        '&client_id=yTInTFyeJ10yiPJhRlQUbkBkQdWVyFpD&limit=100&offset=0`,
+)
+    .then(async response => {
+        const data: { title?: string }[] = (await response.json()).collection
+        foundTracks.data = data.map(resource => ({
             platform: 'soundcloud',
-            title: 'track546',
-            author: {
-                username: 'user2323',
-            },
-        },
-    ]
-    foundTracks.loading = false
-}, 1000)
+            author: { username: 'test' },
+            title: resource.title || 'test',
+        }))
+        foundTracks.loading = false
+    })
+    .catch(error => {
+        console.log('ERROR:', error)
+    })
 </script>
 
 <template>

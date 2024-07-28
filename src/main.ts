@@ -3,13 +3,14 @@ import { createApp } from 'vue'
 // Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
-import { teaGreenTheme } from '@/themes/tea-green'
+import { teaGreenTheme } from '@/app/ui/vuetify-themes'
 import '@mdi/font/css/materialdesignicons.css'
 
 import { createPinia } from 'pinia'
 
-import App from './App.vue'
-import router from '@/router'
+import App from '@/app/ui/App.vue'
+import router from '@/app/config/router'
+import { useAppErrorStore } from '@/app/model/app-error-store'
 
 const app = createApp(App)
 
@@ -23,5 +24,10 @@ app.use(
         },
     }),
 )
+
+app.config.errorHandler = error => {
+    const { handleError } = useAppErrorStore()
+    handleError(error)
+}
 
 app.mount('#app')

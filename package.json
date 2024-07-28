@@ -21,6 +21,7 @@
         "@capacitor/cli": "^6.1.1",
         "@capacitor/core": "^6.1.1",
         "@capacitor/haptics": "^6.0.0",
+        "@vueuse/core": "^10.11.0",
         "pinia": "^2.1.7",
         "vue": "^3.4.29",
         "vue-router": "^4.3.3",

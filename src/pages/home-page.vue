@@ -1,13 +1,25 @@
 <script setup lang="ts">
+import { AppError } from '@/shared/model/app-error'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const searchQuery = ref('')
+
+function search() {
+    if (searchQuery.value.length < 1) {
+        throw new AppError('invalid-data-error', 'Your search query is empty')
+    }
+
+    router.push(`/search?query=${searchQuery.value}`)
+}
 </script>
 
 <template>
     <h1 class="page-heading">MUSIC</h1>
 
-    <div class="search-form">
+    <form class="search-form" @submit.prevent="search">
         <VTextField
             v-model.trim="searchQuery"
             class="search-field"
@@ -18,13 +30,8 @@ const searchQuery = ref('')
             rounded
         />
 
-        <VBtn
-            variant="flat"
-            color="primary"
-            icon="mdi-magnify"
-            :to="`/search?query=${searchQuery}`"
-        />
-    </div>
+        <VBtn variant="flat" color="primary" icon="mdi-magnify" type="submit" />
+    </form>
 </template>
 
 <style scoped>
