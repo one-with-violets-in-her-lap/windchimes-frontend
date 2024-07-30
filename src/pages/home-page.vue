@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { AppError } from '@/shared/model/app-error'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -9,7 +8,7 @@ const searchQuery = ref('')
 
 function search() {
     if (searchQuery.value.length < 1) {
-        throw new AppError('invalid-data-error', 'Your search query is empty')
+        return
     }
 
     router.push(`/search?query=${searchQuery.value}`)

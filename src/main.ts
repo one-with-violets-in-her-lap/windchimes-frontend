@@ -10,6 +10,7 @@ import { createPinia } from 'pinia'
 
 import App from '@/app/ui/App.vue'
 import router from '@/app/config/router'
+import auth0 from '@/app/config/auth0'
 import { useAppErrorStore } from '@/app/model/app-error-store'
 
 const app = createApp(App)
@@ -24,6 +25,7 @@ app.use(
         },
     }),
 )
+app.use(auth0)
 
 app.config.errorHandler = error => {
     const { handleError } = useAppErrorStore()

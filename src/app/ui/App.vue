@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { onErrorCaptured, ref } from 'vue'
+import { onErrorCaptured } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAppErrorStore } from '@/app/model/app-error-store'
+import NavigationBar from '@/widgets/navigation-bar/ui/navigation-bar.vue'
 
 const appErrorStore = useAppErrorStore()
 const { handleError } = appErrorStore
@@ -12,6 +13,8 @@ onErrorCaptured(handleError)
 
 <template>
     <div class="root-container">
+        <NavigationBar />
+
         <main class="main-content-container">
             <RouterView v-if="!error" />
 
