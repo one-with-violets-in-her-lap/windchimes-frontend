@@ -1,7 +1,24 @@
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue'
+import { Capacitor } from '@capacitor/core'
+import { Browser } from '@capacitor/browser'
+import { App } from '@capacitor/app'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const { user, isLoading, loginWithRedirect } = useAuth0()
+
+async function logIn() {
+    if (Capacitor.isNativePlatform()) {
+        await loginWithRedirect({
+            openUrl(url) {
+                Browser.open({ url })
+            },
+        })
+    } else {
+        await loginWithRedirect()
+    }
+}
 </script>
 
 <template>
@@ -15,7 +32,7 @@ const { user, isLoading, loginWithRedirect } = useAuth0()
         density="compact"
         class="text-capitalize px-0"
         prepend-icon="mdi-login"
-        @click="loginWithRedirect"
+        @click="logIn"
     >
         Log in
     </VBtn>
