@@ -2,11 +2,8 @@
 import { useAuth0 } from '@auth0/auth0-vue'
 import { Capacitor } from '@capacitor/core'
 import { Browser } from '@capacitor/browser'
-import { App } from '@capacitor/app'
-import { useRouter } from 'vue-router'
 
-const router = useRouter()
-const { user, isLoading, loginWithRedirect } = useAuth0()
+const { user, loginWithRedirect } = useAuth0()
 
 async function logIn() {
     if (Capacitor.isNativePlatform()) {

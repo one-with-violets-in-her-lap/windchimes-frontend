@@ -14,7 +14,7 @@ export default createAuth0(
         clientId: import.meta.env.VITE_AUTH0_CLIENT_ID,
         useRefreshTokens: true,
         useRefreshTokensFallback: false,
-        // cacheLocation: 'localstorage',
+        cacheLocation: 'localstorage',
         authorizationParams: {
             redirect_uri: redirectUri,
         },

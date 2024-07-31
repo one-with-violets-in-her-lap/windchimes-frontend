@@ -9,19 +9,21 @@ import NavigationBar from '@/widgets/navigation-bar/ui/navigation-bar.vue'
 const appErrorStore = useAppErrorStore()
 const { handleError } = appErrorStore
 const { error } = storeToRefs(appErrorStore)
-const auth0 = useAuth0()
 
 onErrorCaptured(handleError)
 
+const { handleRedirectCallback, isLoading } = useAuth0()
+
+// listens to redirect to `io.windchimes://auth-callback?state=...&code=....` deep link
 App.addListener('appUrlOpen', async event => {
     if (event.url.includes('state') && event.url.includes('code')) {
-        await auth0.handleRedirectCallback(event.url)
+        await handleRedirectCallback(event.url)
     }
 })
 </script>
 
 <template>
-    <div class="root-container">
+    <div class="root-container" v-if="!isLoading">
         <NavigationBar />
 
         <main class="main-content-container">
@@ -41,6 +43,7 @@ App.addListener('appUrlOpen', async event => {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .main-content-container {
