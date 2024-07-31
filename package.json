@@ -1,5 +1,5 @@
 {
-    "name": "multi-source-player",
+    "name": "windchimes",
     "version": "0.0.0",
     "private": true,
     "type": "module",
@@ -31,6 +31,7 @@
         "vuetify": "^3.6.13"
     },
     "devDependencies": {
+        "@capacitor/assets": "^3.0.5",
         "@mdi/font": "^7.4.47",
         "@rushstack/eslint-patch": "^1.8.0",
         "@tsconfig/node20": "^20.1.4",

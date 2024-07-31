@@ -5,7 +5,7 @@ const onNativePlatform = Capacitor.isNativePlatform()
 
 let redirectUri = 'http://localhost:5173/auth-callback'
 if (onNativePlatform) {
-    redirectUri = 'multi-source-player://auth-callback'
+    redirectUri = 'io.windchimes://auth-callback'
 }
 
 export default createAuth0(

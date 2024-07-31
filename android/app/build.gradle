@@ -4,7 +4,7 @@ android {
     namespace "io.multisourceplayer.multisourceplayer"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "io.multisourceplayer.multisourceplayer"
+        applicationId "io.windchimes"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

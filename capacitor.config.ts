@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
-    appId: 'io.multisourceplayer.multisourceplayer',
-    appName: 'multi-source-player',
+    appId: 'io.windchimes',
+    appName: 'windchimes',
     webDir: 'dist',
 }
 
