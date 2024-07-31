@@ -1,12 +1,6 @@
 import { createAuth0 } from '@auth0/auth0-vue'
 import { Capacitor } from '@capacitor/core'
-
-const onNativePlatform = Capacitor.isNativePlatform()
-
-let redirectUri = 'http://localhost:5173/auth-callback'
-if (onNativePlatform) {
-    redirectUri = 'io.windchimes://auth-callback'
-}
+import { auth0AuthCallbackUri } from '@/shared/config/auth0-redirect-uri'
 
 export default createAuth0(
     {
@@ -16,11 +10,11 @@ export default createAuth0(
         useRefreshTokensFallback: false,
         cacheLocation: 'localstorage',
         authorizationParams: {
-            redirect_uri: redirectUri,
+            redirect_uri: auth0AuthCallbackUri,
         },
     },
     {
         // call redirect callback manually if on android/ios
-        skipRedirectCallback: onNativePlatform,
+        skipRedirectCallback: Capacitor.isNativePlatform(),
     },
 )
