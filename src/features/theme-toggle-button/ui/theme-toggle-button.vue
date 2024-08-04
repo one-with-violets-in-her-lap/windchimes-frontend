@@ -3,6 +3,7 @@ import { useTheme } from 'vuetify'
 
 const theme = useTheme()
 function changeTheme(newTheme: string) {
+    localStorage.setItem('theme', newTheme)
     theme.global.name.value = newTheme
 }
 </script>

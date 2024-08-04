@@ -23,7 +23,7 @@ app.use(router)
 app.use(
     createVuetify({
         theme: {
-            defaultTheme: 'teaGreenLightTheme',
+            defaultTheme: localStorage.getItem('theme') || 'teaGreenLightTheme',
             themes: { teaGreenLightTheme, teaGreenDarkTheme },
         },
     }),
