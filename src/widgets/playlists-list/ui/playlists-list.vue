@@ -54,7 +54,13 @@ const { loading, error, result } = useQuery<{
                         </template>
 
                         <template #prepend>
-                            <VAvatar :image="playlist.pictureUrl" :alt="playlist.name" rounded tile size="70px" />
+                            <VAvatar
+                                :image="playlist.pictureUrl"
+                                :alt="playlist.name"
+                                rounded
+                                tile
+                                size="70px"
+                            />
                         </template>
                     </VCard>
                 </template>

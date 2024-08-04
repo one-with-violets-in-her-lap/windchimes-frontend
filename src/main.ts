@@ -3,7 +3,7 @@ import { createApp } from 'vue'
 // Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
-import { teaGreenTheme } from '@/app/ui/vuetify-themes'
+import { teaGreenLightTheme, teaGreenDarkTheme } from '@/app/ui/vuetify-themes'
 import '@mdi/font/css/materialdesignicons.css'
 
 import { createPinia } from 'pinia'
@@ -23,8 +23,8 @@ app.use(router)
 app.use(
     createVuetify({
         theme: {
-            defaultTheme: 'teaGreenTheme',
-            themes: { teaGreenTheme },
+            defaultTheme: 'teaGreenLightTheme',
+            themes: { teaGreenLightTheme, teaGreenDarkTheme },
         },
     }),
 )
