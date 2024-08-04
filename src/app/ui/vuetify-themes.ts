@@ -4,9 +4,11 @@ export const teaGreenTheme: ThemeDefinition = {
     dark: false,
     colors: {
         background: '#FFFFFF',
-        surface: '#FFFFFF',
+        surface: '#f2f2f2',
         'surface-darken-1': '#ededed',
+        'surface-darken-2': '#e2e0e0',
         primary: '#60D770',
+        'primary-lighten-1': '#81e88f',
         'primary-darken-1': '#68CC76',
         secondary: '#60D770',
         'secondary-darken-1': '#68CC76',

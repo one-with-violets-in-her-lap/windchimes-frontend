@@ -16,7 +16,8 @@ import AccountMenu from '@/features/account-menu/ui/account-menu.vue'
     align-items: center;
     gap: 13px;
     padding: 12px 15px;
-    border-bottom: 1px solid rgb(212, 212, 212);
+    background-color: #fafafa;
+    border-bottom: 1px solid #e7e7e7;
 }
 
 .navigation {

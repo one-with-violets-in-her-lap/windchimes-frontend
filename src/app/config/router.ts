@@ -12,6 +12,11 @@ const router = createRouter({
         },
 
         {
+            path: '/home',
+            redirect: '/',
+        },
+
+        {
             path: '/auth-callback',
             component: AuthCallbackPage,
         },

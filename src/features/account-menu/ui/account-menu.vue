@@ -18,7 +18,7 @@ async function queryLogIn() {
     }
 }
 
-async function queryLogout() {    
+async function queryLogout() {
     const options = { logoutParams: { returnTo: auth0LogoutRedirectUri } }
 
     if (Capacitor.isNativePlatform()) {
@@ -61,6 +61,7 @@ async function queryLogout() {
     <VBtn
         v-else
         variant="flat"
+        color="transparent"
         density="compact"
         class="text-capitalize px-0"
         prepend-icon="mdi-login"
