@@ -44,7 +44,6 @@ const { loading, error, result } = useQuery<{
                         v-bind="props"
                         variant="flat"
                         :color="isHovering ? 'primary-lighten-1' : undefined"
-                        class="text-wrap"
                         :subtitle="`${playlist.tracksCount} tracks`"
                     >
                         <template #title>
