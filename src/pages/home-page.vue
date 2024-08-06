@@ -3,7 +3,7 @@ import PlaylistsList from '@/widgets/playlists-list/ui/playlists-list.vue'
 </script>
 
 <template>
-    <h1 class="page-heading">MUSIC</h1>
+    <h1 class="text-h3 font-weight-bold mb-4">MUSIC</h1>
 
     <PlaylistsList />
 </template>

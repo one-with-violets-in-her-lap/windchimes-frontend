@@ -37,7 +37,14 @@ App.addListener('appUrlOpen', async event => {
 </template>
 
 <style>
-@import url('@/assets/styles/typography.css');
+@font-face {
+    font-family: 'Geist';
+    src: url('@/assets/fonts/geist.woff2');
+}
+
+body, h1, h2, h3, h4, h5 {
+    font-family: 'Geist' !important;
+}
 
 .root-container {
     display: flex;
