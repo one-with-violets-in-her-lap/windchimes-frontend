@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '@/pages/home-page.vue'
-import AuthCallbackPage from '@/pages/auth-callback.vue'
+import AuthCallbackPage from '@/pages/auth-callback-page.vue'
 import NotFoundPage from '@/pages/not-found-page.vue'
 
 const router = createRouter({
