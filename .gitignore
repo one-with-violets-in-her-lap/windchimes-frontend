@@ -1,5 +1,7 @@
 .env
 
+graphql-generated-types
+
 # Logs
 logs
 *.log

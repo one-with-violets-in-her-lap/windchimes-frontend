@@ -42,7 +42,12 @@ App.addListener('appUrlOpen', async event => {
     src: url('@/assets/fonts/geist.woff2');
 }
 
-body, h1, h2, h3, h4, h5 {
+body,
+h1,
+h2,
+h3,
+h4,
+h5 {
     font-family: 'Geist' !important;
 }
 

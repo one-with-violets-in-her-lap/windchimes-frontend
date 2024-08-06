@@ -2,16 +2,13 @@
 import gql from 'graphql-tag'
 import { useQuery } from '@vue/apollo-composable'
 import { useAuth0 } from '@auth0/auth0-vue'
+import type { Playlist } from '@/entities/playlist/model/playlist'
+import PlaylistCard from '@/entities/playlist/ui/playlist-card.vue'
 
 const { user } = useAuth0()
 
 const { loading, error, result } = useQuery<{
-    playlists: {
-        id: number
-        name: string
-        pictureUrl: string
-        tracksCount: number
-    }[]
+    playlists: Playlist[]
 }>(
     gql`
         query GetPlaylists($userId: String!) {
@@ -36,34 +33,11 @@ const { loading, error, result } = useQuery<{
         </p>
 
         <ul v-else-if="result">
-            <VHover>
-                <template #default="{ isHovering, props }">
-                    <VCard
-                        v-for="playlist in result.playlists"
-                        :key="playlist.id"
-                        v-bind="props"
-                        variant="flat"
-                        :color="isHovering ? 'primary-lighten-1' : undefined"
-                        :subtitle="`${playlist.tracksCount} tracks`"
-                    >
-                        <template #title>
-                            <h3 class="text-h6 text-wrap">
-                                {{ playlist.name }}
-                            </h3>
-                        </template>
-
-                        <template #prepend>
-                            <VAvatar
-                                :image="playlist.pictureUrl"
-                                :alt="playlist.name"
-                                rounded
-                                tile
-                                size="70px"
-                            />
-                        </template>
-                    </VCard>
-                </template>
-            </VHover>
+            <PlaylistCard
+                v-for="playlist in result.playlists"
+                :key="playlist.id"
+                :playlist="playlist"
+            />
         </ul>
     </div>
 </template>
