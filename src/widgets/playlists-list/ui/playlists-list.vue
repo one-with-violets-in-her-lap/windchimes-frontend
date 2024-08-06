@@ -1,26 +1,12 @@
 <script setup lang="ts">
-import gql from 'graphql-tag'
-import { useQuery } from '@vue/apollo-composable'
 import { useAuth0 } from '@auth0/auth0-vue'
-import type { Playlist } from '@/entities/playlist/model/playlist'
+import { usePlaylistsQuery } from '../api/playlists-query'
 import PlaylistCard from '@/entities/playlist/ui/playlist-card.vue'
 
 const { user } = useAuth0()
 
-const { loading, error, result, restart } = useQuery<{
-    playlists: Playlist[]
-}>(
-    gql`
-        query GetPlaylists($userId: String!) {
-            playlists(userId: $userId) {
-                id
-                name
-                pictureUrl
-                tracksCount
-            }
-        }
-    `,
-    { userId: user.value?.sub || '' },
+const { loading, error, result, restart } = usePlaylistsQuery(
+    user.value?.sub || '',
 )
 </script>
 
@@ -28,14 +14,14 @@ const { loading, error, result, restart } = useQuery<{
     <div v-if="user">
         <VProgressCircular indeterminate :size="50" v-if="loading" />
 
-        <VAlert v-else-if="error" title="Something went wrong when loading playlists" type="error">
-            <p class="my-3">
-                <b>Error:</b> {{ error.message }}
-            </p>
+        <VAlert
+            v-else-if="error"
+            title="Something went wrong when loading playlists"
+            type="error"
+        >
+            <p class="my-3"><b>Error:</b> {{ error.message }}</p>
 
-            <VBtn prepend-icon="mdi-reload" @click="restart">
-                Try again
-            </VBtn>
+            <VBtn prepend-icon="mdi-reload" @click="restart"> Try again </VBtn>
         </VAlert>
 
         <Transition v-else-if="result" appear name="playlist-card-slide">
@@ -51,11 +37,15 @@ const { loading, error, result, restart } = useQuery<{
 </template>
 
 <style scoped>
-.playlist-card-slide-enter-active, .playlist-card-slide-leave-active {
-    transition: transform 0.6s ease, opacity 0.6s ease;
+.playlist-card-slide-enter-active,
+.playlist-card-slide-leave-active {
+    transition:
+        transform 0.6s ease,
+        opacity 0.6s ease;
 }
 
-.playlist-card-slide-enter-from, .playlist-card-slide-leave-to {
+.playlist-card-slide-enter-from,
+.playlist-card-slide-leave-to {
     opacity: 0;
     transform: translateX(40px);
 }
