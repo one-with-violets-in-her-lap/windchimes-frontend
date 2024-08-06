@@ -19,7 +19,7 @@ import ThemeToggleButton from '@/features/theme-toggle-button/ui/theme-toggle-bu
     gap: 13px;
     padding: 12px 15px;
     background-color: rgb(var(--v-theme-surface));
-    border-bottom: 1px solid rgb(var(--v-theme-surface-darken-2));
+    border-bottom: 1px solid rgb(var(--v-theme-surface-3));
 }
 
 .navigation {

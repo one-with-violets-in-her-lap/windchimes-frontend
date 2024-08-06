@@ -4,9 +4,9 @@ export const teaGreenLightTheme: ThemeDefinition = {
     dark: false,
     colors: {
         background: '#FFFFFF',
-        surface: '#f2f2f2',
-        'surface-darken-1': '#ededed',
-        'surface-darken-2': '#e2e0e0',
+        surface: '#f4f4f4',
+        'surface-2': '#ededed',
+        'surface-3': '#e2e0e0',
         primary: '#60D770',
         'primary-lighten-1': '#81e88f',
         'primary-darken-1': '#68CC76',
@@ -22,10 +22,10 @@ export const teaGreenLightTheme: ThemeDefinition = {
 export const teaGreenDarkTheme: ThemeDefinition = {
     dark: true,
     colors: {
-        background: '#282828',
-        surface: '#353535',
-        'surface-darken-1': '#353535',
-        'surface-darken-2': '#353535',
+        background: '#1c1c1c',
+        surface: '#282828',
+        'surface-2': '#353535',
+        'surface-3': '#474747',
         primary: '#60D770',
         'primary-lighten-1': '#81e88f',
         'primary-darken-1': '#68CC76',
