@@ -7,7 +7,7 @@ import PlaylistCard from '@/entities/playlist/ui/playlist-card.vue'
 
 const { user } = useAuth0()
 
-const { loading, error, result } = useQuery<{
+const { loading, error, result, restart } = useQuery<{
     playlists: Playlist[]
 }>(
     gql`
@@ -28,18 +28,35 @@ const { loading, error, result } = useQuery<{
     <div v-if="user">
         <VProgressCircular indeterminate :size="50" v-if="loading" />
 
-        <p v-else-if="error">
-            {{ error.message }}
-        </p>
+        <VAlert v-else-if="error" title="Something went wrong when loading playlists" type="error">
+            <p class="my-3">
+                <b>Error:</b> {{ error.message }}
+            </p>
 
-        <ul v-else-if="result">
-            <PlaylistCard
-                v-for="playlist in result.playlists"
-                :key="playlist.id"
-                :playlist="playlist"
-            />
-        </ul>
+            <VBtn prepend-icon="mdi-reload" @click="restart">
+                Try again
+            </VBtn>
+        </VAlert>
+
+        <Transition v-else-if="result" appear name="playlist-card-slide">
+            <ul>
+                <PlaylistCard
+                    v-for="playlist in result.playlists"
+                    :key="playlist.id"
+                    :playlist="playlist"
+                />
+            </ul>
+        </Transition>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.playlist-card-slide-enter-active, .playlist-card-slide-leave-active {
+    transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+.playlist-card-slide-enter-from, .playlist-card-slide-leave-to {
+    opacity: 0;
+    transform: translateX(40px);
+}
+</style>
