@@ -14,6 +14,7 @@ defineProps<{
                 variant="flat"
                 :color="isHovering ? 'primary-lighten-1' : undefined"
                 :subtitle="`${playlist.tracksCount} tracks`"
+                :to="{ name: 'playlist', params: { id: playlist.id } }"
             >
                 <template #title>
                     <h3 class="text-h6 text-wrap">
@@ -24,7 +25,8 @@ defineProps<{
                 <template #prepend>
                     <VAvatar
                         :image="playlist.pictureUrl || undefined"
-                        :alt="playlist.name"
+                        icon="mdi-playlist-music"
+                        color="surface-3"
                         rounded
                         tile
                         size="70px"
