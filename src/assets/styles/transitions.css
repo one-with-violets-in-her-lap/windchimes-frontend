@@ -1,0 +1,22 @@
+.slide-enter-active,
+.slide-leave-active {
+    transition:
+        transform 0.5s ease,
+        opacity 0.5s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+    opacity: 0;
+    transform: translateX(40px);
+}
+
+.scale-up-enter-active,
+.scale-up-leave-active {
+    transition: transform 0.4s ease;
+}
+
+.scale-up-enter-from,
+.scale-up-leave-to {
+    transform: scale(0);
+}

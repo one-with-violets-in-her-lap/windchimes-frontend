@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
 
+import '@/assets/styles/transitions.css'
+
 // Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'

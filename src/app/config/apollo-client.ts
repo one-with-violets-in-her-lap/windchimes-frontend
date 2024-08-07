@@ -2,6 +2,7 @@ import {
     ApolloClient,
     createHttpLink,
     InMemoryCache,
+    type Resolvers,
 } from '@apollo/client/core'
 
 const httpLink = createHttpLink({
