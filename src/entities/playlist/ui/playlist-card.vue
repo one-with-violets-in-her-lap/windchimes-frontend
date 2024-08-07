@@ -1,9 +1,18 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { Playlist } from '@/entities/playlist/model/playlist'
 
-defineProps<{
+const props = defineProps<{
     playlist: Playlist
 }>()
+
+const formattedCreationDate = computed(() =>
+    new Date(props.playlist.createdAt).toLocaleDateString(undefined, {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+    }),
+)
 </script>
 
 <template>
@@ -13,13 +22,22 @@ defineProps<{
                 v-bind="props"
                 variant="flat"
                 :color="isHovering ? 'primary-lighten-1' : undefined"
-                :subtitle="`${playlist.tracksCount} tracks`"
                 :to="{ name: 'playlist', params: { id: playlist.id } }"
             >
                 <template #title>
                     <h3 class="text-h6 text-wrap">
                         {{ playlist.name }}
                     </h3>
+                </template>
+
+                <template #subtitle>
+                    {{ playlist.tracksCount }} tracks ·
+                    <time
+                        :datetime="playlist.createdAt"
+                        :title="new Date(playlist.createdAt).toLocaleString()"
+                    >
+                        {{ formattedCreationDate }}
+                    </time>
                 </template>
 
                 <template #prepend>

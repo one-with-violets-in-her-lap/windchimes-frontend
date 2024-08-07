@@ -18,6 +18,7 @@ const { loading, error, result } = useQuery<
         query GetPlaylistWithTracks($playlistId: Int!) {
             playlist(playlistId: $playlistId) {
                 id
+                createdAt
                 name
                 pictureUrl
                 tracksCount
@@ -53,13 +54,28 @@ const { loading, error, result } = useQuery<
                 {{ result.playlist.name }}
             </h1>
 
-            <div class="text-surface-4 mb-2">
+            <div class="text-surface-4 mb-5">
                 <!-- <span class="font-weight-bold">·</span> -->
-                <VIcon icon="mdi-playlist-music"/>
+                <VIcon icon="mdi-calendar mr-1" />
+
+                <time
+                    class="mr-3"
+                    :datetime="result.playlist.createdAt"
+                    :title="new Date(result.playlist.createdAt).toLocaleString()"
+                >
+                    {{
+                        new Date(result.playlist.createdAt).toLocaleDateString(
+                            undefined, { dateStyle: 'medium' }
+                        )
+                    }}
+                </time>
+
+                <VIcon icon="mdi-playlist-music" />
+
                 {{ result.playlist.tracksCount }} tracks
             </div>
 
-            <p v-if="result.playlist.description" class="text-subtitle-1 mb-5">
+            <p v-if="result.playlist.description" class="text-subtitle-1 mb-7">
                 {{ result.playlist.description }}
             </p>
 

@@ -10,6 +10,7 @@ export function usePlaylistsQuery(userId: string) {
             query GetPlaylists($userId: String!) {
                 playlists(userId: $userId) {
                     id
+                    createdAt
                     name
                     pictureUrl
                     tracksCount
