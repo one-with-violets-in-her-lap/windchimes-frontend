@@ -1,22 +1,23 @@
 <script setup lang="ts">
 import LoadingContent from '@/shared/ui/loading-content.vue'
+import PlaylistTracks from '@/widgets/playlist-tracks/ui/playlist-tracks.vue'
 import { useRoute } from 'vue-router'
 import gql from 'graphql-tag'
 import { useQuery } from '@vue/apollo-composable'
 import type {
     GetPlaylistWithTracksQuery,
     GetPlaylistWithTracksQueryVariables,
-} from '@/shared/utils/graphql-generated-types/graphql'
+} from '@/shared/model/graphql-generated-types/graphql'
 
 const playlistId = useRoute().params.id.toString()
 
-const { loading, error, result } = useQuery<
+const { loading, error, result, restart, fetchMore } = useQuery<
     GetPlaylistWithTracksQuery,
     GetPlaylistWithTracksQueryVariables
 >(
     gql`
-        query GetPlaylistWithTracks($playlistId: Int!) {
-            playlist(playlistId: $playlistId) {
+        query GetPlaylistWithTracks($playlistId: Int!, $tracksOffset: Int) {
+            playlist(playlistId: $playlistId, tracksOffset: $tracksOffset) {
                 id
                 createdAt
                 name
@@ -25,9 +26,12 @@ const { loading, error, result } = useQuery<
                 description
 
                 tracks {
-                    platformId
-                    name
-                    pictureUrl
+                    items {
+                        platformId
+                        name
+                        pictureUrl
+                    }
+                    totalItemsCount
                 }
             }
         }
@@ -37,7 +41,11 @@ const { loading, error, result } = useQuery<
 </script>
 
 <template>
-    <LoadingContent :loading="loading" :error="error">
+    <LoadingContent
+        :loading="loading && !result"
+        :error="error"
+        @retry="restart"
+    >
         <div v-if="result?.playlist">
             <VAvatar
                 v-if="result.playlist.pictureUrl"
@@ -55,17 +63,19 @@ const { loading, error, result } = useQuery<
             </h1>
 
             <div class="text-surface-4 mb-5">
-                <!-- <span class="font-weight-bold">·</span> -->
                 <VIcon icon="mdi-calendar mr-1" />
 
                 <time
                     class="mr-3"
                     :datetime="result.playlist.createdAt"
-                    :title="new Date(result.playlist.createdAt).toLocaleString()"
+                    :title="
+                        new Date(result.playlist.createdAt).toLocaleString()
+                    "
                 >
                     {{
                         new Date(result.playlist.createdAt).toLocaleDateString(
-                            undefined, { dateStyle: 'medium' }
+                            undefined,
+                            { dateStyle: 'medium' },
                         )
                     }}
                 </time>
@@ -80,15 +90,41 @@ const { loading, error, result } = useQuery<
             </p>
 
             <Transition name="scale-up" appear>
-                <VList rounded>
-                    <VListItem
-                        v-for="track in result.playlist.tracks"
-                        :key="track.platformId"
-                        prepend-icon="mdi-music"
-                    >
-                        {{ track.name }}
-                    </VListItem>
-                </VList>
+                <PlaylistTracks
+                    :playlist="result.playlist"
+                    @load-more="
+                        fetchMore({
+                            variables: {
+                                tracksOffset:
+                                    result.playlist.tracks.items.length,
+                            },
+                            updateQuery(previousData, { fetchMoreResult }) {
+                                if (
+                                    !previousData.playlist ||
+                                    !fetchMoreResult?.playlist
+                                ) {
+                                    return previousData
+                                }
+
+                                return {
+                                    ...previousData,
+                                    playlist: {
+                                        ...previousData.playlist,
+                                        tracks: {
+                                            ...previousData.playlist.tracks,
+                                            items: [
+                                                ...(previousData.playlist.tracks
+                                                    .items || []),
+                                                ...(fetchMoreResult.playlist
+                                                    .tracks.items || []),
+                                            ],
+                                        },
+                                    },
+                                }
+                            },
+                        })
+                    "
+                />
             </Transition>
         </div>
     </LoadingContent>

@@ -6,7 +6,7 @@ const config: CodegenConfig = {
     schema: process.env.VITE_GRAPHQL_API_URL,
     documents: 'src/**/*.vue',
     generates: {
-        './src/shared/utils/graphql-generated-types/': {
+        './src/shared/model/graphql-generated-types/': {
             preset: 'client',
             plugins: [],
         },
