@@ -23,6 +23,7 @@ const formattedCreationDate = computed(() =>
                 variant="flat"
                 :color="isHovering ? 'primary-lighten-1' : undefined"
                 :to="{ name: 'playlist', params: { id: playlist.id } }"
+                class="mb-4"
             >
                 <template #title>
                     <h3 class="text-h6 text-wrap">

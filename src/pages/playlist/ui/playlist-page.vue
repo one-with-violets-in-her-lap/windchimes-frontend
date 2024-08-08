@@ -43,6 +43,7 @@ const { loading, error, result, restart, fetchMore } = useQuery<
 <template>
     <LoadingContent
         :loading="loading && !result"
+        skeleton="list-item-three-line"
         :error="error"
         @retry="restart"
     >
