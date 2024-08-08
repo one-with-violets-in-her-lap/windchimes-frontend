@@ -9,6 +9,9 @@ const config: CodegenConfig = {
         './src/shared/model/graphql-generated-types/': {
             preset: 'client',
             plugins: [],
+            config: {
+                useTypeImports: true
+            }
         },
     },
 }
