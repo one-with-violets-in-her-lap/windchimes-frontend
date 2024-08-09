@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
 import type { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
+import TrackItem from '@/features/track/ui/track-item.vue'
 
 const props = defineProps<{
     playlist: NonNullable<GetPlaylistWithTracksQuery['playlist']>
@@ -22,13 +23,12 @@ useIntersectionObserver(loadMoreTriggerElement, entries => {
 <template>
     <div>
         <VList rounded class="mb-3">
-            <VListItem
-                v-for="track in playlist.tracks.items"
+            <TrackItem
+                v-for="(track, index) in playlist.tracks.items"
                 :key="track.platformId"
-                prepend-icon="mdi-music"
-            >
-                {{ track.name }}
-            </VListItem>
+                :track="track"
+                :track-number="index + 1"
+            />
         </VList>
 
         <VProgressCircular

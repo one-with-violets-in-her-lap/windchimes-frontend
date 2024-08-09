@@ -29,6 +29,8 @@ const { loading, error, result, restart, fetchMore } = useQuery<
                     items {
                         platformId
                         name
+                        platform
+                        secondsDuration
                         pictureUrl
                     }
                     totalItemsCount
