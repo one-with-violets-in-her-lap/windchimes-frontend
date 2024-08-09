@@ -1,4 +1,4 @@
-export class AppError extends Error {
+export class FatalError extends Error {
     constructor(
         readonly name: string,
         readonly explanation: string,

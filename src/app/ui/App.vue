@@ -3,12 +3,13 @@ import { onErrorCaptured } from 'vue'
 import { storeToRefs } from 'pinia'
 import { App } from '@capacitor/app'
 import { useAuth0 } from '@auth0/auth0-vue'
-import { useAppErrorStore } from '@/app/model/app-error-store'
+import { useFatalErrorStore } from '@/app/model/app-error-store'
 import NavigationBar from '@/widgets/navigation-bar/ui/navigation-bar.vue'
+import PlayerControls from '@/widgets/player-controls/ui/player-controls.vue'
 
-const appErrorStore = useAppErrorStore()
-const { handleError } = appErrorStore
-const { error } = storeToRefs(appErrorStore)
+const fatalErrorStore = useFatalErrorStore()
+const { handleError } = fatalErrorStore
+const { error } = storeToRefs(fatalErrorStore)
 
 onErrorCaptured(handleError)
 
@@ -33,6 +34,8 @@ App.addListener('appUrlOpen', async event => {
                 {{ error.explanation }}
             </div>
         </main>
+
+        <PlayerControls />
     </div>
 </template>
 

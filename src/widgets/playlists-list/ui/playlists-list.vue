@@ -14,7 +14,7 @@ const { loading, error, result, restart } = usePlaylistsQuery(
 <template>
     <div v-if="user">
         <LoadingContent :loading="loading" :error="error" @retry="restart">
-            <Transition name="slide" appear>
+            <Transition name="slide-left" appear>
                 <div v-if="result">
                     <PlaylistCard
                         v-for="playlist in result.playlists"

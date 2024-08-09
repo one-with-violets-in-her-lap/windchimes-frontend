@@ -15,7 +15,7 @@ import App from '@/app/ui/App.vue'
 import router from '@/app/config/router'
 import auth0 from '@/app/config/auth0'
 import apolloClient from '@/app/config/apollo-client'
-import { useAppErrorStore } from '@/app/model/app-error-store'
+import { useFatalErrorStore } from '@/app/model/app-error-store'
 
 const app = createApp(App)
 
@@ -33,7 +33,7 @@ app.use(
 app.use(auth0)
 
 app.config.errorHandler = error => {
-    const { handleError } = useAppErrorStore()
+    const { handleError } = useFatalErrorStore()
     handleError(error)
 }
 
