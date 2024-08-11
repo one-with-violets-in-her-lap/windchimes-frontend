@@ -1,9 +1,7 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { PlaylistTrack } from '@/features/track/model/track'
-import type {
-    GetTrackAudioFileUrlQuery
-} from '@/shared/model/graphql-generated-types/graphql'
+import type { GetTrackAudioFileUrlQuery } from '@/shared/model/graphql-generated-types/graphql'
 
 type TrackWithAudioFileUrl = Omit<
     PlaylistTrack & GetTrackAudioFileUrlQuery,

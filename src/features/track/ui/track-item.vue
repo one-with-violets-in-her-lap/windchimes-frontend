@@ -4,6 +4,7 @@ import { useApolloClient } from '@vue/apollo-composable'
 import type { PlaylistTrack } from '@/features/track/model/track'
 import { usePlayerStore } from '@/shared/model/player'
 import { queryTrackAudioFile } from '@/features/track/api/audio-file-query'
+import { getFormattedTimeFromSeconds } from '@/shared/model/get-formatted-time-from-seconds'
 
 const props = defineProps<{
     track: PlaylistTrack
@@ -12,17 +13,6 @@ const props = defineProps<{
 
 const { client: apolloClient } = useApolloClient()
 const { play } = usePlayerStore()
-
-const duration = computed(() => {
-    const minutes = String(
-        Math.floor(props.track.secondsDuration / 60),
-    ).padStart(2, '0')
-    const seconds = String(
-        Math.floor(props.track.secondsDuration % 60),
-    ).padStart(2, '0')
-
-    return `${minutes}:${seconds}`
-})
 
 async function playTrack() {
     const response = await queryTrackAudioFile(apolloClient, props.track)
@@ -42,7 +32,10 @@ async function playTrack() {
     <VListItem
         prepend-icon="mdi-music"
         :title="track.name"
-        :subtitle="`${trackNumber} · ${duration}`"
+        :subtitle="
+            `${trackNumber} · ` +
+            `${getFormattedTimeFromSeconds(track.secondsDuration)}`
+        "
         lines="two"
         :prepend-avatar="track.pictureUrl || undefined"
     >

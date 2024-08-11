@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import NavigationBar from '@/widgets/navigation-bar/ui/navigation-bar.vue'
+import PlayerToolbar from '@/widgets/player/ui/player-toolbar.vue'
 import { onErrorCaptured } from 'vue'
 import { storeToRefs } from 'pinia'
 import { App } from '@capacitor/app'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { useFatalErrorStore } from '@/app/model/app-error-store'
-import NavigationBar from '@/widgets/navigation-bar/ui/navigation-bar.vue'
-import PlayerControls from '@/widgets/player-controls/ui/player-controls.vue'
 
 const fatalErrorStore = useFatalErrorStore()
 const { handleError } = fatalErrorStore
@@ -24,19 +24,21 @@ App.addListener('appUrlOpen', async event => {
 </script>
 
 <template>
-    <div class="root-container" v-if="!isLoading">
-        <NavigationBar />
+    <VApp>
+        <div class="root-container" v-if="!isLoading">
+            <NavigationBar />
 
-        <main class="main-content-container">
-            <RouterView v-if="!error" />
+            <main class="main-content-container">
+                <RouterView v-if="!error" />
 
-            <div v-else>
-                {{ error.explanation }}
-            </div>
-        </main>
+                <div v-else>
+                    {{ error.explanation }}
+                </div>
+            </main>
 
-        <PlayerControls />
-    </div>
+            <PlayerToolbar />
+        </div>
+    </VApp>
 </template>
 
 <style>
@@ -63,7 +65,7 @@ h5 {
 
 .main-content-container {
     flex-grow: 1;
-    padding: 15px 12px;
+    padding: 15px 12px 200px 12px;
     background-color: rgb(var(--v-theme-background));
 }
 </style>
