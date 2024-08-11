@@ -4,7 +4,7 @@ import 'dotenv/config'
 const config: CodegenConfig = {
     overwrite: true,
     schema: process.env.VITE_GRAPHQL_API_URL,
-    documents: 'src/**/*.vue',
+    documents: ['src/**/*.vue', 'src/**/*.ts'],
     generates: {
         './src/shared/model/graphql-generated-types/': {
             preset: 'client',
