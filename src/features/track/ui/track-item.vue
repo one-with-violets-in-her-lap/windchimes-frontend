@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useApolloClient } from '@vue/apollo-composable'
 import type { PlaylistTrack } from '@/features/track/model/track'
 import { usePlayerStore } from '@/shared/model/player'
