@@ -6,8 +6,8 @@ import { usePlayerStore } from '@/shared/model/player'
 import { getFormattedTimeFromSeconds } from '@/shared/model/get-formatted-time-from-seconds'
 
 const playerStore = usePlayerStore()
-const { currentTrack, paused, currentSeconds } = storeToRefs(playerStore)
-const { play, pause, setCurrentSeconds } = playerStore
+const { currentTrack, paused, currentSecond } = storeToRefs(playerStore)
+const { play, pause, rewind } = playerStore
 
 const fullPlayerOpened = ref(false)
 </script>
@@ -38,7 +38,7 @@ const fullPlayerOpened = ref(false)
                             {{ currentTrack.name }}
                         </div>
                         <span class="text-surface-4">
-                            {{ getFormattedTimeFromSeconds(currentSeconds) }}
+                            {{ getFormattedTimeFromSeconds(currentSecond) }}
                         </span>
                     </div>
 
@@ -49,9 +49,9 @@ const fullPlayerOpened = ref(false)
                         center-affix
                         :min="0"
                         :max="currentTrack.secondsDuration"
-                        :model-value="currentSeconds"
+                        :model-value="currentSecond"
                         @update:model-value="
-                            newValue => setCurrentSeconds(newValue)
+                            newValue => rewind(newValue)
                         "
                         @click.stop
                     />

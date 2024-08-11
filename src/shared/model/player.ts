@@ -10,15 +10,16 @@ type TrackWithAudioFileUrl = Omit<
 
 export const usePlayerStore = defineStore('player', () => {
     const currentTrack = ref<TrackWithAudioFileUrl>()
+
     const paused = ref(false)
-    const currentSeconds = ref(0)
+    const currentSecond = ref(0)
 
     const audio = new Audio()
     audio.addEventListener('pause', () => (paused.value = true))
     audio.addEventListener('play', () => (paused.value = false))
     audio.addEventListener(
         'timeupdate',
-        () => (currentSeconds.value = audio.currentTime),
+        () => (currentSecond.value = audio.currentTime),
     )
     audio.volume = 0.1
 
@@ -48,10 +49,10 @@ export const usePlayerStore = defineStore('player', () => {
         // for external components
         currentTrack: computed(() => currentTrack.value),
         paused: computed(() => paused.value),
-        currentSeconds: computed(() => currentSeconds.value),
+        currentSecond: computed(() => currentSecond.value),
 
         pause,
         play,
-        setCurrentSeconds: rewind,
+        rewind,
     }
 })
