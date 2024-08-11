@@ -11,6 +11,7 @@ import type {
 
 const playlistId = useRoute().params.id.toString()
 
+// crap needs refactoring
 const { loading, error, result, restart, fetchMore } = useQuery<
     GetPlaylistWithTracksQuery,
     GetPlaylistWithTracksQueryVariables
@@ -27,6 +28,7 @@ const { loading, error, result, restart, fetchMore } = useQuery<
 
                 tracks {
                     items {
+                        id
                         platformId
                         name
                         platform

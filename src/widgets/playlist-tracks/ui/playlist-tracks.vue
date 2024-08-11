@@ -29,7 +29,7 @@ const availableTracks = computed(() => {
         <VList rounded class="mb-3">
             <TrackItem
                 v-for="(track, index) in availableTracks"
-                :key="track.platformId"
+                :key="track.id"
                 :track="track"
                 :track-number="index + 1"
             />
