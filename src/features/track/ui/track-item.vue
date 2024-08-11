@@ -1,25 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
-import { useCurrentTrackStore } from '@/shared/model/current-track'
-import {
-    Platform,
-    type GetPlaylistWithTracksQuery,
-    type GetTrackAudioFileUrlQuery,
-    type GetTrackAudioFileUrlQueryVariables,
-} from '@/shared/model/graphql-generated-types/graphql'
+import type { PlaylistTrack } from '@/features/track/model/track'
+import { usePlayerStore } from '@/shared/model/player'
+import { queryTrackAudioFile } from '@/features/track/api/audio-file-query'
 
 const props = defineProps<{
-    track: NonNullable<
-        GetPlaylistWithTracksQuery['playlist']
-    >['tracks']['items'][0]
+    track: PlaylistTrack
     trackNumber: number
 }>()
 
-const { client } = useApolloClient()
-const { currentTrack } = storeToRefs(useCurrentTrackStore())
+const { client: apolloClient } = useApolloClient()
+const { play } = usePlayerStore()
 
 const duration = computed(() => {
     const minutes = String(
@@ -32,26 +24,14 @@ const duration = computed(() => {
     return `${minutes}:${seconds}`
 })
 
-async function play() {
-    const audioFileQuery = gql`
-        query GetTrackAudioFileUrl($platform: Platform!, $platformId: String!) {
-            trackAudioFileUrl(platform: $platform, platformId: $platformId)
-        }
-    `
-
-    const response = await client.query<
-        GetTrackAudioFileUrlQuery,
-        GetTrackAudioFileUrlQueryVariables
-    >({
-        query: audioFileQuery,
-        variables: {
-            platform: Platform.Soundcloud,
-            platformId: props.track.platformId,
-        },
-    })
+async function playTrack() {
+    const response = await queryTrackAudioFile(apolloClient, props.track)
 
     if (response.data.trackAudioFileUrl) {
-        currentTrack.value = props.track
+        play({
+            ...props.track,
+            trackAudioFileUrl: response.data.trackAudioFileUrl,
+        })
     } else {
         console.error(response.error?.message)
     }
@@ -76,7 +56,13 @@ async function play() {
                 tile
                 rounded
             />
-            <VBtn icon="mdi-play" variant="flat" color="primary" size="38px" @click="play" />
+            <VBtn
+                icon="mdi-play"
+                variant="flat"
+                color="primary"
+                size="38px"
+                @click="playTrack"
+            />
         </template>
     </VListItem>
 </template>

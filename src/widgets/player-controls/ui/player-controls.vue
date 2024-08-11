@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { useCurrentTrackStore } from '@/shared/model/current-track'
+import { usePlayerStore } from '@/shared/model/player'
 
-const { currentTrack } = storeToRefs(useCurrentTrackStore())
+const playerStore = usePlayerStore()
+const { currentTrack, paused, currentSeconds } = storeToRefs(playerStore)
+const { play, pause, setCurrentSeconds } = playerStore
 </script>
 
 <template>
@@ -16,15 +18,17 @@ const { currentTrack } = storeToRefs(useCurrentTrackStore())
             class="player-controls-bar"
         >
             <VBtn
-                icon="mdi-play"
+                :icon="paused ? 'mdi-play' : 'mdi-pause'"
                 variant="flat"
                 color="primary"
                 size="38px"
                 class="mr-3"
+                @click="() => (paused ? play() : pause())"
             />
+
             <div class="w-100">
                 <div class="d-flex">
-                    <div class="d-inline-block w-75 text-truncate mr-1">
+                    <div class="track-name text-truncate">
                         {{ currentTrack.name }}
                     </div>
                     <span class="text-surface-4">1:20</span>
@@ -35,6 +39,12 @@ const { currentTrack } = storeToRefs(useCurrentTrackStore())
                     thumb-size="14"
                     track-size="2"
                     center-affix
+                    :min="0"
+                    :max="currentTrack.secondsDuration"
+                    :model-value="currentSeconds"
+                    @update:model-value="
+                        newValue => setCurrentSeconds(newValue)
+                    "
                 />
             </div>
         </VToolbar>
@@ -56,5 +66,11 @@ const { currentTrack } = storeToRefs(useCurrentTrackStore())
     width: 100%;
     margin-inline: 0 !important;
     height: 30px;
+}
+
+.track-name {
+    display: inline-block;
+    max-width: 70%;
+    margin-right: 6px;
 }
 </style>

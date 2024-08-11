@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ApolloError } from '@apollo/client'
+import type { ApolloError } from '@apollo/client/core'
 
 defineProps<{
     loading: boolean

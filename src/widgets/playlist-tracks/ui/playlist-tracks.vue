@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
-import type { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
 import TrackItem from '@/features/track/ui/track-item.vue'
+import type { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
 
 const props = defineProps<{
     playlist: NonNullable<GetPlaylistWithTracksQuery['playlist']>
@@ -18,13 +18,17 @@ useIntersectionObserver(loadMoreTriggerElement, entries => {
         emit('load-more', props.playlist.tracks.items.length)
     }
 })
+
+const availableTracks = computed(() => {
+    return props.playlist.tracks.items.filter(track => track !== null)
+})
 </script>
 
 <template>
     <div>
         <VList rounded class="mb-3">
             <TrackItem
-                v-for="(track, index) in playlist.tracks.items"
+                v-for="(track, index) in availableTracks"
                 :key="track.platformId"
                 :track="track"
                 :track-number="index + 1"
