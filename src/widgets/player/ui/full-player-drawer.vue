@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
+import anime from 'animejs'
 import { usePlayerStore } from '@/shared/model/player'
 
 const opened = defineModel<boolean>('opened', { required: true })
@@ -9,12 +9,27 @@ const playerStore = usePlayerStore()
 const { playNextTrack, playPreviousTrack } = playerStore
 const { currentTrack } = storeToRefs(playerStore)
 
-const skipButtonsLocked = ref(false)
+let pulseAnimation: anime.AnimeInstance | undefined = undefined
+async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
+    if (!pulseAnimation) {
+        pulseAnimation = anime({
+            targets: '.skip-button',
+            opacity: 0.5,
+            scale: 0.7,
+            duration: 600,
+            loop: true,
+            direction: 'alternate',
+            autoplay: false,
+            easing: 'linear',
+        })
+    }
 
-async function lockSkipButtonsUntilFinished(promise: Promise<void>) {
-    skipButtonsLocked.value = true
+    pulseAnimation.play()
+
     await promise
-    skipButtonsLocked.value = false
+
+    pulseAnimation.seek(0)
+    pulseAnimation.pause()
 }
 </script>
 
@@ -28,12 +43,10 @@ async function lockSkipButtonsUntilFinished(promise: Promise<void>) {
         <div>
             <VBtn
                 icon
-                size="50px"
                 class="mr-5 skip-button"
-                :class="{ 'skip-button-locked': skipButtonsLocked }"
                 color="surface-3"
                 variant="flat"
-                @click="lockSkipButtonsUntilFinished(playPreviousTrack())"
+                @click="animateSkipButtonsUntilFinished(playPreviousTrack())"
             >
                 <VIcon icon="mdi-skip-backward" size="40px" />
             </VBtn>
@@ -44,7 +57,6 @@ async function lockSkipButtonsUntilFinished(promise: Promise<void>) {
                 variant="outlined"
                 color="surface-3"
                 size="170px"
-                class="mb-4"
             >
                 <VImg
                     v-if="currentTrack?.pictureUrl"
@@ -55,12 +67,10 @@ async function lockSkipButtonsUntilFinished(promise: Promise<void>) {
 
             <VBtn
                 icon
-                size="50px"
                 class="ml-5 skip-button"
-                :class="{ 'skip-button-locked': skipButtonsLocked }"
                 color="surface-3"
                 variant="flat"
-                @click="lockSkipButtonsUntilFinished(playNextTrack())"
+                @click="animateSkipButtonsUntilFinished(playNextTrack())"
             >
                 <VIcon icon="mdi-skip-forward" size="40px" />
             </VBtn>
@@ -81,25 +91,6 @@ async function lockSkipButtonsUntilFinished(promise: Promise<void>) {
 }
 
 .skip-button {
-    transition: opacity 0.5s ease;
-}
-
-.skip-button-locked {
-    opacity: 0.4;
-    animation-name: pulse;
-    animation-duration: 0.5s;
-    animation-iteration-count: infinite;
-    animation-fill-mode: both;
-    animation-direction: alternate;
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-
-    100% {
-        transform: scale(0.7);
-    }
+    transition: none;
 }
 </style>
