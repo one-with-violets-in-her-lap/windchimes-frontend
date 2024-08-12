@@ -50,9 +50,7 @@ const fullPlayerOpened = ref(false)
                         :min="0"
                         :max="currentTrack.secondsDuration"
                         :model-value="currentSecond"
-                        @update:model-value="
-                            newValue => rewind(newValue)
-                        "
+                        @update:model-value="newValue => rewind(newValue)"
                         @click.stop
                     />
                 </div>

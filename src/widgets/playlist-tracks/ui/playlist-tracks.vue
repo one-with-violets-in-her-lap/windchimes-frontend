@@ -31,6 +31,7 @@ const availableTracks = computed(() => {
                 v-for="(track, index) in availableTracks"
                 :key="track.id"
                 :track="track"
+                :all-playlist-tracks="availableTracks"
                 :track-number="index + 1"
             />
         </VList>

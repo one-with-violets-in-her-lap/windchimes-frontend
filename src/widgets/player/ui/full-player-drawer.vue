@@ -1,11 +1,21 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { usePlayerStore } from '@/shared/model/player'
 
+const opened = defineModel<boolean>('opened', { required: true })
+
 const playerStore = usePlayerStore()
+const { playNextTrack, playPreviousTrack } = playerStore
 const { currentTrack } = storeToRefs(playerStore)
 
-const opened = defineModel<boolean>('opened', { required: true })
+const skipButtonsLocked = ref(false)
+
+async function lockSkipButtonsUntilFinished(promise: Promise<void>) {
+    skipButtonsLocked.value = true
+    await promise
+    skipButtonsLocked.value = false
+}
 </script>
 
 <template>
@@ -19,9 +29,11 @@ const opened = defineModel<boolean>('opened', { required: true })
             <VBtn
                 icon
                 size="50px"
-                class="mr-5"
+                class="mr-5 skip-button"
+                :class="{ 'skip-button-locked': skipButtonsLocked }"
                 color="surface-3"
                 variant="flat"
+                @click="lockSkipButtonsUntilFinished(playPreviousTrack())"
             >
                 <VIcon icon="mdi-skip-backward" size="40px" />
             </VBtn>
@@ -44,9 +56,11 @@ const opened = defineModel<boolean>('opened', { required: true })
             <VBtn
                 icon
                 size="50px"
-                class="ml-5"
+                class="ml-5 skip-button"
+                :class="{ 'skip-button-locked': skipButtonsLocked }"
                 color="surface-3"
                 variant="flat"
+                @click="lockSkipButtonsUntilFinished(playNextTrack())"
             >
                 <VIcon icon="mdi-skip-forward" size="40px" />
             </VBtn>
@@ -64,5 +78,28 @@ const opened = defineModel<boolean>('opened', { required: true })
     display: flex;
     align-items: center;
     flex-direction: column;
+}
+
+.skip-button {
+    transition: opacity 0.5s ease;
+}
+
+.skip-button-locked {
+    opacity: 0.4;
+    animation-name: pulse;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+    animation-direction: alternate;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(0.7);
+    }
 }
 </style>
