@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import FullPlayerDrawer from '@/widgets/player/ui/full-player-drawer.vue'
+import TrackTimeSlider from '@/features/track-time-slider/ui/track-time-slider.vue'
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { usePlayerStore } from '@/shared/model/player'
@@ -42,15 +43,7 @@ const fullPlayerOpened = ref(false)
                         </span>
                     </div>
 
-                    <VSlider
-                        class="track-progress-slider"
-                        thumb-size="14"
-                        track-size="2"
-                        center-affix
-                        :min="0"
-                        :max="currentTrack.secondsDuration"
-                        :model-value="currentSecond"
-                        @update:model-value="newValue => rewind(newValue)"
+                    <TrackTimeSlider
                         @click.stop
                     />
                 </div>
@@ -73,12 +66,6 @@ const fullPlayerOpened = ref(false)
 
     background-color: rgba(var(--v-theme-surface), 0.85);
     backdrop-filter: blur(3px);
-}
-
-.track-progress-slider {
-    width: 100%;
-    margin-inline: 0 !important;
-    height: 30px;
 }
 
 .track-name {

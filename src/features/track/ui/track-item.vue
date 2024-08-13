@@ -2,7 +2,7 @@
 import { storeToRefs } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable'
 import { queryTrackAudioFile } from '@/shared/api/audio-file-query'
-import type { PlaylistTrack } from '@/features/track/model/track'
+import type { PlaylistTrack } from '@/shared/model/track'
 import { usePlayerStore } from '@/shared/model/player'
 import { getFormattedTimeFromSeconds } from '@/shared/model/get-formatted-time-from-seconds'
 

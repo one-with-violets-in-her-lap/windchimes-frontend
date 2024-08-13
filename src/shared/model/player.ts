@@ -1,6 +1,7 @@
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
-import type { PlaylistTrack } from '@/features/track/model/track'
+import { useLocalStorage } from '@vueuse/core'
+import type { PlaylistTrack } from '@/shared/model/track'
 import type { GetTrackAudioFileUrlQuery } from '@/shared/model/graphql-generated-types/graphql'
 import { useTracksQueue } from '@/shared/model/tracks-queue'
 
@@ -15,19 +16,37 @@ export const usePlayerStore = defineStore('player', () => {
         currentTrackId,
         tracksQueue,
         playNextTrack,
-        playPreviousTrack
+        playPreviousTrack,
     } = useTracksQueue(play)
 
     const paused = ref(false)
     const currentSecond = ref(0)
 
+    const volume = useLocalStorage('volume', '0.5')
+    watch(volume, () => {
+        if (isNaN(+volume.value)) {
+            volume.value = '0.5'
+        }
+
+        audio.volume = +volume.value
+    })
+
     const audio = new Audio()
+
     audio.addEventListener('pause', () => (paused.value = true))
     audio.addEventListener('play', () => (paused.value = false))
     audio.addEventListener(
         'timeupdate',
         () => (currentSecond.value = audio.currentTime),
     )
+    audio.addEventListener('ended', async () => {
+        try {
+            await playNextTrack()
+        } catch (error) {
+            console.error(error)
+        }
+    })
+
     audio.volume = 0.1
 
     function pause() {
@@ -54,6 +73,7 @@ export const usePlayerStore = defineStore('player', () => {
     return {
         currentTrack,
         tracksQueue,
+        volume,
 
         /*
             returns computed properties so paused/track time state can only be
@@ -66,6 +86,6 @@ export const usePlayerStore = defineStore('player', () => {
         play,
         rewind,
         playNextTrack,
-        playPreviousTrack
+        playPreviousTrack,
     }
 })
