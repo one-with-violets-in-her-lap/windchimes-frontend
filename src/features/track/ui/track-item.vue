@@ -1,13 +1,10 @@
 <script setup lang="ts">
+import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import { storeToRefs } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable'
 import { queryTrackAudioFile } from '@/entities/track/api/audio-file-query'
 import type { PlaylistTrack } from '@/entities/track/model/track'
 import { usePlayerStore } from '@/entities/player/model/player-store'
-import {
-    getDateTimeAttributeFromSeconds,
-    getFormattedTimeFromSeconds,
-} from '@/shared/model/duration-formatting'
 
 const props = defineProps<{
     track: PlaylistTrack
@@ -41,22 +38,15 @@ async function playTrack() {
     <VListItem
         prepend-icon="mdi-music"
         :title="track.name"
-        :subtitle="
-            `${trackNumber} · ` +
-            `${getFormattedTimeFromSeconds(track.secondsDuration)}`
-        "
         lines="two"
         :prepend-avatar="track.pictureUrl || undefined"
     >
         <template #subtitle>
             {{ trackNumber }} ·
-            <time
-                :datetime="
-                    getDateTimeAttributeFromSeconds(track.secondsDuration)
-                "
-            >
-                {{ getFormattedTimeFromSeconds(track.secondsDuration) }}
-            </time>
+            <DurationTimestamp
+                :seconds-duration="track.secondsDuration"
+                unstyled
+            />
         </template>
 
         <template #prepend>

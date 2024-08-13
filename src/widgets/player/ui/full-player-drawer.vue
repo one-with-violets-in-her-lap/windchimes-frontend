@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import TrackTimeSlider from '@/features/track-time-slider/ui/track-time-slider.vue'
+import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import { storeToRefs } from 'pinia'
 import anime from 'animejs'
 import { usePlayerStore } from '@/entities/player/model/player-store'
@@ -8,7 +9,7 @@ const opened = defineModel<boolean>('opened', { required: true })
 
 const playerStore = usePlayerStore()
 const { playNextTrack, playPreviousTrack } = playerStore
-const { currentTrack, volume } = storeToRefs(playerStore)
+const { currentTrack, volume, currentSecond } = storeToRefs(playerStore)
 
 let pulseAnimation: anime.AnimeInstance | undefined = undefined
 async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
@@ -42,7 +43,7 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
         class="player-drawer"
     >
         <div v-if="currentTrack" class="drawer-content-wrapper">
-            <div class="d-flex align-center gc-2 w-100 justify-center">
+            <div class="d-flex align-center gc-2 w-100 justify-center mb-2">
                 <VBtn
                     icon
                     class="skip-button"
@@ -80,32 +81,60 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
                 </VBtn>
             </div>
 
+            <h3 class="text-h5 mb-1 text-center">
+                {{ currentTrack.name }}
+            </h3>
+
             <TrackTimeSlider class="track-time-slider" />
 
-            <VMenu width="180px">
-                <template #activator="{ props }">
-                    <VBtn
-                        variant="flat"
-                        color="surface-2"
-                        icon="mdi-volume-high"
-                        class="mr-auto ml-2"
-                        v-bind="props"
-                    ></VBtn>
-                </template>
+            <div class="mb-3 text-surface-3">
+                <DurationTimestamp :seconds-duration="currentSecond" />
+                -
+                <DurationTimestamp
+                    :seconds-duration="currentTrack.secondsDuration"
+                />
+            </div>
 
-                <VSheet class="mt-2" color="surface-2" border>
-                    <VSlider
-                        thumb-size="14"
-                        track-size="2"
-                        :min="0"
-                        :max="1"
-                        class=""
-                        color="primary"
-                        v-model="volume"
-                        @click.stop
-                    />
-                </VSheet>
-            </VMenu>
+            <div class="d-flex justify-center ga-2">
+                <VMenu width="180px" location="bottom center">
+                    <template #activator="{ props }">
+                        <VBtn
+                            variant="flat"
+                            color="surface-2"
+                            icon="mdi-volume-high"
+                            class="mr-auto ml-2"
+                            v-bind="props"
+                        />
+                    </template>
+
+                    <VSheet class="mt-2" color="surface-2" border>
+                        <VSlider
+                            thumb-size="14"
+                            track-size="2"
+                            :min="0"
+                            :max="1"
+                            class="w-75 mx-auto"
+                            color="primary"
+                            v-model="volume"
+                            @click.stop
+                        />
+                    </VSheet>
+                </VMenu>
+
+                <VBtn
+                    variant="flat"
+                    color="surface-2"
+                    icon="mdi-shuffle"
+                    class="mr-auto ml-2"
+                />
+
+                <VBtn
+                    variant="flat"
+                    color="surface-2"
+                    icon="mdi-repeat"
+                    class="mr-auto ml-2"
+                />
+            </div>
         </div>
     </VNavigationDrawer>
 </template>
