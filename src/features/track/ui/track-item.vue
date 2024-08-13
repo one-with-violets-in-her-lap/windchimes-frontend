@@ -4,7 +4,7 @@ import { useApolloClient } from '@vue/apollo-composable'
 import { queryTrackAudioFile } from '@/entities/track/api/audio-file-query'
 import type { PlaylistTrack } from '@/entities/track/model/track'
 import { usePlayerStore } from '@/entities/player/model/player-store'
-import { getFormattedTimeFromSeconds } from '@/shared/model/duration-formatting'
+import { getDateTimeAttributeFromSeconds, getFormattedTimeFromSeconds } from '@/shared/model/duration-formatting'
 
 const props = defineProps<{
     track: PlaylistTrack
@@ -45,6 +45,13 @@ async function playTrack() {
         lines="two"
         :prepend-avatar="track.pictureUrl || undefined"
     >
+        <template #subtitle>
+            {{ trackNumber }} ·
+            <time :datetime="getDateTimeAttributeFromSeconds(track.secondsDuration)">
+                {{ getFormattedTimeFromSeconds(track.secondsDuration) }}
+            </time>
+        </template>
+
         <template #prepend>
             <VAvatar
                 :image="track.pictureUrl || undefined"
