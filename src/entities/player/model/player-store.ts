@@ -1,6 +1,5 @@
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { useLocalStorage } from '@vueuse/core'
 import type { PlaylistTrack } from '@/entities/track/model/track'
 import type { GetTrackAudioFileUrlQuery } from '@/shared/model/graphql-generated-types/graphql'
 import { useTracksQueue } from '@/entities/player/model/tracks-queue'

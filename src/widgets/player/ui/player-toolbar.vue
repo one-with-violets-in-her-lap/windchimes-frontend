@@ -11,7 +11,7 @@ import {
 
 const playerStore = usePlayerStore()
 const { currentTrack, paused, currentSecond } = storeToRefs(playerStore)
-const { play, pause, rewind } = playerStore
+const { play, pause } = playerStore
 
 const fullPlayerOpened = ref(false)
 </script>

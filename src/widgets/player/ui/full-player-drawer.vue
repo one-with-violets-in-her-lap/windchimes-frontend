@@ -7,8 +7,8 @@ import { usePlayerStore } from '@/entities/player/model/player-store'
 const opened = defineModel<boolean>('opened', { required: true })
 
 const playerStore = usePlayerStore()
-const { playNextTrack, playPreviousTrack, rewind } = playerStore
-const { currentTrack, currentSecond, volume } = storeToRefs(playerStore)
+const { playNextTrack, playPreviousTrack } = playerStore
+const { currentTrack, volume } = storeToRefs(playerStore)
 
 let pulseAnimation: anime.AnimeInstance | undefined = undefined
 async function animateSkipButtonsUntilFinished(promise: Promise<void>) {

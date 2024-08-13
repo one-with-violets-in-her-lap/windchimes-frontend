@@ -10,8 +10,8 @@ const config: CodegenConfig = {
             preset: 'client',
             plugins: [],
             config: {
-                useTypeImports: true
-            }
+                useTypeImports: true,
+            },
         },
     },
 }
