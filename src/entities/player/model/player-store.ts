@@ -1,9 +1,10 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
-import type { PlaylistTrack } from '@/shared/model/track'
+import type { PlaylistTrack } from '@/entities/track/model/track'
 import type { GetTrackAudioFileUrlQuery } from '@/shared/model/graphql-generated-types/graphql'
-import { useTracksQueue } from '@/shared/model/tracks-queue'
+import { useTracksQueue } from '@/entities/player/model/tracks-queue'
+import { usePlayerVolume } from '@/entities/player/model/volume'
 
 export type TrackWithAudioFileUrl = Omit<
     PlaylistTrack & GetTrackAudioFileUrlQuery,
@@ -22,16 +23,9 @@ export const usePlayerStore = defineStore('player', () => {
     const paused = ref(false)
     const currentSecond = ref(0)
 
-    const volume = useLocalStorage('volume', '0.5')
-    watch(volume, () => {
-        if (isNaN(+volume.value)) {
-            volume.value = '0.5'
-        }
-
-        audio.volume = +volume.value
-    })
-
     const audio = new Audio()
+
+    const { volume } = usePlayerVolume(audio)
 
     audio.addEventListener('pause', () => (paused.value = true))
     audio.addEventListener('play', () => (paused.value = false))

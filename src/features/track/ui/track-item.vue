@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable'
-import { queryTrackAudioFile } from '@/shared/api/audio-file-query'
-import type { PlaylistTrack } from '@/shared/model/track'
-import { usePlayerStore } from '@/shared/model/player'
-import { getFormattedTimeFromSeconds } from '@/shared/model/get-formatted-time-from-seconds'
+import { queryTrackAudioFile } from '@/entities/track/api/audio-file-query'
+import type { PlaylistTrack } from '@/entities/track/model/track'
+import { usePlayerStore } from '@/entities/player/model/player-store'
+import { getFormattedTimeFromSeconds } from '@/shared/model/duration-formatting'
 
 const props = defineProps<{
     track: PlaylistTrack

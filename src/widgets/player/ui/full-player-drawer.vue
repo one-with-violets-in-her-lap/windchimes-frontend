@@ -2,7 +2,7 @@
 import TrackTimeSlider from '@/features/track-time-slider/ui/track-time-slider.vue'
 import { storeToRefs } from 'pinia'
 import anime from 'animejs'
-import { usePlayerStore } from '@/shared/model/player'
+import { usePlayerStore } from '@/entities/player/model/player-store'
 
 const opened = defineModel<boolean>('opened', { required: true })
 
@@ -48,7 +48,9 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
                     class="skip-button"
                     color="surface-3"
                     variant="flat"
-                    @click="animateSkipButtonsUntilFinished(playPreviousTrack())"
+                    @click="
+                        animateSkipButtonsUntilFinished(playPreviousTrack())
+                    "
                 >
                     <VIcon icon="mdi-skip-backward" size="40px" />
                 </VBtn>
@@ -78,9 +80,32 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
                 </VBtn>
             </div>
 
-            <TrackTimeSlider
-                class="track-time-slider"
-            />
+            <TrackTimeSlider class="track-time-slider" />
+
+            <VMenu width="180px">
+                <template #activator="{ props }">
+                    <VBtn
+                        variant="flat"
+                        color="surface-2"
+                        icon="mdi-volume-high"
+                        class="mr-auto ml-2"
+                        v-bind="props"
+                    ></VBtn>
+                </template>
+
+                <VSheet class="mt-2" color="surface-2" border>
+                    <VSlider
+                        thumb-size="14"
+                        track-size="2"
+                        :min="0"
+                        :max="1"
+                        class=""
+                        color="primary"
+                        v-model="volume"
+                        @click.stop
+                    />
+                </VSheet>
+            </VMenu>
         </div>
     </VNavigationDrawer>
 </template>
@@ -105,6 +130,7 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
 
 .track-time-slider {
     width: 90% !important;
+    margin-bottom: 8px;
 }
 
 .current-track-picture {

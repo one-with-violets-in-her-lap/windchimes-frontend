@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { usePlayerStore } from '@/shared/model/player'
+import { usePlayerStore } from '@/entities/player/model/player-store'
 
 const playerStore = usePlayerStore()
-const {rewind } = playerStore
+const { rewind } = playerStore
 const { currentTrack, currentSecond } = storeToRefs(playerStore)
 </script>
 
@@ -16,7 +16,7 @@ const { currentTrack, currentSecond } = storeToRefs(playerStore)
         :min="0"
         :max="currentTrack?.secondsDuration"
         :model-value="currentSecond"
-        @update:model-value="(newSecondsValue) => rewind(newSecondsValue)"
+        @update:model-value="newSecondsValue => rewind(newSecondsValue)"
     />
 </template>
 

@@ -3,8 +3,11 @@ import FullPlayerDrawer from '@/widgets/player/ui/full-player-drawer.vue'
 import TrackTimeSlider from '@/features/track-time-slider/ui/track-time-slider.vue'
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { usePlayerStore } from '@/shared/model/player'
-import { getFormattedTimeFromSeconds } from '@/shared/model/get-formatted-time-from-seconds'
+import { usePlayerStore } from '@/entities/player/model/player-store'
+import {
+    getDateTimeAttributeFromSeconds,
+    getFormattedTimeFromSeconds,
+} from '@/shared/model/duration-formatting'
 
 const playerStore = usePlayerStore()
 const { currentTrack, paused, currentSecond } = storeToRefs(playerStore)
@@ -38,14 +41,18 @@ const fullPlayerOpened = ref(false)
                         <div class="track-name text-truncate">
                             {{ currentTrack.name }}
                         </div>
-                        <span class="text-surface-4">
+
+                        <time
+                            class="text-surface-4"
+                            :datetime="
+                                getDateTimeAttributeFromSeconds(currentSecond)
+                            "
+                        >
                             {{ getFormattedTimeFromSeconds(currentSecond) }}
-                        </span>
+                        </time>
                     </div>
 
-                    <TrackTimeSlider
-                        @click.stop
-                    />
+                    <TrackTimeSlider @click.stop />
                 </div>
             </VToolbar>
         </Transition>

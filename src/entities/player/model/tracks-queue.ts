@@ -1,8 +1,11 @@
 import { computed, ref } from 'vue'
 import { useApolloClient } from '@vue/apollo-composable'
-import type { PlaylistTrack } from '@/shared/model/track'
-import type { TrackWithAudioFileUrl } from '@/shared/model/player'
-import { queryTrackAudioFile } from '@/shared/api/audio-file-query'
+import type { PlaylistTrack } from '@/entities/track/model/track'
+import {
+    usePlayerStore, // for jsdoc
+    type TrackWithAudioFileUrl,
+} from '@/entities/player/model/player-store'
+import { queryTrackAudioFile } from '@/entities/track/api/audio-file-query'
 
 /**
  * couldn't play next/previous track because the end/beginning of
@@ -11,6 +14,13 @@ import { queryTrackAudioFile } from '@/shared/api/audio-file-query'
  */
 export class TracksQueueNavigationError extends Error {}
 
+/**
+ * creates reactive tracks queue state, with play next/previous
+ * functionality. **not a global player tracks queue state**, use
+ * {@link usePlayerStore} for this purpose
+ * @param playTrack
+ * @returns
+ */
 export function useTracksQueue(
     playTrack: (track?: TrackWithAudioFileUrl) => void,
 ) {
