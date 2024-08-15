@@ -21,15 +21,17 @@ const { play } = playerStore
 async function playTrack() {
     const response = await queryTrackAudioFile(apolloClient, props.track)
 
-    if (response.data.trackAudioFileUrl) {
+    if (response.data.trackAudioFile?.__typename === 'TrackAudioFileGraphQL') {
         tracksQueue.value = props.allPlaylistTracks
 
         play({
             ...props.track,
-            trackAudioFileUrl: response.data.trackAudioFileUrl,
+            trackAudioFileUrl: response.data.trackAudioFile.url,
         })
+    } else if(response.data.trackAudioFile?.__typename === 'ErrorGraphQL') {
+        console.error(response.data.trackAudioFile.explanation)
     } else {
-        console.error(response.error?.message)
+        console.error(response.error)
     }
 }
 </script>

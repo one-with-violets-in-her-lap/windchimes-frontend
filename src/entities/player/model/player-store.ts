@@ -6,7 +6,7 @@ import { useTracksQueue } from '@/entities/player/model/tracks-queue'
 import { usePlayerVolume } from '@/entities/player/model/volume'
 
 export type TrackWithAudioFileUrl = Omit<
-    PlaylistTrack & GetTrackAudioFileUrlQuery,
+    PlaylistTrack & { trackAudioFileUrl: string },
     '__typename'
 >
 

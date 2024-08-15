@@ -82,8 +82,12 @@ export function useTracksQueue(
         }
 
         const audioFileUrlQuery = await queryTrackAudioFile(apolloClient, track)
-        if (!audioFileUrlQuery.data.trackAudioFileUrl) {
-            console.error(audioFileUrlQuery.error)
+        if (
+            !audioFileUrlQuery.data.trackAudioFile ||
+            audioFileUrlQuery.data.trackAudioFile.__typename !==
+                'TrackAudioFileGraphQL'
+        ) {
+            console.error(audioFileUrlQuery.data.trackAudioFile)
             throw new TracksQueueNavigationError(
                 "couldn't obtain audio file url of a track",
             )
@@ -91,7 +95,7 @@ export function useTracksQueue(
 
         playTrack({
             ...track,
-            trackAudioFileUrl: audioFileUrlQuery.data.trackAudioFileUrl,
+            trackAudioFileUrl: audioFileUrlQuery.data.trackAudioFile.url,
         })
     }
 

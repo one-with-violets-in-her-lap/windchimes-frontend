@@ -13,7 +13,16 @@ export async function queryTrackAudioFile(
 ) {
     const audioFileQuery = gql`
         query GetTrackAudioFileUrl($platform: Platform!, $platformId: String!) {
-            trackAudioFileUrl(platform: $platform, platformId: $platformId)
+            trackAudioFile(platform: $platform, platformId: $platformId) {
+                ... on TrackAudioFileGraphQL {
+                    url
+                }
+
+                ... on ErrorGraphQL {
+                    name
+                    explanation
+                }
+            }
         }
     `
 
