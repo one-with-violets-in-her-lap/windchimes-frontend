@@ -100,6 +100,7 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
             </div>
 
             <div class="d-flex justify-center ga-2">
+                <!-- move to volume slider feature -->
                 <VMenu width="180px" location="bottom center">
                     <template #activator="{ props }">
                         <VBtn
