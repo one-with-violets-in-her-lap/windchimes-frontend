@@ -43,7 +43,7 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
         class="player-drawer"
     >
         <div v-if="currentTrack" class="drawer-content-wrapper">
-            <div class="d-flex align-center gc-2 w-100 justify-center mb-2">
+            <div class="d-flex align-center gc-3 w-100 justify-center mb-2">
                 <VBtn
                     icon
                     class="skip-button"
@@ -81,9 +81,13 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
                 </VBtn>
             </div>
 
-            <h3 class="text-h5 mb-1 text-center">
+            <h3 class="text-h5 text-center">
                 {{ currentTrack.name }}
             </h3>
+
+            <span class="text-h6 mb-1 text-center text-surface-4">
+                {{ currentTrack.owner.name }}
+            </span>
 
             <TrackTimeSlider class="track-time-slider" />
 
@@ -166,6 +170,7 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
     flex-shrink: 1;
     width: 75%;
     height: auto;
+    aspect-ratio: 1/1;
     max-width: 200px;
 }
 </style>

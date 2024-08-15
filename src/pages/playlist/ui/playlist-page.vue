@@ -34,6 +34,10 @@ const { loading, error, result, restart, fetchMore } = useQuery<
                         platform
                         secondsDuration
                         pictureUrl
+
+                        owner {
+                            name
+                        }
                     }
                     totalItemsCount
                 }

@@ -36,6 +36,8 @@ const fullPlayerOpened = ref(false)
                 <div class="w-100">
                     <div class="d-flex">
                         <div class="track-name text-truncate">
+                            {{ currentTrack.owner.name }}
+                            -
                             {{ currentTrack.name }}
                         </div>
 

@@ -37,7 +37,7 @@ async function playTrack() {
 <template>
     <VListItem
         prepend-icon="mdi-music"
-        :title="track.name"
+        :title="`${track.owner.name} - ${track.name}`"
         lines="two"
         :prepend-avatar="track.pictureUrl || undefined"
     >
