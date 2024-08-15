@@ -15,11 +15,14 @@ export const usePlayerStore = defineStore('player', () => {
         currentTrack,
         currentTrackId,
         tracksQueue,
+        loop,
         playNextTrack,
         playPreviousTrack,
+        shuffleQueue
     } = useTracksQueue(play)
 
     const paused = ref(false)
+
     const currentSecond = ref(0)
 
     const audio = new Audio()
@@ -67,6 +70,7 @@ export const usePlayerStore = defineStore('player', () => {
         currentTrack,
         tracksQueue,
         volume,
+        loop,
 
         /*
             returns computed properties so paused/track time state can only be
@@ -80,5 +84,6 @@ export const usePlayerStore = defineStore('player', () => {
         rewind,
         playNextTrack,
         playPreviousTrack,
+        shuffleQueue
     }
 })

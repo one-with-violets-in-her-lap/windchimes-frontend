@@ -1,4 +1,5 @@
 import { computed, ref } from 'vue'
+import { useLocalStorage } from '@vueuse/core'
 import { useApolloClient } from '@vue/apollo-composable'
 import type { PlaylistTrack } from '@/entities/track/model/track'
 import {
@@ -6,6 +7,7 @@ import {
     type TrackWithAudioFileUrl,
 } from '@/entities/player/model/player-store'
 import { queryTrackAudioFile } from '@/entities/track/api/audio-file-query'
+import { shuffle } from '@/entities/player/utils/shuffle'
 
 /**
  * couldn't play next/previous track because the end/beginning of
@@ -26,6 +28,8 @@ export function useTracksQueue(
 ) {
     const { client: apolloClient } = useApolloClient()
     const tracksQueue = ref<PlaylistTrack[]>([])
+
+    const loop = useLocalStorage('loop', false)
 
     const currentTrackId = ref<number>()
     const currentTrack = computed(() => {
@@ -48,11 +52,11 @@ export function useTracksQueue(
             track => track.id === currentTrackId.value,
         )
 
-        if (currentTrackIndex === -1) {
-            currentTrackIndex = 0
+        if (currentTrackIndex >= tracksQueue.value.length - 1 && loop.value) {
+            await playTrackFromQueue(0)
+        } else {
+            await playTrackFromQueue(currentTrackIndex + 1)
         }
-
-        await playTrackFromQueue(currentTrackIndex + 1)
     }
 
     /**
@@ -64,10 +68,6 @@ export function useTracksQueue(
         let currentTrackIndex = tracksQueue.value.findIndex(
             track => track.id === currentTrackId.value,
         )
-
-        if (currentTrackIndex === -1) {
-            currentTrackIndex = 0
-        }
 
         await playTrackFromQueue(currentTrackIndex - 1)
     }
@@ -99,11 +99,29 @@ export function useTracksQueue(
         })
     }
 
+    function shuffleQueue() {
+        let partToShuffleStartIndex = tracksQueue.value.findIndex(
+            track => track.id === currentTrackId.value,
+        )
+
+        if (partToShuffleStartIndex === -1) {
+            partToShuffleStartIndex = 0
+        }
+
+        const shuffledQueuePart = shuffle(tracksQueue.value.slice(partToShuffleStartIndex))
+        shuffledQueuePart.forEach((track, shuffledQueueTrackIndex) => {
+            tracksQueue.value[partToShuffleStartIndex + shuffledQueueTrackIndex] = track
+        })
+    }
+
     return {
         tracksQueue,
         currentTrackId,
         currentTrack,
+        loop,
+
         playNextTrack,
         playPreviousTrack,
+        shuffleQueue
     }
 }

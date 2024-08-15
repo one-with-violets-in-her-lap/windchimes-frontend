@@ -8,8 +8,8 @@ import { usePlayerStore } from '@/entities/player/model/player-store'
 const opened = defineModel<boolean>('opened', { required: true })
 
 const playerStore = usePlayerStore()
-const { playNextTrack, playPreviousTrack } = playerStore
-const { currentTrack, volume, currentSecond } = storeToRefs(playerStore)
+const { playNextTrack, playPreviousTrack, shuffleQueue } = playerStore
+const { currentTrack, volume, currentSecond, loop } = storeToRefs(playerStore)
 
 let pulseAnimation: anime.AnimeInstance | undefined = undefined
 async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
@@ -50,7 +50,9 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
                     color="surface-3"
                     variant="flat"
                     @click="
-                        animateSkipButtonsUntilFinished(playPreviousTrack())
+                        animateSkipButtonsUntilFinished(
+                            playPreviousTrack().catch(error => {}),
+                        )
                     "
                 >
                     <VIcon icon="mdi-skip-backward" size="40px" />
@@ -75,7 +77,11 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
                     class="skip-button"
                     color="surface-3"
                     variant="flat"
-                    @click="animateSkipButtonsUntilFinished(playNextTrack())"
+                    @click="
+                        animateSkipButtonsUntilFinished(
+                            playNextTrack().catch(error => {}),
+                        )
+                    "
                 >
                     <VIcon icon="mdi-skip-forward" size="40px" />
                 </VBtn>
@@ -131,13 +137,15 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
                     color="surface-2"
                     icon="mdi-shuffle"
                     class="mr-auto ml-2"
+                    @click="shuffleQueue"
                 />
 
                 <VBtn
                     variant="flat"
-                    color="surface-2"
+                    :color="loop ? 'primary' : 'surface-2'"
                     icon="mdi-repeat"
                     class="mr-auto ml-2"
+                    @click="loop = !loop"
                 />
             </div>
         </div>

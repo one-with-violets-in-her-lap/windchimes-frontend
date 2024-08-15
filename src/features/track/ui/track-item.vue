@@ -28,7 +28,7 @@ async function playTrack() {
             ...props.track,
             trackAudioFileUrl: response.data.trackAudioFile.url,
         })
-    } else if(response.data.trackAudioFile?.__typename === 'ErrorGraphQL') {
+    } else if (response.data.trackAudioFile?.__typename === 'ErrorGraphQL') {
         console.error(response.data.trackAudioFile.explanation)
     } else {
         console.error(response.error)

@@ -9,7 +9,7 @@ import { usePlayerStore } from '@/entities/player/model/player-store' // for jsd
  * @param audio html audio element to bind volume state to
  */
 export function usePlayerVolume(audio: HTMLAudioElement) {
-    const volume = useLocalStorage('volume', '0.5')
+    const volume = useLocalStorage('volume', 0.5)
 
     onMounted(() => {
         updateAudioVolume()
@@ -20,8 +20,10 @@ export function usePlayerVolume(audio: HTMLAudioElement) {
     })
 
     function updateAudioVolume() {
-        if (isNaN(+volume.value)) {
-            volume.value = '0.5'
+        console.log(volume.value)
+
+        if (isNaN(volume.value)) {
+            volume.value = 0.5
         }
 
         audio.volume = +volume.value
