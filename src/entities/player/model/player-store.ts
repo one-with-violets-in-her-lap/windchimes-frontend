@@ -18,7 +18,7 @@ export const usePlayerStore = defineStore('player', () => {
         loop,
         playNextTrack,
         playPreviousTrack,
-        shuffleQueue
+        shuffleQueue,
     } = useTracksQueue(play)
 
     const paused = ref(false)
@@ -84,6 +84,6 @@ export const usePlayerStore = defineStore('player', () => {
         rewind,
         playNextTrack,
         playPreviousTrack,
-        shuffleQueue
+        shuffleQueue,
     }
 })

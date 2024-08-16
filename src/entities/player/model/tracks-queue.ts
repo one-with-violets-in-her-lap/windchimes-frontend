@@ -108,9 +108,13 @@ export function useTracksQueue(
             partToShuffleStartIndex = 0
         }
 
-        const shuffledQueuePart = shuffle(tracksQueue.value.slice(partToShuffleStartIndex))
+        const shuffledQueuePart = shuffle(
+            tracksQueue.value.slice(partToShuffleStartIndex),
+        )
         shuffledQueuePart.forEach((track, shuffledQueueTrackIndex) => {
-            tracksQueue.value[partToShuffleStartIndex + shuffledQueueTrackIndex] = track
+            tracksQueue.value[
+                partToShuffleStartIndex + shuffledQueueTrackIndex
+            ] = track
         })
     }
 
@@ -122,6 +126,6 @@ export function useTracksQueue(
 
         playNextTrack,
         playPreviousTrack,
-        shuffleQueue
+        shuffleQueue,
     }
 }

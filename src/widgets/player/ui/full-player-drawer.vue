@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import TrackTimeSlider from '@/features/track-time-slider/ui/track-time-slider.vue'
+import TrackTimeSlider from '@/features/player/track-time-slider/ui/track-time-slider.vue'
+import VolumeMenuButton from '@/features/player/volume-menu-button/ui/volume-menu-button.vue'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import { storeToRefs } from 'pinia'
 import anime from 'animejs'
@@ -9,7 +10,7 @@ const opened = defineModel<boolean>('opened', { required: true })
 
 const playerStore = usePlayerStore()
 const { playNextTrack, playPreviousTrack, shuffleQueue } = playerStore
-const { currentTrack, volume, currentSecond, loop } = storeToRefs(playerStore)
+const { currentTrack, currentSecond, loop } = storeToRefs(playerStore)
 
 let pulseAnimation: anime.AnimeInstance | undefined = undefined
 async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
@@ -106,31 +107,7 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
             </div>
 
             <div class="d-flex justify-center ga-2">
-                <!-- move to volume slider feature -->
-                <VMenu width="180px" location="bottom center">
-                    <template #activator="{ props }">
-                        <VBtn
-                            variant="flat"
-                            color="surface-2"
-                            icon="mdi-volume-high"
-                            class="mr-auto ml-2"
-                            v-bind="props"
-                        />
-                    </template>
-
-                    <VSheet class="mt-2" color="surface-2" border>
-                        <VSlider
-                            thumb-size="14"
-                            track-size="2"
-                            :min="0"
-                            :max="1"
-                            class="w-75 mx-auto"
-                            color="primary"
-                            v-model="volume"
-                            @click.stop
-                        />
-                    </VSheet>
-                </VMenu>
+                <VolumeMenuButton />
 
                 <VBtn
                     variant="flat"
