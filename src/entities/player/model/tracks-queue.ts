@@ -48,7 +48,7 @@ export function useTracksQueue(
      * next track audio file can't be loaded
      */
     async function playNextTrack() {
-        let currentTrackIndex = tracksQueue.value.findIndex(
+        const currentTrackIndex = tracksQueue.value.findIndex(
             track => track.id === currentTrackId.value,
         )
 
@@ -65,7 +65,7 @@ export function useTracksQueue(
      * previous track audio file can't be loaded
      */
     async function playPreviousTrack() {
-        let currentTrackIndex = tracksQueue.value.findIndex(
+        const currentTrackIndex = tracksQueue.value.findIndex(
             track => track.id === currentTrackId.value,
         )
 

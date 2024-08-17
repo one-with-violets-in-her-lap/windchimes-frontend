@@ -5,12 +5,14 @@ import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import { storeToRefs } from 'pinia'
 import anime from 'animejs'
 import { usePlayerStore } from '@/entities/player/model/player-store'
+import { useNotificationsStore } from '@/shared/model/notifications'
 
 const opened = defineModel<boolean>('opened', { required: true })
 
 const playerStore = usePlayerStore()
 const { playNextTrack, playPreviousTrack, shuffleQueue } = playerStore
 const { currentTrack, currentSecond, loop } = storeToRefs(playerStore)
+const { showNotification } = useNotificationsStore()
 
 let pulseAnimation: anime.AnimeInstance | undefined = undefined
 async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
@@ -33,6 +35,11 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
 
     pulseAnimation.seek(0)
     pulseAnimation.pause()
+}
+
+function shuffleTracksQueue() {
+    shuffleQueue()
+    showNotification('success', 'next tracks will appear in random order')
 }
 </script>
 
@@ -114,7 +121,7 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
                     color="surface-2"
                     icon="mdi-shuffle"
                     class="mr-auto ml-2"
-                    @click="shuffleQueue"
+                    @click="shuffleTracksQueue"
                 />
 
                 <VBtn

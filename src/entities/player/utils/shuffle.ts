@@ -3,7 +3,7 @@ export function shuffle<TItem>(items: TItem[]) {
 
     let currentIndex = newItems.length
     while (currentIndex != 0) {
-        let randomIndex = Math.floor(Math.random() * currentIndex)
+        const randomIndex = Math.floor(Math.random() * currentIndex)
         currentIndex--
 
         const currentItem = newItems[currentIndex]

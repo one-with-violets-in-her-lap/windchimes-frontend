@@ -1,7 +1,6 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { PlaylistTrack } from '@/entities/track/model/track'
-import type { GetTrackAudioFileUrlQuery } from '@/shared/model/graphql-generated-types/graphql'
 import { useTracksQueue } from '@/entities/player/model/tracks-queue'
 import { usePlayerVolume } from '@/entities/player/model/volume'
 

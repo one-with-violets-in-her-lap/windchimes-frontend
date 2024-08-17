@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import NavigationBar from '@/widgets/navigation-bar/ui/navigation-bar.vue'
 import PlayerToolbar from '@/widgets/player/ui/player-toolbar.vue'
+import NotificationsList from '@/widgets/notifications-list/ui/notifications-list.vue'
 import { onErrorCaptured } from 'vue'
 import { storeToRefs } from 'pinia'
 import { App } from '@capacitor/app'
@@ -37,6 +38,8 @@ App.addListener('appUrlOpen', async event => {
             </main>
 
             <PlayerToolbar />
+
+            <NotificationsList />
         </div>
     </VApp>
 </template>
