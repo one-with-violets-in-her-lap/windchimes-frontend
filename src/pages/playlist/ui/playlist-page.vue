@@ -1,51 +1,21 @@
 <script setup lang="ts">
 import LoadingContent from '@/shared/ui/loading-content.vue'
 import PlaylistTracks from '@/widgets/playlist-tracks/ui/playlist-tracks.vue'
+import { watch } from 'vue'
 import { useRoute } from 'vue-router'
-import gql from 'graphql-tag'
-import { useQuery } from '@vue/apollo-composable'
-import type {
-    GetPlaylistWithTracksQuery,
-    GetPlaylistWithTracksQueryVariables,
-} from '@/shared/model/graphql-generated-types/graphql'
+import { usePlaylistWithTracksQuery } from '@/pages/playlist/api/playlist-with-tracks-query'
+import { NotFoundError } from '@/shared/model/fatal-errors'
 
 const playlistId = useRoute().params.id.toString()
 
-// crap needs refactoring
-const { loading, error, result, restart, fetchMore } = useQuery<
-    GetPlaylistWithTracksQuery,
-    GetPlaylistWithTracksQueryVariables
->(
-    gql`
-        query GetPlaylistWithTracks($playlistId: Int!, $tracksOffset: Int) {
-            playlist(playlistId: $playlistId, tracksOffset: $tracksOffset) {
-                id
-                createdAt
-                name
-                pictureUrl
-                tracksCount
-                description
+const { loading, error, result, restart, fetchMore } =
+    usePlaylistWithTracksQuery(+playlistId)
 
-                tracks {
-                    items {
-                        id
-                        platformId
-                        name
-                        platform
-                        secondsDuration
-                        pictureUrl
-
-                        owner {
-                            name
-                        }
-                    }
-                    totalItemsCount
-                }
-            }
-        }
-    `,
-    { playlistId: +playlistId },
-)
+watch(result, () => {
+    if (!error.value && !result.value?.playlist) {
+        throw new NotFoundError('playlist not found')
+    }
+}, { once: true })
 </script>
 
 <template>

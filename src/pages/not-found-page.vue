@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { FatalError } from '@/shared/model/fatal-error'
+import { NotFoundError } from '@/shared/model/fatal-errors'
 
-throw new FatalError('not-found', 'Requested page was not found')
+throw new NotFoundError('requested page was not found')
 </script>
 
 <template>
