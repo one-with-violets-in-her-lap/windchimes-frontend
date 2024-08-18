@@ -32,7 +32,7 @@ export async function queryTrackAudioFile(
     >({
         query: audioFileQuery,
         variables: {
-            platform: Platform.Soundcloud,
+            platform: track.platform,
             platformId: track.platformId,
         },
     })
