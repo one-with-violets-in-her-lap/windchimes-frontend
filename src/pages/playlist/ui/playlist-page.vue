@@ -11,11 +11,15 @@ const playlistId = useRoute().params.id.toString()
 const { loading, error, result, restart, fetchMore } =
     usePlaylistWithTracksQuery(+playlistId)
 
-watch(result, () => {
-    if (!error.value && !result.value?.playlist) {
-        throw new NotFoundError('playlist not found')
-    }
-}, { once: true })
+watch(
+    result,
+    () => {
+        if (!error.value && !result.value?.playlist) {
+            throw new NotFoundError('playlist not found')
+        }
+    },
+    { once: true },
+)
 </script>
 
 <template>
