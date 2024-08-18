@@ -23,11 +23,12 @@ export function usePlaylistWithTracksQuery(playlistId: number) {
                     tracks {
                         items {
                             id
+                            platform
                             platformId
                             name
-                            platform
                             secondsDuration
                             pictureUrl
+                            audioFileEndpointUrl
 
                             owner {
                                 name

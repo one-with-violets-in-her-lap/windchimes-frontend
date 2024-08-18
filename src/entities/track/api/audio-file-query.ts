@@ -1,10 +1,9 @@
 import gql from 'graphql-tag'
 import { type ApolloClient } from '@apollo/client/core'
 import type { PlaylistTrack } from '@/entities/track/model/track'
-import {
-    Platform,
-    type GetTrackAudioFileUrlQuery,
-    type GetTrackAudioFileUrlQueryVariables,
+import type {
+    GetTrackAudioFileUrlQuery,
+    GetTrackAudioFileUrlQueryVariables,
 } from '@/shared/model/graphql-generated-types/graphql'
 
 export async function queryTrackAudioFile(
@@ -12,8 +11,10 @@ export async function queryTrackAudioFile(
     track: PlaylistTrack,
 ) {
     const audioFileQuery = gql`
-        query GetTrackAudioFileUrl($platform: Platform!, $platformId: String!) {
-            trackAudioFile(platform: $platform, platformId: $platformId) {
+        query GetTrackAudioFileUrl(
+            $trackToReadData: TrackAudioFileQueryInput!
+        ) {
+            trackAudioFile(trackToReadData: $trackToReadData) {
                 ... on TrackAudioFileGraphQL {
                     url
                 }
@@ -32,8 +33,11 @@ export async function queryTrackAudioFile(
     >({
         query: audioFileQuery,
         variables: {
-            platform: track.platform,
-            platformId: track.platformId,
+            trackToReadData: {
+                platform: track.platform,
+                platformId: track.platformId,
+                audioFileEndpointUrl: track.audioFileEndpointUrl,
+            },
         },
     })
 }
