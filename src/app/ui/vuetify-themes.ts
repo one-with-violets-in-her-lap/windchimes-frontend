@@ -7,7 +7,7 @@ export const teaGreenLightTheme: ThemeDefinition = {
         'background-contrast': '#1C1C1C',
         surface: '#F4F4F4',
         'surface-2': '#EDEDED',
-        'surface-3': '#E2E0E0',
+        'surface-3': '#C1C1C1',
         'surface-4': '#878787',
         primary: '#60D770',
         'primary-lighten-1': '#81E88F',
@@ -16,7 +16,7 @@ export const teaGreenLightTheme: ThemeDefinition = {
         'secondary-darken-1': '#68CC76',
         error: '#E87474',
         info: '#3ca7d8',
-        success: '#8DE599',
+        success: '#68CC76',
         warning: '#FFC960',
     },
 }
