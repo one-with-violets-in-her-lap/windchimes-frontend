@@ -10,8 +10,9 @@ import { useNotificationsStore } from '@/shared/model/notifications'
 const opened = defineModel<boolean>('opened', { required: true })
 
 const playerStore = usePlayerStore()
-const { playNextTrack, playPreviousTrack, shuffleQueue } = playerStore
-const { currentTrack, currentSecond, loop } = storeToRefs(playerStore)
+const { playNextTrack, playPreviousTrack, shuffleQueue, pause, play } =
+    playerStore
+const { currentTrack, currentSecond, loop, paused } = storeToRefs(playerStore)
 const { showNotification } = useNotificationsStore()
 
 let pulseAnimation: anime.AnimeInstance | undefined = undefined
@@ -55,7 +56,7 @@ function shuffleTracksQueue() {
                 <VBtn
                     icon
                     class="skip-button"
-                    color="surface-3"
+                    color="surface-2"
                     variant="flat"
                     @click="
                         animateSkipButtonsUntilFinished(
@@ -66,24 +67,34 @@ function shuffleTracksQueue() {
                     <VIcon icon="mdi-skip-backward" size="40px" />
                 </VBtn>
 
-                <VAvatar
-                    tile
-                    rounded
-                    variant="outlined"
-                    color="surface-3"
-                    class="current-track-picture"
-                >
-                    <VImg
-                        v-if="currentTrack?.pictureUrl"
-                        :src="currentTrack.pictureUrl"
-                    />
-                    <VIcon v-else icon="mdi-music" size="100px" />
-                </VAvatar>
+                <button class="pause-button" @click="paused ? play() : pause()">
+                    <VAvatar
+                        tile
+                        rounded
+                        variant="outlined"
+                        color="surface-3"
+                        class="current-track-picture"
+                    >
+                        <VImg
+                            v-if="currentTrack?.pictureUrl"
+                            :src="currentTrack.pictureUrl"
+                        />
+                        <VIcon v-else icon="mdi-music" size="100" />
+                    </VAvatar>
+
+                    <VOverlay
+                        contained
+                        v-model="paused"
+                        content-class="d-flex justify-center align-center w-100 h-100"
+                    >
+                        <VIcon icon="mdi-pause" color="white" size="60" />
+                    </VOverlay>
+                </button>
 
                 <VBtn
                     icon
                     class="skip-button"
-                    color="surface-3"
+                    color="surface-2"
                     variant="flat"
                     @click="
                         animateSkipButtonsUntilFinished(
@@ -164,11 +175,16 @@ function shuffleTracksQueue() {
     margin-bottom: 8px;
 }
 
-.current-track-picture {
+.pause-button {
+    position: relative;
     flex-shrink: 1;
     width: 75%;
+    max-width: 170px;
+}
+
+.current-track-picture {
+    width: 100%;
     height: auto;
     aspect-ratio: 1/1;
-    max-width: 200px;
 }
 </style>
