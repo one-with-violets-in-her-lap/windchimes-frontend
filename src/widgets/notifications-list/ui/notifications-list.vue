@@ -12,7 +12,7 @@ const { closeNotification } = notificationStore
 const icons: Record<NotificationType, string> = {
     error: 'mdi-alert',
     info: 'mdi-information',
-    success: 'mdi-check',
+    success: 'mdi-check-circle',
 }
 </script>
 
@@ -21,7 +21,7 @@ const icons: Record<NotificationType, string> = {
         <VSnackbar
             v-for="notification in notifications"
             :key="notification.id"
-            color="surface-2"
+            color="surface"
             :model-value="notification.visible"
             @update:model-value="closeNotification(notification.id)"
         >
@@ -29,6 +29,7 @@ const icons: Record<NotificationType, string> = {
                 <VIcon
                     :icon="icons[notification.type]"
                     :color="notification.type"
+                    size="26"
                     class="mr-2"
                 />
 
