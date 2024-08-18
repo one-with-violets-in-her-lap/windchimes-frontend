@@ -45,10 +45,14 @@ async function playTrack() {
     >
         <template #subtitle>
             {{ trackNumber }} ·
+
             <DurationTimestamp
                 :seconds-duration="track.secondsDuration"
                 unstyled
+                class="mr-2"
             />
+
+            <VIcon :icon="`mdi-${track.platform.toLowerCase()}`" />
         </template>
 
         <template #prepend>
@@ -61,6 +65,7 @@ async function playTrack() {
                 tile
                 rounded
             />
+
             <VBtn
                 icon="mdi-play"
                 variant="flat"

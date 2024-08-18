@@ -101,6 +101,11 @@ function shuffleTracksQueue() {
 
             <span class="text-h6 mb-1 text-center text-surface-4">
                 {{ currentTrack.owner.name }}
+                <VIcon
+                    :icon="`mdi-${currentTrack.platform.toLowerCase()}`"
+                    size="22"
+                    class="ml-1"
+                />
             </span>
 
             <TrackTimeSlider class="track-time-slider" />
