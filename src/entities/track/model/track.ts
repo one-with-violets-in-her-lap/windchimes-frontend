@@ -1,7 +1,3 @@
-import type { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
+import type { PlaylistLoadedTrackFragment } from '@/shared/model/graphql-generated-types/graphql'
 
-type PlaylistTracksList = NonNullable<
-    GetPlaylistWithTracksQuery['playlist']
->['tracks']['items']
-
-export type PlaylistTrack = NonNullable<PlaylistTracksList[0]>
+export type PlaylistTrack = PlaylistLoadedTrackFragment

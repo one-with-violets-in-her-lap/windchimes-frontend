@@ -13,7 +13,9 @@ export function usePlaylistsQuery(userId: string) {
                     createdAt
                     name
                     pictureUrl
-                    tracksCount
+                    tracksReferences {
+                        id
+                    }
                 }
             }
         `,

@@ -20,8 +20,6 @@ export function usePlayerVolume(audio: HTMLAudioElement) {
     })
 
     function updateAudioVolume() {
-        console.log(volume.value)
-
         if (isNaN(volume.value)) {
             volume.value = 0.5
         }

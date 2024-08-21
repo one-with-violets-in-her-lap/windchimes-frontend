@@ -2,25 +2,38 @@
 import { computed, ref } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
 import TrackItem from '@/features/track/ui/track-item.vue'
+import { ExcludeGraphQLError } from '@/shared/utils/exclude-graphql-error'
 import type { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
 
+const TRACKS_PORTION_SIZE = 30
+
 const props = defineProps<{
-    playlist: NonNullable<GetPlaylistWithTracksQuery['playlist']>
+    playlist: ExcludeGraphQLError<GetPlaylistWithTracksQuery['playlist']>
 }>()
 
 const emit = defineEmits<{
-    (event: 'load-more', offset: number): void
+    (event: 'load-more', tracksToLoadIds: number[]): void
 }>()
 
 const loadMoreTriggerElement = ref<HTMLElement>()
 useIntersectionObserver(loadMoreTriggerElement, entries => {
     if (entries[0].isIntersecting) {
-        emit('load-more', props.playlist.tracks.items.length)
+        const lastLoadedIndex = props.playlist.loadedTracks.length - 1
+
+        emit(
+            'load-more',
+            props.playlist.tracksReferences
+                .slice(
+                    lastLoadedIndex,
+                    lastLoadedIndex + TRACKS_PORTION_SIZE + 1,
+                )
+                .map(trackReference => trackReference.id),
+        )
     }
 })
 
 const availableTracks = computed(() => {
-    return props.playlist.tracks.items.filter(track => track !== null)
+    return props.playlist.loadedTracks.filter(track => track !== null)
 })
 </script>
 
@@ -38,8 +51,8 @@ const availableTracks = computed(() => {
 
         <VProgressCircular
             v-if="
-                props.playlist.tracks.items.length <
-                props.playlist.tracks.totalItemsCount
+                props.playlist.loadedTracks.length <
+                props.playlist.tracksReferences.length
             "
             ref="loadMoreTriggerElement"
             indeterminate

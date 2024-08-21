@@ -12,6 +12,9 @@ const config: CodegenConfig = {
             config: {
                 useTypeImports: true,
             },
+            presetConfig: {
+                fragmentMasking: false,
+            },
         },
     },
 }

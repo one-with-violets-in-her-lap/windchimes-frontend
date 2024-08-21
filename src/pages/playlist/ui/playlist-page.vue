@@ -20,6 +20,37 @@ watch(
     },
     { once: true },
 )
+
+function loadMoreTracks(ids: number[]) {
+    fetchMore({
+        variables: {
+            tracksToLoadIds: ids,
+        },
+        updateQuery(previousData, { fetchMoreResult }) {
+            if (
+                !previousData.playlist ||
+                !fetchMoreResult?.playlist ||
+                previousData.playlist.__typename !==
+                    'PlaylistWithTracksGraphQL' ||
+                fetchMoreResult.playlist.__typename !==
+                    'PlaylistWithTracksGraphQL'
+            ) {
+                return previousData
+            }
+
+            return {
+                ...previousData,
+                playlist: {
+                    ...previousData.playlist,
+                    loadedTracks: [
+                        ...(previousData.playlist.loadedTracks || []),
+                        ...(fetchMoreResult.playlist.loadedTracks || []),
+                    ],
+                },
+            }
+        },
+    })
+}
 </script>
 
 <template>
@@ -29,7 +60,12 @@ watch(
         :error="error"
         @retry="restart"
     >
-        <div v-if="result?.playlist">
+        <div
+            v-if="
+                result?.playlist &&
+                result.playlist.__typename === 'PlaylistWithTracksGraphQL'
+            "
+        >
             <VAvatar
                 v-if="result.playlist.pictureUrl"
                 :image="result.playlist.pictureUrl"
@@ -65,7 +101,7 @@ watch(
 
                 <VIcon icon="mdi-playlist-music" />
 
-                {{ result.playlist.tracksCount }} tracks
+                {{ result.playlist.tracksReferences.length }} tracks
             </div>
 
             <p v-if="result.playlist.description" class="text-subtitle-1 mb-7">
@@ -75,38 +111,7 @@ watch(
             <Transition name="scale-up" appear>
                 <PlaylistTracks
                     :playlist="result.playlist"
-                    @load-more="
-                        fetchMore({
-                            variables: {
-                                tracksOffset:
-                                    result.playlist.tracks.items.length,
-                            },
-                            updateQuery(previousData, { fetchMoreResult }) {
-                                if (
-                                    !previousData.playlist ||
-                                    !fetchMoreResult?.playlist
-                                ) {
-                                    return previousData
-                                }
-
-                                return {
-                                    ...previousData,
-                                    playlist: {
-                                        ...previousData.playlist,
-                                        tracks: {
-                                            ...previousData.playlist.tracks,
-                                            items: [
-                                                ...(previousData.playlist.tracks
-                                                    .items || []),
-                                                ...(fetchMoreResult.playlist
-                                                    .tracks.items || []),
-                                            ],
-                                        },
-                                    },
-                                }
-                            },
-                        })
-                    "
+                    @load-more="loadMoreTracks"
                 />
             </Transition>
         </div>
