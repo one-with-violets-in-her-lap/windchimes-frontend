@@ -11,9 +11,7 @@ export async function queryTrackAudioFile(
     track: PlaylistTrack,
 ) {
     const audioFileQuery = gql`
-        query GetTrackAudioFileUrl(
-            $trackToReadData: TrackAudioFileQueryInput!
-        ) {
+        query GetTrackAudioFileUrl($trackToReadData: TrackAudioFileQueryInput!) {
             trackAudioFile(trackToReadData: $trackToReadData) {
                 ... on TrackAudioFileGraphQL {
                     url

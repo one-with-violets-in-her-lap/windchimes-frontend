@@ -30,10 +30,8 @@ function loadMoreTracks(ids: number[]) {
             if (
                 !previousData.playlist ||
                 !fetchMoreResult?.playlist ||
-                previousData.playlist.__typename !==
-                    'PlaylistWithTracksGraphQL' ||
-                fetchMoreResult.playlist.__typename !==
-                    'PlaylistWithTracksGraphQL'
+                previousData.playlist.__typename !== 'PlaylistWithTracksGraphQL' ||
+                fetchMoreResult.playlist.__typename !== 'PlaylistWithTracksGraphQL'
             ) {
                 return previousData
             }
@@ -87,9 +85,7 @@ function loadMoreTracks(ids: number[]) {
                 <time
                     class="mr-3"
                     :datetime="result.playlist.createdAt"
-                    :title="
-                        new Date(result.playlist.createdAt).toLocaleString()
-                    "
+                    :title="new Date(result.playlist.createdAt).toLocaleString()"
                 >
                     {{
                         new Date(result.playlist.createdAt).toLocaleDateString(

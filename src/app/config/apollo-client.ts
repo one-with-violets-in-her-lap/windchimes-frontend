@@ -1,8 +1,4 @@
-import {
-    ApolloClient,
-    createHttpLink,
-    InMemoryCache,
-} from '@apollo/client/core'
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core'
 
 const httpLink = createHttpLink({
     uri: import.meta.env.VITE_GRAPHQL_API_URL,

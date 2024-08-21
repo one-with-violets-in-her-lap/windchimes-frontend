@@ -10,8 +10,7 @@ import { useNotificationsStore } from '@/shared/model/notifications'
 const opened = defineModel<boolean>('opened', { required: true })
 
 const playerStore = usePlayerStore()
-const { playNextTrack, playPreviousTrack, shuffleQueue, pause, play } =
-    playerStore
+const { playNextTrack, playPreviousTrack, shuffleQueue, pause, play } = playerStore
 const { currentTrack, currentSecond, loop, paused } = storeToRefs(playerStore)
 const { showNotification } = useNotificationsStore()
 
@@ -124,9 +123,7 @@ function shuffleTracksQueue() {
             <div class="mb-3 text-surface-3">
                 <DurationTimestamp :seconds-duration="currentSecond" />
                 -
-                <DurationTimestamp
-                    :seconds-duration="currentTrack.secondsDuration"
-                />
+                <DurationTimestamp :seconds-duration="currentTrack.secondsDuration" />
             </div>
 
             <div class="d-flex justify-center ga-2">

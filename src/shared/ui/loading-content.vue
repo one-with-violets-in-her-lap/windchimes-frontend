@@ -54,9 +54,7 @@ const emit = defineEmits<{
     >
         <p class="my-3"><b>Error:</b> {{ error.message }}</p>
 
-        <VBtn prepend-icon="mdi-reload" @click="emit('retry')">
-            Try again
-        </VBtn>
+        <VBtn prepend-icon="mdi-reload" @click="emit('retry')"> Try again </VBtn>
     </VAlert>
 
     <slot v-else></slot>

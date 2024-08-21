@@ -6,9 +6,7 @@ import { usePlaylistsQuery } from '../api/playlists-query'
 
 const { user } = useAuth0()
 
-const { loading, error, result, restart } = usePlaylistsQuery(
-    user.value?.sub || '',
-)
+const { loading, error, result, restart } = usePlaylistsQuery(user.value?.sub || '')
 </script>
 
 <template>

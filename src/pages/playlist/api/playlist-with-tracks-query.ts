@@ -10,33 +10,12 @@ export function usePlaylistWithTracksQuery(
     playlistId: number,
     tracksToLoadIds?: number[],
 ) {
-    return useQuery<
-        GetPlaylistWithTracksQuery,
-        GetPlaylistWithTracksQueryVariables
-    >(
+    return useQuery<GetPlaylistWithTracksQuery, GetPlaylistWithTracksQueryVariables>(
         gql`
-            fragment PlaylistLoadedTrack on TrackGraphQL {
-                id
-                platform
-                platformId
-                name
-                secondsDuration
-                pictureUrl
-                audioFileEndpointUrl
+            ${PLAYLIST_LOADED_TRACK_FRAGMENT}
 
-                owner {
-                    name
-                }
-            }
-
-            query GetPlaylistWithTracks(
-                $playlistId: Int!
-                $tracksToLoadIds: [Int!]
-            ) {
-                playlist(
-                    playlistId: $playlistId
-                    tracksToLoadIds: $tracksToLoadIds
-                ) {
+            query GetPlaylistWithTracks($playlistId: Int!, $tracksToLoadIds: [Int!]) {
+                playlist(playlistId: $playlistId, tracksToLoadIds: $tracksToLoadIds) {
                     ... on PlaylistWithTracksGraphQL {
                         id
                         createdAt

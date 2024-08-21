@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import {
-    useNotificationsStore,
-    NotificationType,
-} from '@/shared/model/notifications'
+import { useNotificationsStore, NotificationType } from '@/shared/model/notifications'
 
 const notificationStore = useNotificationsStore()
 const { notifications } = storeToRefs(notificationStore)

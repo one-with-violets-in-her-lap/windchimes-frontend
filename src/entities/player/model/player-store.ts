@@ -52,6 +52,7 @@ export const usePlayerStore = defineStore('player', () => {
      * resumes the current track or plays a new one if `track` param is specified
      */
     function play(track?: TrackWithAudioFileUrl) {
+        console.log(track)
         if (track?.trackAudioFileUrl) {
             audio.src = track.trackAudioFileUrl
             currentTrackId.value = track.id

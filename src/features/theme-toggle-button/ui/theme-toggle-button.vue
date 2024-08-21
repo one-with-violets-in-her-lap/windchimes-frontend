@@ -14,10 +14,7 @@ function changeTheme(newTheme: string) {
         :model-value="theme.global.name.value"
         @update:model-value="changeTheme"
     >
-        <v-btn
-            icon="mdi-white-balance-sunny"
-            value="teaGreenLightTheme"
-        ></v-btn>
+        <v-btn icon="mdi-white-balance-sunny" value="teaGreenLightTheme"></v-btn>
         <v-btn icon="mdi-weather-night" value="teaGreenDarkTheme"></v-btn>
     </v-btn-toggle>
 </template>

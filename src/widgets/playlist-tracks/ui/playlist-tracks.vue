@@ -3,7 +3,11 @@ import { computed, ref } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
 import TrackItem from '@/features/track/ui/track-item.vue'
 import { ExcludeGraphQLError } from '@/shared/utils/exclude-graphql-error'
-import type { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
+import type {
+    GetPlaylistWithTracksQuery,
+    TrackReferenceGraphQl,
+} from '@/shared/model/graphql-generated-types/graphql'
+import { PlaylistTrack } from '@/entities/track/model/track'
 
 const TRACKS_PORTION_SIZE = 30
 
@@ -23,10 +27,7 @@ useIntersectionObserver(loadMoreTriggerElement, entries => {
         emit(
             'load-more',
             props.playlist.tracksReferences
-                .slice(
-                    lastLoadedIndex,
-                    lastLoadedIndex + TRACKS_PORTION_SIZE + 1,
-                )
+                .slice(lastLoadedIndex, lastLoadedIndex + TRACKS_PORTION_SIZE + 1)
                 .map(trackReference => trackReference.id),
         )
     }
@@ -34,6 +35,23 @@ useIntersectionObserver(loadMoreTriggerElement, entries => {
 
 const availableTracks = computed(() => {
     return props.playlist.loadedTracks.filter(track => track !== null)
+})
+
+const allPlaylistTracks = computed(() => {
+    const tracksReferences: (TrackReferenceGraphQl | PlaylistTrack)[] = [
+        ...props.playlist.tracksReferences,
+    ]
+
+    availableTracks.value.forEach(loadedTrack => {
+        const matchingTrackReferenceIndex = tracksReferences.findIndex(
+            trackReference => trackReference.id === loadedTrack.id,
+        )
+        if (matchingTrackReferenceIndex !== -1) {
+            tracksReferences[matchingTrackReferenceIndex] = loadedTrack
+        }
+    })
+
+    return tracksReferences
 })
 </script>
 
@@ -44,7 +62,7 @@ const availableTracks = computed(() => {
                 v-for="(track, index) in availableTracks"
                 :key="track.id"
                 :track="track"
-                :all-playlist-tracks="availableTracks"
+                :all-playlist-tracks="allPlaylistTracks"
                 :track-number="index + 1"
             />
         </VList>
