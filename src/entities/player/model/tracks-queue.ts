@@ -121,13 +121,15 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
     }
 
     function shuffleQueue() {
-        let partToShuffleStartIndex = tracksQueue.value.findIndex(
+        let currentTrackIndex = tracksQueue.value.findIndex(
             track => track.id === currentTrackId.value,
         )
 
-        if (partToShuffleStartIndex === -1) {
-            partToShuffleStartIndex = 0
+        if (currentTrackIndex === -1) {
+            currentTrackIndex = 0
         }
+
+        const partToShuffleStartIndex = currentTrackIndex + 1
 
         const shuffledQueuePart = shuffle<TrackReferenceGraphQl | PlaylistTrack>(
             tracksQueue.value.slice(partToShuffleStartIndex),
