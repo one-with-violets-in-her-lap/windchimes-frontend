@@ -1,24 +1,43 @@
 import gql from 'graphql-tag'
 import { useQuery } from '@vue/apollo-composable'
-import type { Playlist } from '@/entities/playlist/model/playlist'
+import {
+    GetPlaylistsQueryVariables,
+    GetPlaylistsQuery,
+} from '@/shared/model/graphql-generated-types/graphql'
 
-export function usePlaylistsQuery(userId: string) {
-    return useQuery<{
-        playlists: Playlist[]
-    }>(
+
+export const PLAYLISTS_LIST_ITEM_FRAGMENT = gql`
+    fragment PlaylistsListItemFragment on PlaylistGraphQL {
+        id
+        createdAt
+        name
+        pictureUrl
+        tracksReferences {
+            id
+        }
+    }
+`
+
+export function usePlaylistsQuery(ownerAuth0Id: string) {
+    return useQuery<GetPlaylistsQuery, GetPlaylistsQueryVariables>(
         gql`
-            query GetPlaylists($userId: String!) {
-                playlists(userId: $userId) {
-                    id
-                    createdAt
-                    name
-                    pictureUrl
-                    tracksReferences {
-                        id
+            ${PLAYLISTS_LIST_ITEM_FRAGMENT}
+
+            query GetPlaylists($ownerAuth0Id: String!) {
+                playlists(ownerAuth0Id: $ownerAuth0Id) {
+                    ... on ErrorGraphQL {
+                        name
+                        explanation
+                    }
+
+                    ... on PlaylistGraphQLListResponseWrapperGraphQL {
+                        items {
+                            ...PlaylistsListItemFragment
+                        }
                     }
                 }
             }
         `,
-        { userId },
+        { ownerAuth0Id: ownerAuth0Id },
     )
 }

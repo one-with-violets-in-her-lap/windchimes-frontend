@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Playlist } from '@/entities/playlist/model/playlist'
+import { PlaylistsListItemFragmentFragment } from '@/shared/model/graphql-generated-types/graphql';
 
 const props = defineProps<{
-    playlist: Playlist
+    playlist: PlaylistsListItemFragmentFragment
 }>()
 
 const formattedCreationDate = computed(() =>
