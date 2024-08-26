@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useFatalErrorStore } from '@/app/model/fatal-error-store'
 import HomePage from '@/pages/home-page.vue'
 import AuthCallbackPage from '@/pages/auth-callback-page.vue'
 import NotFoundPage from '@/pages/not-found-page.vue'
@@ -31,7 +32,7 @@ const router = createRouter({
             name: 'not-found-page',
             component: NotFoundPage,
         },
-    ],
+    ]
 })
 
 export default router

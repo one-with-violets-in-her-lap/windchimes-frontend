@@ -25,7 +25,12 @@ const playlistsQueryError = computed(() => {
             @retry="restart"
         >
             <Transition name="slide-left" appear>
-                <div v-if="result?.playlists.__typename === 'PlaylistGraphQLListResponseWrapperGraphQL'">
+                <div
+                    v-if="
+                        result?.playlists.__typename ===
+                        'PlaylistGraphQLListResponseWrapperGraphQL'
+                    "
+                >
                     <PlaylistCard
                         v-for="playlist in result.playlists.items"
                         :key="playlist.id"
@@ -35,6 +40,8 @@ const playlistsQueryError = computed(() => {
             </Transition>
         </LoadingContent>
     </div>
+
+    <p v-else>No public playlists feed for now. Log in to view your saved music</p>
 </template>
 
 <style scoped></style>

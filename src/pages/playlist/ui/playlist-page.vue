@@ -1,25 +1,26 @@
 <script setup lang="ts">
 import LoadingContent from '@/shared/ui/loading-content.vue'
 import PlaylistTracks from '@/widgets/playlist-tracks/ui/playlist-tracks.vue'
-import { watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useFatalErrorStore } from '@/app/model/fatal-error-store'
 import { usePlaylistWithTracksQuery } from '@/pages/playlist/api/playlist-with-tracks-query'
 import { NotFoundError } from '@/shared/model/fatal-errors'
 
 const playlistId = useRoute().params.id.toString()
 
-const { loading, error, result, restart, fetchMore } =
-    usePlaylistWithTracksQuery(+playlistId)
+const { handleError } = useFatalErrorStore()
 
-watch(
-    result,
-    () => {
-        if (!error.value && !result.value?.playlist) {
-            throw new NotFoundError('playlist not found')
-        }
-    },
-    { once: true },
-)
+const { loading, error, result, restart, fetchMore, onResult } =
+    usePlaylistWithTracksQuery(+playlistId)
+onResult(() => {
+    if (!result.value) {
+        return
+    }
+
+    if (result.value.playlist?.__typename !== 'PlaylistWithTracksGraphQL') {
+        handleError(new NotFoundError('Playlist not found'))
+    }
+})
 
 function loadMoreTracks(ids: number[]) {
     fetchMore({

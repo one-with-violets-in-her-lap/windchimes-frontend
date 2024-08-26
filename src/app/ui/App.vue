@@ -6,12 +6,11 @@ import { onErrorCaptured } from 'vue'
 import { storeToRefs } from 'pinia'
 import { App } from '@capacitor/app'
 import { useAuth0 } from '@auth0/auth0-vue'
-import { useFatalErrorStore } from '@/app/model/app-error-store'
+import { useFatalErrorStore } from '@/app/model/fatal-error-store'
 
 const fatalErrorStore = useFatalErrorStore()
 const { handleError } = fatalErrorStore
 const { error } = storeToRefs(fatalErrorStore)
-
 onErrorCaptured(handleError)
 
 const { handleRedirectCallback, isLoading } = useAuth0()

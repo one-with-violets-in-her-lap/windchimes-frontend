@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { readonly, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { FatalError } from '@/shared/model/fatal-errors'
 
@@ -13,5 +13,9 @@ export const useFatalErrorStore = defineStore('authDialogOpened', () => {
         }
     }
 
-    return { error, handleError }
+    function clearError() {
+        error.value = undefined
+    }
+
+    return { error: readonly(error), handleError, clearError }
 })

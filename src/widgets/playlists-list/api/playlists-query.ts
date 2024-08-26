@@ -5,7 +5,6 @@ import {
     GetPlaylistsQuery,
 } from '@/shared/model/graphql-generated-types/graphql'
 
-
 export const PLAYLISTS_LIST_ITEM_FRAGMENT = gql`
     fragment PlaylistsListItemFragment on PlaylistGraphQL {
         id
