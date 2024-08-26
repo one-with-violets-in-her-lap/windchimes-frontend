@@ -30,7 +30,9 @@ const icons: Record<NotificationType, string> = {
                     class="mr-2"
                 />
 
-                {{ notification.message }}
+                <p>
+                    {{ notification.message }}
+                </p>
             </div>
 
             <template #actions>

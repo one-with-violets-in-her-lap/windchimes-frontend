@@ -32,7 +32,7 @@ const router = createRouter({
             name: 'not-found-page',
             component: NotFoundPage,
         },
-    ]
+    ],
 })
 
 export default router

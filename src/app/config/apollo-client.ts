@@ -17,8 +17,6 @@ const authLink = new ApolloLink((operation, forward) => {
         ) || 'null',
     )
 
-    console.log(idTokenData)
-
     if (idTokenData?.id_token) {
         operation.setContext({
             headers: {
