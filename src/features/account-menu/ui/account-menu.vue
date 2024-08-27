@@ -8,21 +8,25 @@ const { requestLogIn, requestLogout } = useCurrentAccountActions()
 </script>
 
 <template>
-    <VMenu v-if="user">
+    <VMenu v-if="user" :close-on-content-click="false">
         <template #activator="{ props }">
             <button v-bind="props">
                 <VAvatar
                     :image="user.picture"
                     color="surface-darken-1"
                     icon="mdi-user"
-                    class="mr-2"
+                    class="mr-1"
                 />
+
                 {{ user.nickname }}
+
                 <VIcon icon="mdi-chevron-down" />
             </button>
         </template>
 
         <VList>
+            <slot name="append-items"></slot>
+
             <VListItem>
                 <VBtn flat @click="requestLogout" class="text-capitalize">
                     Logout
