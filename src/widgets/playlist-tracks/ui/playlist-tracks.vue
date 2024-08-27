@@ -27,7 +27,7 @@ useIntersectionObserver(loadMoreTriggerElement, entries => {
         emit(
             'load-more',
             props.playlist.tracksReferences
-                .slice(lastLoadedIndex, lastLoadedIndex + TRACKS_PORTION_SIZE + 1)
+                .slice(lastLoadedIndex + 1, lastLoadedIndex + TRACKS_PORTION_SIZE + 1)
                 .map(trackReference => trackReference.id),
         )
     }
@@ -37,6 +37,10 @@ const availableTracks = computed(() => {
     return props.playlist.loadedTracks.filter(track => track !== null)
 })
 
+/**
+ * all playlist tracks include tracks that are not loaded via virtual scroll,
+ * these are tracks references that have only track's id and platform
+ */
 const allPlaylistTracks = computed(() => {
     const tracksReferences: (TrackReferenceGraphQl | PlaylistTrack)[] = [
         ...props.playlist.tracksReferences,
