@@ -45,7 +45,7 @@ const formattedCreationDate = computed(() =>
                     <VAvatar
                         :image="playlist.pictureUrl || undefined"
                         icon="mdi-playlist-music"
-                        color="surface-3"
+                        color="surface-2"
                         rounded
                         tile
                         size="70px"
