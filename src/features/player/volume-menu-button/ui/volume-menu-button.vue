@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { usePlayerStore } from '@/entities/player/model/player-store'
+import { usePlayerStore } from '@/features/player/model/player-store'
 
 const { volume } = storeToRefs(usePlayerStore())
 </script>

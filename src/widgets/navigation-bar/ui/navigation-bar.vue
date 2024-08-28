@@ -9,7 +9,11 @@ const route = useRoute()
 
 <template>
     <VAppBar class="position-static border-b-thin" elevation="0">
-        <VBtn v-if="route.name !== 'home'" icon="mdi-arrow-left" @click="router.back" />
+        <VBtn
+            v-if="route.name !== 'home'"
+            icon="mdi-arrow-left"
+            @click="router.back"
+        />
 
         <template #append>
             <nav class="gc-3 d-flex items-center">
@@ -27,6 +31,4 @@ const route = useRoute()
     </VAppBar>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

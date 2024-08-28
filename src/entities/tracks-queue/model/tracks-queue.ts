@@ -1,15 +1,15 @@
 import { computed, ref } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 import { useApolloClient } from '@vue/apollo-composable'
-import type { PlaylistTrack } from '@/entities/track/model/track'
 import {
     usePlayerStore, // for jsdoc
     type TrackWithAudioFileUrl,
-} from '@/entities/player/model/player-store'
+} from '@/features/player/model/player-store'
+import type { PlaylistTrack } from '@/entities/track/model/track'
 import { queryTrackAudioFile } from '@/entities/track/api/audio-file-query'
-import { shuffle } from '@/entities/player/utils/shuffle'
-import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 import { queryLoadedTrack } from '@/entities/track/api/track-query'
+import { shuffleNextQueueTracks } from '@/entities/tracks-queue/utils/shuffle-next-queue-tracks'
+import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 
 /**
  * couldn't play next/previous track because the end/beginning of
@@ -25,6 +25,7 @@ export class TracksQueueNavigationError extends Error {}
  */
 export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => void) {
     const { client: apolloClient } = useApolloClient()
+
     const tracksQueue = ref<(PlaylistTrack | TrackReferenceGraphQl)[]>([])
 
     const loop = useLocalStorage('loop', false)
@@ -121,23 +122,10 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
     }
 
     function shuffleQueue() {
-        let currentTrackIndex = tracksQueue.value.findIndex(
-            track => track.id === currentTrackId.value,
+        tracksQueue.value = shuffleNextQueueTracks(
+            tracksQueue.value,
+            currentTrackId.value,
         )
-
-        if (currentTrackIndex === -1) {
-            currentTrackIndex = 0
-        }
-
-        const partToShuffleStartIndex = currentTrackIndex + 1
-
-        const shuffledQueuePart = shuffle<TrackReferenceGraphQl | PlaylistTrack>(
-            tracksQueue.value.slice(partToShuffleStartIndex),
-        )
-        shuffledQueuePart.forEach((track, shuffledQueueTrackIndex) => {
-            tracksQueue.value[partToShuffleStartIndex + shuffledQueueTrackIndex] =
-                track
-        })
     }
 
     return {

@@ -4,7 +4,7 @@ import TrackTimeSlider from '@/features/player/track-time-slider/ui/track-time-s
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { usePlayerStore } from '@/entities/player/model/player-store'
+import { usePlayerStore } from '@/features/player/model/player-store'
 
 const playerStore = usePlayerStore()
 const { currentTrack, paused, currentSecond } = storeToRefs(playerStore)

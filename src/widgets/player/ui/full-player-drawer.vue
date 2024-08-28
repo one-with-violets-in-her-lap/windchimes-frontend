@@ -4,7 +4,7 @@ import VolumeMenuButton from '@/features/player/volume-menu-button/ui/volume-men
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import { storeToRefs } from 'pinia'
 import anime from 'animejs'
-import { usePlayerStore } from '@/entities/player/model/player-store'
+import { usePlayerStore } from '@/features/player/model/player-store'
 import { useNotificationsStore } from '@/shared/model/notifications'
 
 const opened = defineModel<boolean>('opened', { required: true })

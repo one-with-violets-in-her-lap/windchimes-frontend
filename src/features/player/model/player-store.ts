@@ -1,8 +1,8 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { PlaylistTrack } from '@/entities/track/model/track'
-import { useTracksQueue } from '@/entities/player/model/tracks-queue'
-import { usePlayerVolume } from '@/entities/player/model/volume'
+import { useTracksQueue } from '@/entities/tracks-queue/model/tracks-queue'
+import { usePlayerVolume } from '@/features/player/model/volume'
 
 export type TrackWithAudioFileUrl = Omit<
     PlaylistTrack & { trackAudioFileUrl: string },

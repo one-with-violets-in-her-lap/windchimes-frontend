@@ -8,9 +8,7 @@ import { usePlaylistsQuery } from '@/widgets/playlists-list/api/playlists-query'
 
 const { user } = useAuth0()
 
-const { loading, error, result, restart } = usePlaylistsQuery(
-    user.value?.sub || '',
-)
+const { loading, error, result, restart } = usePlaylistsQuery(user.value?.sub || '')
 const playlistsQueryError = computed(() => {
     if (result.value?.playlists.__typename === 'ErrorGraphQL') {
         return result.value.playlists

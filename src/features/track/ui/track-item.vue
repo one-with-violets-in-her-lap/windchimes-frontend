@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable'
 import { queryTrackAudioFile } from '@/entities/track/api/audio-file-query'
 import type { PlaylistTrack } from '@/entities/track/model/track'
-import { usePlayerStore } from '@/entities/player/model/player-store'
+import { usePlayerStore } from '@/features/player/model/player-store'
 import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 
 const props = defineProps<{

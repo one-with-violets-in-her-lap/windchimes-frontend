@@ -1,6 +1,6 @@
 import { onMounted, watch } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
-import { usePlayerStore } from '@/entities/player/model/player-store' // for jsdoc
+import { usePlayerStore } from '@/features/player/model/player-store' // for jsdoc
 
 /**
  * creates reactive volume state for html audio element.
