@@ -8,7 +8,7 @@ const route = useRoute()
 </script>
 
 <template>
-    <VAppBar class="position-static border-b-thin" elevation="0">
+    <VAppBar class="z-index-default position-static border-b-thin" elevation="0">
         <VBtn
             v-if="route.name !== 'home'"
             icon="mdi-arrow-left"
@@ -31,4 +31,8 @@ const route = useRoute()
     </VAppBar>
 </template>
 
-<style scoped></style>
+<style scoped>
+.z-index-default {
+    z-index: 0 !important;
+}
+</style>
