@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
+import { useTheme } from 'vuetify'
 import SiriWave from 'siriwave'
 
 const props = defineProps<{
     audio?: HTMLAudioElement
 }>()
 
+const theme = useTheme()
+
 const waveformContainer = ref<HTMLDivElement>()
 let waveform: SiriWave | undefined = undefined
-let waveformAnimatingIntervalId: number | undefined = 0
 
 const audioContext = new AudioContext()
 
@@ -27,13 +29,7 @@ onMounted(() => {
     analyser.connect(audioContext.destination)
     const byteTimeDomainData = new Uint8Array(analyser.frequencyBinCount)
 
-    waveform = new SiriWave({
-        container: waveformContainer.value,
-        width: waveformContainer.value.clientWidth,
-        color: '#FFFFFF',
-        height: 200,
-        autostart: true,
-    })
+    initializeWaveform()
 
     function updateWaveformAmplitude() {
         if (waveform) {
@@ -49,6 +45,30 @@ onMounted(() => {
 
     requestAnimationFrame(updateWaveformAmplitude)
 })
+watch(theme.current, initializeWaveform)
+
+function initializeWaveform() {
+    if (waveformContainer.value) {
+        if (waveform) {
+            waveform.dispose()
+        }
+
+        waveform = new SiriWave({
+            container: waveformContainer.value,
+            width: waveformContainer.value.clientWidth,
+            color: theme.current.value.colors.background,
+            height: 200,
+            autostart: true,
+            curveDefinition: [
+                { attenuation: -2, lineWidth: 2, opacity: 0.1 },
+                { attenuation: -6, lineWidth: 2, opacity: 0.2 },
+                { attenuation: 4, lineWidth: 2, opacity: 0.4 },
+                { attenuation: 2, lineWidth: 2, opacity: 0.6 },
+                { attenuation: 1, lineWidth: 2.5, opacity: 1 },
+            ]
+        })
+    }
+}
 </script>
 
 <template>
