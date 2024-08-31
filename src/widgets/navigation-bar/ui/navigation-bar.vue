@@ -16,7 +16,7 @@ const route = useRoute()
         />
 
         <template #append>
-            <nav class="gc-3 d-flex items-center">
+            <nav class="gc-3 d-flex align-center">
                 <AccountMenu>
                     <template #append-items>
                         <VListItem class="d-sm-none">
