@@ -16,12 +16,9 @@ const fullPlayerOpened = ref(false)
 <template>
     <div>
         <Transition name="slide-up">
-            <VToolbar
+            <div
                 v-if="currentTrack && !fullPlayerOpened"
-                floating
-                elevation="5"
-                height="72"
-                class="player-controls-bar"
+                class="elevation-6 player-controls-bar"
                 @click="fullPlayerOpened = true"
             >
                 <VBtn
@@ -46,7 +43,7 @@ const fullPlayerOpened = ref(false)
 
                     <TrackTimeSlider @click.stop />
                 </div>
-            </VToolbar>
+            </div>
         </Transition>
 
         <FullPlayerDrawer v-model:opened="fullPlayerOpened" />
@@ -58,8 +55,9 @@ const fullPlayerOpened = ref(false)
     position: fixed;
     bottom: 0px;
     left: 0px;
+    width: 100%;
+    padding: 7px;
 
-    padding: 0px 7px;
     display: flex;
     align-items: center;
 
