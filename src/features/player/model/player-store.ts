@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { readonly, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { PlaylistTrack } from '@/entities/track/model/track'
 import { useTracksQueue } from '@/entities/tracks-queue/model/tracks-queue'
@@ -21,10 +21,10 @@ export const usePlayerStore = defineStore('player', () => {
     } = useTracksQueue(play)
 
     const paused = ref(false)
-
     const currentSecond = ref(0)
 
     const audio = new Audio()
+    audio.crossOrigin = 'anonymous'
 
     const { volume } = usePlayerVolume(audio)
 
@@ -53,6 +53,7 @@ export const usePlayerStore = defineStore('player', () => {
      */
     function play(track?: TrackWithAudioFileUrl) {
         console.log(track)
+
         if (track?.trackAudioFileUrl) {
             audio.src = track.trackAudioFileUrl
             currentTrackId.value = track.id
@@ -71,13 +72,10 @@ export const usePlayerStore = defineStore('player', () => {
         tracksQueue,
         volume,
         loop,
+        paused: readonly(paused),
+        currentSecond: readonly(currentSecond),
 
-        /*
-            returns computed properties so paused/track time state can only be
-            changed with provided helper functions (`pause`, `rewind`)
-        */
-        paused: computed(() => paused.value),
-        currentSecond: computed(() => currentSecond.value),
+        audio,
 
         pause,
         play,

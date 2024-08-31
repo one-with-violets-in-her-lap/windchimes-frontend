@@ -2,15 +2,18 @@
 import TrackTimeSlider from '@/features/player/track-time-slider/ui/track-time-slider.vue'
 import VolumeMenuButton from '@/features/player/volume-menu-button/ui/volume-menu-button.vue'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
+
 import { storeToRefs } from 'pinia'
 import anime from 'animejs'
 import { usePlayerStore } from '@/features/player/model/player-store'
 import { useNotificationsStore } from '@/shared/model/notifications'
+import CurrentTrackThumbnail from '@/entities/current-track-thumbnail/ui/current-track-thumbnail.vue'
 
 const opened = defineModel<boolean>('opened', { required: true })
 
 const playerStore = usePlayerStore()
-const { playNextTrack, playPreviousTrack, shuffleQueue, pause, play } = playerStore
+const { playNextTrack, playPreviousTrack, shuffleQueue, pause, play, audio } =
+    playerStore
 const { currentTrack, currentSecond, loop, paused } = storeToRefs(playerStore)
 const { showNotification } = useNotificationsStore()
 
@@ -66,29 +69,12 @@ function shuffleTracksQueue() {
                     <VIcon icon="mdi-skip-backward" size="40px" />
                 </VBtn>
 
-                <button class="pause-button" @click="paused ? play() : pause()">
-                    <VAvatar
-                        tile
-                        rounded
-                        variant="outlined"
-                        color="surface-3"
-                        class="current-track-picture"
-                    >
-                        <VImg
-                            v-if="currentTrack?.pictureUrl"
-                            :src="currentTrack.pictureUrl"
-                        />
-                        <VIcon v-else icon="mdi-music" size="100" />
-                    </VAvatar>
-
-                    <VOverlay
-                        contained
-                        v-model="paused"
-                        content-class="d-flex justify-center align-center w-100 h-100"
-                    >
-                        <VIcon icon="mdi-pause" color="white" size="60" />
-                    </VOverlay>
-                </button>
+                <CurrentTrackThumbnail
+                    :paused="paused"
+                    :audio="audio"
+                    :current-track="currentTrack"
+                    @click="paused ? play() : pause()"
+                />
 
                 <VBtn
                     icon
@@ -170,18 +156,5 @@ function shuffleTracksQueue() {
 .track-time-slider {
     width: 90% !important;
     margin-bottom: 8px;
-}
-
-.pause-button {
-    position: relative;
-    flex-shrink: 1;
-    width: 75%;
-    max-width: 170px;
-}
-
-.current-track-picture {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1/1;
 }
 </style>
