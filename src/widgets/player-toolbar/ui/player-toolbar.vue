@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FullPlayerDrawer from '@/widgets/player/ui/full-player-drawer.vue'
+import FullPlayerDrawer from '@/widgets/player-toolbar/ui/full-player-drawer.vue'
 import TrackTimeSlider from '@/features/player/track-time-slider/ui/track-time-slider.vue'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import { ref } from 'vue'
