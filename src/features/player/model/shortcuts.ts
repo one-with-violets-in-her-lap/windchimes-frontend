@@ -7,7 +7,7 @@ export function usePlayerShortcuts() {
     const { pause, play, playNextTrack, playPreviousTrack } = playerStore
     const { paused } = storeToRefs(playerStore)
 
-    onKeyStroke(' ', (event) => {
+    onKeyStroke(' ', event => {
         paused.value ? play() : pause()
         event.preventDefault()
     })
@@ -16,11 +16,10 @@ export function usePlayerShortcuts() {
         if (!event.shiftKey) {
             return
         }
-        
+
         try {
             await playNextTrack()
-        }
-        catch(error) {
+        } catch (error) {
             console.error(error)
         }
     })
@@ -29,11 +28,10 @@ export function usePlayerShortcuts() {
         if (!event.shiftKey) {
             return
         }
-        
+
         try {
             await playPreviousTrack()
-        }
-        catch(error) {
+        } catch (error) {
             console.error(error)
         }
     })

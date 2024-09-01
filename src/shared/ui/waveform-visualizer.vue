@@ -65,7 +65,7 @@ function initializeWaveform() {
                 { attenuation: 4, lineWidth: 2, opacity: 0.4 },
                 { attenuation: 2, lineWidth: 2, opacity: 0.6 },
                 { attenuation: 1, lineWidth: 2.5, opacity: 1 },
-            ]
+            ],
         })
     }
 }

@@ -1,8 +1,10 @@
-import { readonly, ref } from 'vue'
+import { toRef } from 'vue'
 import { defineStore } from 'pinia'
+import { MediaSession } from '@jofr/capacitor-media-session'
+import { usePlayerVolume } from '@/features/player/model/volume'
 import type { PlaylistTrack } from '@/entities/track/model/track'
 import { useTracksQueue } from '@/entities/tracks-queue/model/tracks-queue'
-import { usePlayerVolume } from '@/features/player/model/volume'
+import { useAudio } from '@/shared/model/reactive-audio'
 
 export type TrackWithAudioFileUrl = Omit<
     PlaylistTrack & { trackAudioFileUrl: string },
@@ -20,33 +22,28 @@ export const usePlayerStore = defineStore('player', () => {
         shuffleQueue,
     } = useTracksQueue(play)
 
-    const paused = ref(false)
-    const currentSecond = ref(0)
+    const { audio, currentSecond, pauseAudio, paused, playAudio, rewind } = useAudio(
+        toRef(() => currentTrack.value?.secondsDuration),
+        {
+            async playNext() {
+                try {
+                    await playNextTrack()
+                } catch (error) {
+                    console.error(error)
+                }
+            },
 
-    const audio = new Audio()
-    audio.crossOrigin = 'anonymous'
+            async playPrevious() {
+                try {
+                    await playPreviousTrack()
+                } catch (error) {
+                    console.error(error)
+                }
+            },
+        },
+    )
 
     const { volume } = usePlayerVolume(audio)
-
-    audio.addEventListener('pause', () => (paused.value = true))
-    audio.addEventListener('play', () => (paused.value = false))
-    audio.addEventListener(
-        'timeupdate',
-        () => (currentSecond.value = audio.currentTime),
-    )
-    audio.addEventListener('ended', async () => {
-        try {
-            await playNextTrack()
-        } catch (error) {
-            console.error(error)
-        }
-    })
-
-    audio.volume = 0.1
-
-    function pause() {
-        audio.pause()
-    }
 
     /**
      * resumes the current track or plays a new one if `track` param is specified
@@ -57,14 +54,14 @@ export const usePlayerStore = defineStore('player', () => {
         if (track?.trackAudioFileUrl) {
             audio.src = track.trackAudioFileUrl
             currentTrackId.value = track.id
+            MediaSession.setMetadata({
+                title: currentTrack.value?.name,
+                artist: currentTrack.value?.owner.name,
+                artwork: [{ src: currentTrack.value?.pictureUrl || '' }],
+            })
         }
 
-        audio.play()
-    }
-
-    function rewind(secondsToRewindTo: number) {
-        audio.currentTime = secondsToRewindTo
-        play()
+        playAudio()
     }
 
     return {
@@ -72,12 +69,12 @@ export const usePlayerStore = defineStore('player', () => {
         tracksQueue,
         volume,
         loop,
-        paused: readonly(paused),
-        currentSecond: readonly(currentSecond),
+        paused,
+        currentSecond,
 
         audio,
 
-        pause,
+        pause: pauseAudio,
         play,
         rewind,
         playNextTrack,
