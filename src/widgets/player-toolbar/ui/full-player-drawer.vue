@@ -3,6 +3,7 @@ import TrackTimeSlider from '@/features/player/track-time-slider/ui/track-time-s
 import VolumeMenuButton from '@/features/player/volume-menu-button/ui/volume-menu-button.vue'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 
+import { useDisplay } from 'vuetify'
 import { storeToRefs } from 'pinia'
 import anime from 'animejs'
 import { usePlayerStore } from '@/features/player/model/player-store'
@@ -16,6 +17,8 @@ const { playNextTrack, playPreviousTrack, shuffleQueue, pause, play, audio } =
     playerStore
 const { currentTrack, currentSecond, loop, paused } = storeToRefs(playerStore)
 const { showNotification } = useNotificationsStore()
+
+const { mobile } = useDisplay()
 
 let pulseAnimation: anime.AnimeInstance | undefined = undefined
 async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
@@ -49,9 +52,12 @@ function shuffleTracksQueue() {
 <template>
     <VNavigationDrawer
         v-model="opened"
-        location="bottom"
+        width="500"
+        temporary
         rounded
         class="player-drawer"
+        :location="mobile ? 'bottom' : 'left'"
+        :class="{ 'player-side-drawer': !mobile }"
     >
         <div v-if="currentTrack" class="drawer-content-wrapper">
             <div class="d-flex align-center gc-3 w-100 justify-center mb-2">
@@ -138,9 +144,13 @@ function shuffleTracksQueue() {
 <style scoped>
 .player-drawer {
     padding: 20px;
-    background-color: rgba(var(--v-theme-background), 0.85);
+    background-color: rgba(var(--v-theme-background), 0.8);
     backdrop-filter: blur(3px);
-    height: 78% !important;
+}
+
+.player-side-drawer {
+    height: 100% !important;
+    top: 0px !important;
 }
 
 .drawer-content-wrapper {
