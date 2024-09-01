@@ -11,7 +11,11 @@ const router = createRouter({
             path: '/',
             name: 'home',
             component: HomePage,
-            alias: '/home',
+        },
+        {
+            path: '/home',
+            name: 'home-alternative',
+            redirect: '/',
         },
 
         {
