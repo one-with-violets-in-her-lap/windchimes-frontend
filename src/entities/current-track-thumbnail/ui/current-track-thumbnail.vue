@@ -52,4 +52,9 @@ defineProps<{
     height: auto;
     aspect-ratio: 1/1;
 }
+
+.scale-up-leave-active,
+.scale-up-enter-active {
+    position: absolute;
+}
 </style>

@@ -28,8 +28,3 @@
 .scale-up-leave-to {
     transform: scale(0);
 }
-
-.scale-up-leave-active,
-.scale-up-enter-active {
-    position: absolute;
-}
