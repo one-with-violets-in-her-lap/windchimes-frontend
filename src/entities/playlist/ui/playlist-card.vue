@@ -21,7 +21,7 @@ const formattedCreationDate = computed(() =>
             <VCard
                 v-bind="props"
                 variant="flat"
-                :color="isHovering ? 'primary-lighten-1' : undefined"
+                :color="isHovering ? 'surface-2' : undefined"
                 :to="{ name: 'playlist', params: { id: playlist.id } }"
                 class="mb-4"
             >
