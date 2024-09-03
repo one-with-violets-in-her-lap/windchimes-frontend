@@ -11,12 +11,7 @@ import { queryLoadedTrack } from '@/entities/track/api/track-query'
 import { shuffleNextQueueTracks } from '@/entities/tracks-queue/utils/shuffle-next-queue-tracks'
 import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 
-/**
- * couldn't play next/previous track because the end/beginning of
- * the tracks queue (playlist) has been reached or track audio file url can't be
- * obtained
- */
-export class TracksQueueNavigationError extends Error {}
+export class TrackLoadError extends Error {}
 
 /**
  * creates reactive tracks queue state, with play next/previous
@@ -81,9 +76,7 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
         let track = tracksQueue.value[index]
 
         if (!track) {
-            throw new TracksQueueNavigationError(
-                'end of the playlist tracks queue has been reached',
-            )
+            return
         }
 
         if (track.__typename !== 'TrackGraphQL') {
@@ -94,9 +87,7 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
             })
 
             if (!loadedTrackResponse.data.track) {
-                throw new TracksQueueNavigationError(
-                    "couldn't obtain data of a track",
-                )
+                throw new TrackLoadError("couldn't obtain requested track data")
             }
 
             track = loadedTrackResponse.data.track
@@ -110,7 +101,7 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
                 'TrackAudioFileGraphQL'
         ) {
             console.error(audioFileUrlQuery.data.trackAudioFile)
-            throw new TracksQueueNavigationError(
+            throw new TrackLoadError(
                 "couldn't obtain audio file url of a track",
             )
         }
