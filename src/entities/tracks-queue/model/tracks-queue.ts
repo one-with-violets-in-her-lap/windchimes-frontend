@@ -12,6 +12,14 @@ import { shuffleNextQueueTracks } from '@/entities/tracks-queue/utils/shuffle-ne
 import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 
 export class TrackLoadError extends Error {}
+export class TracksQueueBoundsReachedError extends Error {
+    constructor() {
+        super(
+            'tracks queue end/beginning has been reached when navigation ' +
+                'to prev/next track',
+        )
+    }
+}
 
 /**
  * creates reactive tracks queue state, with play next/previous
@@ -43,40 +51,53 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
     })
 
     /**
-     * plays next track in playlist tracks queue
-     * @throws {TracksQueueNavigationError} either the end of the queue is reached
-     * or next track audio file can't be loaded
+     * plays next track in playlist tracks queue if the end of the
+     * queue is not reached
      */
-    async function playNextTrack() {
-        const currentTrackIndex = tracksQueue.value.findIndex(
-            track => track.id === currentTrackId.value,
-        )
+    async function playNextTrack(tracksToSkipCount = 1) {
+        try {
+            const currentTrackIndex = tracksQueue.value.findIndex(
+                track => track.id === currentTrackId.value,
+            )
+            const lastIndex = tracksQueue.value.length - tracksToSkipCount
 
-        if (currentTrackIndex >= tracksQueue.value.length - 1 && loop.value) {
-            await playTrackFromQueue(0)
-        } else {
-            await playTrackFromQueue(currentTrackIndex + 1)
+            if (currentTrackIndex >= lastIndex && loop.value) {
+                await playTrackFromQueue(0)
+            } else {
+                await playTrackFromQueue(currentTrackIndex + tracksToSkipCount)
+            }
+        } catch (error) {
+            if (error instanceof TrackLoadError) {
+                await playNextTrack(tracksToSkipCount + 1)
+            }
         }
     }
 
     /**
-     * plays previous track in playlist tracks queue
-     * @throws {TracksQueueNavigationError} either the beginning of the queue is
-     * reached or previous track audio file can't be loaded
+     * plays previous track in playlist tracks queue if the beginning of
+     * the queue is not reached
      */
-    async function playPreviousTrack() {
-        const currentTrackIndex = tracksQueue.value.findIndex(
-            track => track.id === currentTrackId.value,
-        )
+    async function playPreviousTrack(tracksToSkipCount = 1) {
+        try {
+            const currentTrackIndex = tracksQueue.value.findIndex(
+                track => track.id === currentTrackId.value,
+            )
 
-        await playTrackFromQueue(currentTrackIndex - 1)
+            await playTrackFromQueue(currentTrackIndex - tracksToSkipCount)
+        } catch (error) {
+            if (error instanceof TrackLoadError) {
+                await playPreviousTrack(tracksToSkipCount + 1)
+            }
+        }
     }
 
     async function playTrackFromQueue(index: number) {
+        console.log(index)
+        
         let track = tracksQueue.value[index]
 
         if (!track) {
-            return
+            throw new TracksQueueBoundsReachedError()
         }
 
         if (track.__typename !== 'TrackGraphQL') {
@@ -101,9 +122,7 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
                 'TrackAudioFileGraphQL'
         ) {
             console.error(audioFileUrlQuery.data.trackAudioFile)
-            throw new TrackLoadError(
-                "couldn't obtain audio file url of a track",
-            )
+            throw new TrackLoadError("couldn't obtain audio file url of a track")
         }
 
         playTrack({
