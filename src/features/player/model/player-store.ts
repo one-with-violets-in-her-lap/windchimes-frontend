@@ -1,6 +1,5 @@
 import { toRef } from 'vue'
 import { defineStore } from 'pinia'
-import { MediaSession } from '@jofr/capacitor-media-session'
 import { usePlayerVolume } from '@/features/player/model/volume'
 import type { PlaylistTrack } from '@/entities/track/model/track'
 import { useTracksQueue } from '@/entities/tracks-queue/model/tracks-queue'
@@ -25,43 +24,29 @@ export const usePlayerStore = defineStore('player', () => {
     const { audio, currentSecond, pauseAudio, paused, playAudio, rewind } = useAudio(
         toRef(() => currentTrack.value?.secondsDuration),
         {
-            async playNext() {
-                try {
-                    await playNextTrack()
-                } catch (error) {
-                    console.error(error)
-                }
-            },
-
-            async playPrevious() {
-                try {
-                    await playPreviousTrack()
-                } catch (error) {
-                    console.error(error)
-                }
-            },
+            playNext: playNextTrack,
+            playPrevious: playPreviousTrack,
         },
     )
 
-    const { volume } = usePlayerVolume(audio)
+    let { volume } = usePlayerVolume(audio)
 
     /**
      * resumes the current track or plays a new one if `track` param is specified
      */
     function play(track?: TrackWithAudioFileUrl) {
-        console.log(track)
-
-        if (track?.trackAudioFileUrl) {
-            audio.src = track.trackAudioFileUrl
-            currentTrackId.value = track.id
-            MediaSession.setMetadata({
-                title: currentTrack.value?.name,
-                artist: currentTrack.value?.owner.name,
-                artwork: [{ src: currentTrack.value?.pictureUrl || '' }],
-            })
+        if (!track) {
+            playAudio()
+            return
         }
 
-        playAudio()
+        currentTrackId.value = track.id
+
+        playAudio(track.trackAudioFileUrl, {
+            title: currentTrack.value?.name,
+            artist: currentTrack.value?.owner.name,
+            artwork: [{ src: currentTrack.value?.pictureUrl || '' }],
+        })
     }
 
     return {
