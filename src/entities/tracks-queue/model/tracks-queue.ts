@@ -60,6 +60,7 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
                 track => track.id === currentTrackId.value,
             )
             const lastIndex = tracksQueue.value.length - tracksToSkipCount
+            console.log(currentTrackIndex, tracksToSkipCount)
 
             if (currentTrackIndex >= lastIndex && loop.value) {
                 await playTrackFromQueue(0)
@@ -67,6 +68,8 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
                 await playTrackFromQueue(currentTrackIndex + tracksToSkipCount)
             }
         } catch (error) {
+            console.log(error)
+            
             if (error instanceof TrackLoadError) {
                 await playNextTrack(tracksToSkipCount + 1)
             }

@@ -27,8 +27,6 @@ export function useAudio(
 
     const audio = new Audio()
 
-    audio.crossOrigin = 'anonymous'
-
     audio.addEventListener('pause', () => {
         paused.value = true
         MediaSession.setPlaybackState({ playbackState: 'paused' })
@@ -39,20 +37,26 @@ export function useAudio(
         MediaSession.setPlaybackState({ playbackState: 'playing' })
     })
 
-    audio.addEventListener('timeupdate', () => {
+    audio.addEventListener('timeupdate', async () => {
         currentSecond.value = audio.currentTime
-        MediaSession.setPositionState({
-            duration: secondsDuration.value,
-            position: currentSecond.value,
-        })
+        
+        try {
+            await MediaSession.setPositionState({
+                duration: secondsDuration.value,
+                position: currentSecond.value,
+            })
+        }
+        catch(error) {
+            console.log('end of track has been reached')
+        }
     })
 
-    audio.addEventListener('ended', actionHandlers.playNext)
+    audio.addEventListener('ended', () => actionHandlers.playNext())
 
-    MediaSession.setActionHandler({ action: 'nexttrack' }, actionHandlers.playNext)
+    MediaSession.setActionHandler({ action: 'nexttrack' }, () => actionHandlers.playNext())
     MediaSession.setActionHandler(
         { action: 'previoustrack' },
-        actionHandlers.playPrevious,
+        () => actionHandlers.playPrevious(),
     )
 
     MediaSession.setActionHandler({ action: 'play' }, () => playAudio())
