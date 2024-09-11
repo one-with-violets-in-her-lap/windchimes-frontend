@@ -66,11 +66,7 @@ function shuffleTracksQueue() {
                     class="skip-button"
                     color="surface-2"
                     variant="flat"
-                    @click="
-                        animateSkipButtonsUntilFinished(
-                            playPreviousTrack().catch(error => {}),
-                        )
-                    "
+                    @click="animateSkipButtonsUntilFinished(playPreviousTrack())"
                 >
                     <VIcon icon="mdi-skip-backward" size="40px" />
                 </VBtn>
@@ -87,11 +83,7 @@ function shuffleTracksQueue() {
                     class="skip-button"
                     color="surface-2"
                     variant="flat"
-                    @click="
-                        animateSkipButtonsUntilFinished(
-                            playNextTrack().catch(error => {}),
-                        )
-                    "
+                    @click="animateSkipButtonsUntilFinished(playNextTrack())"
                 >
                     <VIcon icon="mdi-skip-forward" size="40px" />
                 </VBtn>

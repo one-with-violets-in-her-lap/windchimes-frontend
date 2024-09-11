@@ -1,14 +1,20 @@
 import { readonly, Ref, ref } from 'vue'
-import { MediaSession } from '@jofr/capacitor-media-session'
+import { MediaSession, MetadataOptions } from '@jofr/capacitor-media-session'
 
 export interface AudioActionHandlers {
     playNext: () => void
     playPrevious: () => void
 }
 
+export class FailedToInitializeAudioError extends Error {
+    constructor() {
+        super('html audio element was not initialize due to some error')
+    }
+}
+
 /**
  * creates reactive playback state that is bound to html audio
- * 
+ *
  * the {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaSession|media session}
  * is also synchronized
  */
@@ -20,6 +26,7 @@ export function useAudio(
     const currentSecond = ref(0)
 
     const audio = new Audio()
+
     audio.crossOrigin = 'anonymous'
 
     audio.addEventListener('pause', () => {
@@ -48,8 +55,8 @@ export function useAudio(
         actionHandlers.playPrevious,
     )
 
-    MediaSession.setActionHandler({ action: 'play' }, playAudio)
-    MediaSession.setActionHandler({ action: 'pause' }, pauseAudio)
+    MediaSession.setActionHandler({ action: 'play' }, () => playAudio())
+    MediaSession.setActionHandler({ action: 'pause' }, () => pauseAudio())
 
     MediaSession.setActionHandler({ action: 'seekto' }, event => {
         if (event.seekTime) {
@@ -57,7 +64,15 @@ export function useAudio(
         }
     })
 
-    function playAudio() {
+    function playAudio(src?: string, metadata?: MetadataOptions) {
+        if (src) {
+            audio.src = src
+        }
+
+        if (metadata) {
+            MediaSession.setMetadata(metadata)
+        }
+
         audio.play()
     }
 
@@ -70,6 +85,10 @@ export function useAudio(
         playAudio()
     }
 
+    function setMetadata(metadata: MetadataOptions) {
+        MediaSession.setMetadata(metadata)
+    }
+
     return {
         audio,
 
@@ -79,5 +98,6 @@ export function useAudio(
         pauseAudio,
         playAudio,
         rewind,
+        setMetadata
     }
 }

@@ -18,11 +18,7 @@ export function usePlayerShortcuts() {
             return
         }
 
-        try {
-            await playNextTrack()
-        } catch (error) {
-            console.error(error)
-        }
+        await playNextTrack()
     })
 
     onKeyStroke('ArrowLeft', async event => {
@@ -31,10 +27,6 @@ export function usePlayerShortcuts() {
             return
         }
 
-        try {
-            await playPreviousTrack()
-        } catch (error) {
-            console.error(error)
-        }
+        await playPreviousTrack()
     })
 }
