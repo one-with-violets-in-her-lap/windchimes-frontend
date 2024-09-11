@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PlaylistCard from '@/entities/playlist/ui/playlist-card.vue'
-import PlaylistImportDialog from '@/features/playlist-import-dialog/ui/playlist-import-dialog.vue'
+import PlaylistCreationDialog from '@/features/playlist-creation-dialog/ui/playlist-creation-dialog.vue'
 import LoadingContent from '@/shared/ui/loading-content.vue'
 import { computed } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue'
@@ -25,7 +25,7 @@ const playlistsQueryError = computed(() => {
             :error="playlistsQueryError || error"
             @retry="restart"
         >
-            <PlaylistImportDialog />
+            <PlaylistCreationDialog />
 
             <Transition name="slide-left" appear>
                 <div
