@@ -1,6 +1,9 @@
 import gql from 'graphql-tag'
-import { useMutation } from '@vue/apollo-composable'
-import { CreatePlaylistMutation, CreatePlaylistMutationVariables } from '@/shared/model/graphql-generated-types/graphql'
+import {
+    CreatePlaylistMutation,
+    CreatePlaylistMutationVariables,
+} from '@/shared/model/graphql-generated-types/graphql'
+import { useMutationWithErrorNotification } from '@/shared/utils/graphql-operations'
 
 export function usePlaylistCreationMutation() {
     const mutation = gql`
@@ -9,7 +12,7 @@ export function usePlaylistCreationMutation() {
                 ... on PlaylistGraphQL {
                     id
                 }
-                
+
                 ... on ErrorGraphQL {
                     name
                     explanation
@@ -18,5 +21,8 @@ export function usePlaylistCreationMutation() {
         }
     `
 
-    return useMutation<CreatePlaylistMutation, CreatePlaylistMutationVariables>(mutation)
+    return useMutationWithErrorNotification<
+        CreatePlaylistMutation,
+        CreatePlaylistMutationVariables
+    >(mutation)
 }

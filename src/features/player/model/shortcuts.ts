@@ -7,10 +7,24 @@ export function usePlayerShortcuts() {
     const { pause, play, playNextTrack, playPreviousTrack, rewind } = playerStore
     const { paused, currentSecond } = storeToRefs(playerStore)
 
-    onKeyStroke(' ', event => {
-        paused.value ? play() : pause()
-        event.preventDefault()
-    })
+    onKeyStroke(
+        ' ',
+        event => {
+            const inputEventTarget = event.composedPath().find(target => {
+                if (target instanceof HTMLInputElement) {
+                    return true
+                }
+            })
+
+            if (inputEventTarget) {
+                return
+            }
+
+            paused.value ? play() : pause()
+            event.preventDefault()
+        },
+        { dedupe: true, target: document.body },
+    )
 
     onKeyStroke('ArrowRight', async event => {
         if (!event.shiftKey) {

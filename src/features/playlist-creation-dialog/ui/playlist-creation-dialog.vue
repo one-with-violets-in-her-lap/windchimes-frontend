@@ -17,9 +17,6 @@ const playlistForm = reactive({
 })
 
 const playlistCreationMutation = usePlaylistCreationMutation()
-playlistCreationMutation.onError(error => {
-    showNotification('error', `Unexpected error: "${error.message}"`)
-})
 
 function isNotEmpty(value: string | null) {
     return Boolean(value && value.trim().length > 0)
@@ -49,7 +46,7 @@ async function createPlaylist() {
 </script>
 
 <template>
-    <VDialog v-model="dialogVisible">
+    <VDialog v-model="dialogVisible" max-width="600px">
         <template #activator="{ props: activatorProps }">
             <VBtn
                 variant="flat"

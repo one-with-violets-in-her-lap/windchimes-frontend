@@ -4,13 +4,14 @@ import PlaylistTracks from '@/widgets/playlist-tracks/ui/playlist-tracks.vue'
 import { useRoute } from 'vue-router'
 import { useFatalErrorStore } from '@/app/model/fatal-error-store'
 import { usePlaylistWithTracksQuery } from '@/pages/playlist/api/playlist-with-tracks-query'
+import { PlaylistActionsButtons } from '@/features/playlist-actions'
 import { NotFoundError } from '@/shared/model/fatal-errors'
 
 const playlistId = useRoute().params.id.toString()
 
 const { handleError } = useFatalErrorStore()
 
-const { loading, error, result, restart, fetchMore, onResult } =
+const { loading, error, result, restart, fetchMore, onResult, refetch } =
     usePlaylistWithTracksQuery(+playlistId)
 onResult(() => {
     if (!result.value) {
@@ -101,9 +102,11 @@ function loadMoreTracks(ids: number[]) {
                 {{ result.playlist.tracksReferences.length }} tracks
             </div>
 
-            <p v-if="result.playlist.description" class="text-subtitle-1 mb-7">
+            <p v-if="result.playlist.description" class="text-subtitle-1 mb-5">
                 {{ result.playlist.description }}
             </p>
+
+            <PlaylistActionsButtons :playlist="result.playlist" @update-tracks="refetch()" />
 
             <Transition name="scale-up" appear>
                 <PlaylistTracks
