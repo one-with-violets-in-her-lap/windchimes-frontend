@@ -27,6 +27,7 @@
         "@capacitor/core": "^6.1.1",
         "@capacitor/haptics": "^6.0.0",
         "@jofr/capacitor-media-session": "^4.0.0",
+        "@vee-validate/zod": "^4.13.2",
         "@vue/apollo-composable": "^4.0.2",
         "@vueuse/core": "^10.11.0",
         "animejs": "^3.2.2",
@@ -34,9 +35,11 @@
         "graphql-tag": "^2.12.6",
         "pinia": "^2.1.7",
         "siriwave": "^2.4.0",
+        "vee-validate": "^4.13.2",
         "vue": "^3.4.29",
         "vue-router": "^4.3.3",
-        "vuetify": "^3.6.13"
+        "vuetify": "^3.6.13",
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "@capacitor/assets": "^3.0.5",
