@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { toTypedSchema } from '@vee-validate/zod'
 import zod from 'zod'
 import { PlaylistFormData } from '@/entities/playlists/playlist-form-dialog/model/playlist-form-data'

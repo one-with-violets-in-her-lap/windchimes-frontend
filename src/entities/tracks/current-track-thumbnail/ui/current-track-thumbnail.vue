@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import WaveformVisualizer from '@/shared/ui/waveform-visualizer.vue'
-
 import { PlaylistTrack } from '@/entities/tracks'
 
 defineProps<{
