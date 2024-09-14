@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { watch } from 'vue'
-import * as zod from 'zod'
+import zod from 'zod'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { TracksImportFormData } from '@/entities/tracks-import-form-dialog/model/tracks-import-form-data'
