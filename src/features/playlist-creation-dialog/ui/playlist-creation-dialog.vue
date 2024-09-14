@@ -12,7 +12,7 @@ const playlistForm = reactive({
     valid: false,
     data: {
         name: '',
-        description: ''
+        description: '',
     },
 })
 
@@ -61,10 +61,7 @@ async function createPlaylist() {
 
         <VCard title="Create playlist" elevation="0">
             <template #text>
-                <VForm
-                    v-model="playlistForm.valid"
-                    @submit.prevent="createPlaylist"
-                >
+                <VForm v-model="playlistForm.valid" @submit.prevent="createPlaylist">
                     <VTextField
                         v-model="playlistForm.data.name"
                         label="Name"

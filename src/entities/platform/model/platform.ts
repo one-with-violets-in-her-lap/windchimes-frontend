@@ -3,4 +3,6 @@ export enum Platform {
     Youtube = 'YOUTUBE',
 }
 
-export const platformSelectItems = Object.keys(Platform).map(platform => `${platform}`)
+export const platformSelectItems = Object.keys(Platform).map(
+    platform => `${platform}`,
+)

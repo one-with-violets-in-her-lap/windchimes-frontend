@@ -69,7 +69,7 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
             }
         } catch (error) {
             console.log(error)
-            
+
             if (error instanceof TrackLoadError) {
                 await playNextTrack(tracksToSkipCount + 1)
             }
@@ -96,7 +96,7 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
 
     async function playTrackFromQueue(index: number) {
         console.log(index)
-        
+
         let track = tracksQueue.value[index]
 
         if (!track) {

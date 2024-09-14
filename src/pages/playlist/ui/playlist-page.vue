@@ -106,7 +106,10 @@ function loadMoreTracks(ids: number[]) {
                 {{ result.playlist.description }}
             </p>
 
-            <PlaylistActionsButtons :playlist="result.playlist" @update-tracks="refetch()" />
+            <PlaylistActionsButtons
+                :playlist="result.playlist"
+                @update-tracks="refetch()"
+            />
 
             <Transition name="scale-up" appear>
                 <PlaylistTracks

@@ -1,5 +1,9 @@
 import { useNotificationsStore } from '@/shared/model/notifications'
-import { DocumentNode, OperationVariables, MutationOptions } from '@apollo/client/core'
+import {
+    DocumentNode,
+    OperationVariables,
+    MutationOptions,
+} from '@apollo/client/core'
 import { useMutation } from '@vue/apollo-composable'
 
 export function useMutationWithErrorNotification<

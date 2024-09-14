@@ -6,6 +6,10 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { TracksImportFormData } from '@/entities/tracks-import-form-dialog/model/tracks-import-form-data'
 import { Platform, platformSelectItems } from '@/entities/platform/model/platform'
 
+defineProps<{
+    loading: boolean
+}>()
+
 const opened = defineModel<boolean>('opened', { required: true })
 
 const emit = defineEmits<{
@@ -20,11 +24,16 @@ const { defineField, errors, meta, handleSubmit } = useForm({
                 .min(1, { message: 'Field is required' })
                 .url({ message: 'Must be a valid url' }),
             platform: zod.string().min(1, { message: 'Field is required' }),
+            replaceExistingTracks: zod.boolean(),
         }),
     ),
+    initialValues: {
+        replaceExistingTracks: false,
+    },
 })
 const [playlistToImportUrl] = defineField('playlistToImportUrl')
 const [platform] = defineField('platform')
+const [replaceExistingTracks] = defineField('replaceExistingTracks')
 
 watch(playlistToImportUrl, () => {
     const matchedPlatform = platformSelectItems.find(platform =>
@@ -82,7 +91,13 @@ const handleFormSubmit = handleSubmit(values => {
                             label="Platform"
                             :items="platformSelectItems"
                             :error-messages="errors.platform"
-                            class="mb-3"
+                        />
+
+                        <VSwitch
+                            color="primary"
+                            label="Replace existing tracks"
+                            flat
+                            v-model="replaceExistingTracks"
                         />
 
                         <div class="d-flex ga-3 items-center flex-wrap">
@@ -92,6 +107,7 @@ const handleFormSubmit = handleSubmit(values => {
                                 prepend-icon="mdi-check"
                                 type="submit"
                                 :disabled="!meta.valid"
+                                :loading="loading"
                             >
                                 Import
                             </VBtn>

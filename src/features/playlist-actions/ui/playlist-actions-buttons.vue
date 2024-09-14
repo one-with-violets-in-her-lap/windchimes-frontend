@@ -31,6 +31,7 @@ async function importTracks(tracksImportFormData: Required<TracksImportFormData>
             url: tracksImportFormData.playlistToImportUrl,
         },
         toPlaylistId: props.playlist.id,
+        replaceExistingTracks: tracksImportFormData.replaceExistingTracks,
     })
 
     if (result?.data?.importTracks.__typename === 'ErrorGraphQL') {
@@ -46,6 +47,7 @@ async function importTracks(tracksImportFormData: Required<TracksImportFormData>
     <div class="d-flex align-center gc-3 mb-7">
         <TracksImportFormDialog
             v-model:opened="tracksImportDialogOpened"
+            :loading="tracksImportMutation.loading.value"
             @submit="importTracks"
         />
 

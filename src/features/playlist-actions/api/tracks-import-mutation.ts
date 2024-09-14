@@ -10,8 +10,13 @@ export function useTracksImportMutation() {
         mutation ImportTracks(
             $fromPlaylist: PlaylistToImportFromGraphQL!
             $toPlaylistId: Int!
+            $replaceExistingTracks: Boolean!
         ) {
-            importTracks(fromPlaylist: $fromPlaylist, toPlaylistId: $toPlaylistId) {
+            importTracks(
+                fromPlaylist: $fromPlaylist
+                toPlaylistId: $toPlaylistId
+                replaceExistingTracks: $replaceExistingTracks
+            ) {
                 ... on PlaylistGraphQL {
                     id
                     tracksReferences {

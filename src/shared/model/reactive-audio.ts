@@ -39,24 +39,24 @@ export function useAudio(
 
     audio.addEventListener('timeupdate', async () => {
         currentSecond.value = audio.currentTime
-        
+
         try {
             await MediaSession.setPositionState({
                 duration: secondsDuration.value,
                 position: currentSecond.value,
             })
-        }
-        catch(error) {
+        } catch (error) {
             console.log('end of track has been reached')
         }
     })
 
     audio.addEventListener('ended', () => actionHandlers.playNext())
 
-    MediaSession.setActionHandler({ action: 'nexttrack' }, () => actionHandlers.playNext())
-    MediaSession.setActionHandler(
-        { action: 'previoustrack' },
-        () => actionHandlers.playPrevious(),
+    MediaSession.setActionHandler({ action: 'nexttrack' }, () =>
+        actionHandlers.playNext(),
+    )
+    MediaSession.setActionHandler({ action: 'previoustrack' }, () =>
+        actionHandlers.playPrevious(),
     )
 
     MediaSession.setActionHandler({ action: 'play' }, () => playAudio())
@@ -102,6 +102,6 @@ export function useAudio(
         pauseAudio,
         playAudio,
         rewind,
-        setMetadata
+        setMetadata,
     }
 }
