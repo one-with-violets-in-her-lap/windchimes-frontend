@@ -102,14 +102,14 @@ function loadMoreTracks(ids: number[]) {
                 {{ result.playlist.tracksReferences.length }} tracks
             </div>
 
-            <p v-if="result.playlist.description" class="text-subtitle-1 mb-5">
+            <p
+                v-if="result.playlist.description"
+                class="text-subtitle-1 mb-5 playlist-description"
+            >
                 {{ result.playlist.description }}
             </p>
 
-            <PlaylistActionsButtons
-                :playlist="result.playlist"
-                @update-tracks="refetch()"
-            />
+            <PlaylistActionsButtons :playlist="result.playlist" @update="refetch()" />
 
             <Transition name="scale-up" appear>
                 <PlaylistTracks
@@ -121,4 +121,8 @@ function loadMoreTracks(ids: number[]) {
     </LoadingContent>
 </template>
 
-<style scoped></style>
+<style scoped>
+.playlist-description {
+    white-space: pre-wrap;
+}
+</style>

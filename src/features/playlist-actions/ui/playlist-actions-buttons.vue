@@ -9,17 +9,16 @@ import {
 } from '@/entities/tracks-import-form-dialog'
 import { useNotificationsStore } from '@/shared/model/notifications'
 import { ExcludeGraphQLError } from '@/shared/utils/exclude-graphql-error'
-import {
-    GetPlaylistWithTracksQuery,
-    TrackReferenceGraphQl,
-} from '@/shared/model/graphql-generated-types/graphql'
+import { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
+import { PlaylistFormData, PlaylistFormDialog } from '@/entities/playlists'
+import { usePlaylistUpdateMutation } from '../api/playlist-update-mutation'
 
 const props = defineProps<{
     playlist: ExcludeGraphQLError<GetPlaylistWithTracksQuery['playlist']>
 }>()
 
 const emit = defineEmits<{
-    (event: 'update-tracks', newTracks: TrackReferenceGraphQl[]): void
+    (event: 'update'): void
 }>()
 
 const { showNotification } = useNotificationsStore()
@@ -27,6 +26,7 @@ const router = useRouter()
 
 const tracksImportDialogOpened = ref(false)
 const tracksImportMutation = useTracksImportMutation()
+
 async function importTracks(tracksImportFormData: Required<TracksImportFormData>) {
     const result = await tracksImportMutation.mutate({
         fromPlaylist: {
@@ -40,20 +40,46 @@ async function importTracks(tracksImportFormData: Required<TracksImportFormData>
     if (result?.data?.importTracks.__typename === 'ErrorGraphQL') {
         showNotification('error', result.data.importTracks.explanation)
     } else if (result?.data?.importTracks.__typename === 'PlaylistGraphQL') {
-        emit('update-tracks', result.data.importTracks.tracksReferences)
+        emit('update')
         showNotification('success', 'Imported successfully')
         tracksImportDialogOpened.value = false
     }
 }
 
-const playlistDeletionMutation = usePlaylistDeletionMutation()
+const deletionMutation = usePlaylistDeletionMutation()
 async function deletePlaylist() {
-    await playlistDeletionMutation.mutate({
+    const result = await deletionMutation.mutate({
         playlistId: props.playlist.id,
     })
+
+    if (result?.data?.deletePlaylist.__typename === 'ErrorGraphQL') {
+        showNotification('error', result.data.deletePlaylist.explanation)
+        return
+    }
+
     showNotification('success', 'Deleted the playlist')
 
     router.push('/')
+}
+
+const updateMutation = usePlaylistUpdateMutation()
+const updateFormDialogVisible = ref(false)
+async function updatePlaylist(formData: PlaylistFormData) {
+    const result = await updateMutation.mutate({
+        playlistId: props.playlist.id,
+        newData: formData,
+    })
+
+    if (result?.data?.updatePlaylist?.__typename === 'ErrorGraphQL') {
+        showNotification('error', result.data.updatePlaylist.explanation)
+        return
+    }
+
+    showNotification('success', 'Updated the playlist')
+
+    emit('update')
+
+    updateFormDialogVisible.value = false
 }
 </script>
 
@@ -93,9 +119,7 @@ async function deletePlaylist() {
                                     <VBtn
                                         color="error"
                                         variant="flat"
-                                        :loading="
-                                            playlistDeletionMutation.loading.value
-                                        "
+                                        :loading="deletionMutation.loading.value"
                                         @click="
                                             async () => {
                                                 await deletePlaylist()
@@ -116,7 +140,24 @@ async function deletePlaylist() {
                 </VListItem>
 
                 <VListItem>
-                    <VBtn prepend-icon="mdi-pencil" variant="text"> Edit </VBtn>
+                    <PlaylistFormDialog
+                        title="Edit the playlist"
+                        submit-button-text="Update"
+                        :loading="updateMutation.loading.value"
+                        :initial-form-data="playlist"
+                        v-model:visible="updateFormDialogVisible"
+                        @submit="updatePlaylist"
+                    >
+                        <template #activator="{ activatorProps }">
+                            <VBtn
+                                prepend-icon="mdi-pencil"
+                                variant="text"
+                                v-bind="activatorProps"
+                            >
+                                Edit
+                            </VBtn>
+                        </template>
+                    </PlaylistFormDialog>
                 </VListItem>
             </VList>
         </VMenu>

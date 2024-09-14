@@ -5,18 +5,24 @@ import zod from 'zod'
 import { PlaylistFormData } from '@/entities/playlists/playlist-form-dialog/model/playlist-form-data'
 import { useForm } from 'vee-validate'
 
-const props = withDefaults(defineProps<{
-    initialFormData: Partial<PlaylistFormData>
-    loading: boolean
-    title: string
-    submitButtonText: string
-}>(), { submitButtonText: 'Submit' })
+const props = withDefaults(
+    defineProps<{
+        initialFormData?: Partial<PlaylistFormData>
+        loading: boolean
+        title: string
+        submitButtonText: string
+    }>(),
+    { submitButtonText: 'Submit' },
+)
 
 const emit = defineEmits<{
     (event: 'submit', formData: PlaylistFormData): void
 }>()
 
-const dialogVisible = ref(false)
+const dialogVisible = defineModel('visible', {
+    required: false,
+    default: false,
+})
 
 const { defineField, errors, meta, handleSubmit } = useForm({
     validationSchema: toTypedSchema(
@@ -36,15 +42,7 @@ const handleFormSubmit = handleSubmit(values => emit('submit', values))
 <template>
     <VDialog v-model="dialogVisible" max-width="600px">
         <template #activator="{ props: activatorProps }">
-            <VBtn
-                variant="flat"
-                color="primary"
-                prepend-icon="mdi-plus"
-                class="mb-6"
-                v-bind="activatorProps"
-            >
-                Create playlist
-            </VBtn>
+            <slot name="activator" :activator-props="activatorProps"></slot>
         </template>
 
         <VCard :title="title" elevation="0">
@@ -56,6 +54,7 @@ const handleFormSubmit = handleSubmit(values => emit('submit', values))
                         placeholder="Playlist 1"
                         :error-messages="errors.name"
                         variant="outlined"
+                        class="mb-2"
                     />
 
                     <VTextarea
@@ -77,7 +76,7 @@ const handleFormSubmit = handleSubmit(values => emit('submit', values))
                             :loading="loading"
                             @click="handleFormSubmit"
                         >
-                            Create
+                            {{ submitButtonText }}
                         </VBtn>
 
                         <VBtn

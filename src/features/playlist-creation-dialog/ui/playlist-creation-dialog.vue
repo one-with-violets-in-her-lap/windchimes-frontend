@@ -2,38 +2,28 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { usePlaylistCreationMutation } from '@/features/playlist-creation-dialog/api/playlist-creation-mutation'
+import { PlaylistFormData, PlaylistFormDialog } from '@/entities/playlists'
 import { useNotificationsStore } from '@/shared/model/notifications'
 
 const router = useRouter()
 const { showNotification } = useNotificationsStore()
 
 const dialogVisible = ref(false)
-const playlistForm = reactive({
-    valid: false,
-    data: {
-        name: '',
-        description: '',
-    },
-})
 
 const playlistCreationMutation = usePlaylistCreationMutation()
 
-function isNotEmpty(value: string | null) {
-    return Boolean(value && value.trim().length > 0)
-}
-
-async function createPlaylist() {
+async function createPlaylist(formData: PlaylistFormData) {
     const result = await playlistCreationMutation.mutate({
-        playlistData: playlistForm.data,
+        playlistData: formData,
     })
 
     if (result?.data?.createPlaylist.__typename === 'ErrorGraphQL') {
         showNotification('error', result.data.createPlaylist.explanation)
     } else if (result?.data?.createPlaylist.__typename === 'PlaylistGraphQL') {
-        playlistForm.data = {
-            name: '',
-            description: '',
-        }
+        // formData = {
+        //     name: '',
+        //     description: '',
+        // }
 
         dialogVisible.value = false
 
@@ -46,8 +36,13 @@ async function createPlaylist() {
 </script>
 
 <template>
-    <VDialog v-model="dialogVisible" max-width="600px">
-        <template #activator="{ props: activatorProps }">
+    <PlaylistFormDialog
+        submit-button-text="Create"
+        title="Create playlist"
+        :loading="playlistCreationMutation.loading.value"
+        @submit="createPlaylist"
+    >
+        <template #activator="{ activatorProps }">
             <VBtn
                 variant="flat"
                 color="primary"
@@ -58,51 +53,7 @@ async function createPlaylist() {
                 Create playlist
             </VBtn>
         </template>
-
-        <VCard title="Create playlist" elevation="0">
-            <template #text>
-                <VForm v-model="playlistForm.valid" @submit.prevent="createPlaylist">
-                    <VTextField
-                        v-model="playlistForm.data.name"
-                        label="Name"
-                        placeholder="Playlist 1"
-                        :rules="[isNotEmpty]"
-                        variant="outlined"
-                    />
-
-                    <VTextarea
-                        v-model="playlistForm.data.description"
-                        label="Description"
-                        rows="6"
-                        placeholder="Playlist 1"
-                        variant="outlined"
-                    />
-
-                    <div class="d-flex ga-3 items-center flex-wrap">
-                        <VBtn
-                            variant="flat"
-                            color="primary"
-                            prepend-icon="mdi-check"
-                            type="submit"
-                            :disabled="!playlistForm.valid"
-                            :loading="playlistCreationMutation.loading.value"
-                        >
-                            Create
-                        </VBtn>
-
-                        <VBtn
-                            variant="tonal"
-                            color="error"
-                            prepend-icon="mdi-close"
-                            @click="dialogVisible = false"
-                        >
-                            Cancel
-                        </VBtn>
-                    </div>
-                </VForm>
-            </template>
-        </VCard>
-    </VDialog>
+    </PlaylistFormDialog>
 </template>
 
 <style scoped></style>
