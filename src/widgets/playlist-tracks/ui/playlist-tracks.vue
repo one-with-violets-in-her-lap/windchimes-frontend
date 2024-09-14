@@ -61,7 +61,7 @@ const allPlaylistTracks = computed(() => {
 
 <template>
     <div>
-        <VList rounded class="mb-3">
+        <VList v-if="playlist.loadedTracks.length > 0" rounded class="mb-3">
             <TrackItem
                 v-for="(track, index) in availableTracks"
                 :key="track.id"
@@ -71,11 +71,12 @@ const allPlaylistTracks = computed(() => {
             />
         </VList>
 
+        <VCard v-else elevation="0">
+            <VCardText class="text-surface-4"> No tracks were added yet </VCardText>
+        </VCard>
+
         <VProgressCircular
-            v-if="
-                props.playlist.loadedTracks.length <
-                props.playlist.tracksReferences.length
-            "
+            v-if="playlist.loadedTracks.length < playlist.tracksReferences.length"
             ref="loadMoreTriggerElement"
             indeterminate
             size="40"

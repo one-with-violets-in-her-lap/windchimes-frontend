@@ -11,7 +11,10 @@ export function usePlayerShortcuts() {
         ' ',
         event => {
             const inputEventTarget = event.composedPath().find(target => {
-                if (target instanceof HTMLInputElement) {
+                if (
+                    target instanceof HTMLInputElement ||
+                    target instanceof HTMLTextAreaElement
+                ) {
                     return true
                 }
             })
