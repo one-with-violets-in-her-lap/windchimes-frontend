@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PlaylistCard from '@/entities/playlist/ui/playlist-card.vue'
+import PlaylistCard from '@/entities/playlists/ui/playlist-card.vue'
 import PlaylistCreationDialog from '@/features/playlist-creation-dialog/ui/playlist-creation-dialog.vue'
 import LoadingContent from '@/shared/ui/loading-content.vue'
 import { computed } from 'vue'

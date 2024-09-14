@@ -1,4 +1,4 @@
-import { PlaylistTrack } from '@/entities/track/model/track'
+import { PlaylistTrack } from '@/entities/tracks'
 import { shuffle } from '@/shared/utils/shuffle'
 import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 

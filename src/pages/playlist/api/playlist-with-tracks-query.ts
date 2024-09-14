@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 import { useQuery } from '@vue/apollo-composable'
-import { PLAYLIST_LOADED_TRACK_FRAGMENT } from '@/entities/track/api/playlist-loaded-track-fragment'
+import { PLAYLIST_LOADED_TRACK_FRAGMENT } from '@/entities/tracks'
 import {
     GetPlaylistWithTracksQuery,
     GetPlaylistWithTracksQueryVariables,

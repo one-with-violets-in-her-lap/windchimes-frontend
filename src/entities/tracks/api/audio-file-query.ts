@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 import { type ApolloClient } from '@apollo/client/core'
-import type { PlaylistTrack } from '@/entities/track/model/track'
+import type { PlaylistTrack } from '@/entities/tracks'
 import type {
     GetTrackAudioFileUrlQuery,
     GetTrackAudioFileUrlQueryVariables,

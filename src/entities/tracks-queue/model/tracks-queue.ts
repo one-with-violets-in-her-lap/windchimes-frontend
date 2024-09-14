@@ -5,9 +5,11 @@ import {
     usePlayerStore, // for jsdoc
     type TrackWithAudioFileUrl,
 } from '@/features/player/model/player-store'
-import type { PlaylistTrack } from '@/entities/track/model/track'
-import { queryTrackAudioFile } from '@/entities/track/api/audio-file-query'
-import { queryLoadedTrack } from '@/entities/track/api/track-query'
+import {
+    type PlaylistTrack,
+    queryTrackAudioFile,
+    queryLoadedTrack,
+} from '@/entities/tracks'
 import { shuffleNextQueueTracks } from '@/entities/tracks-queue/utils/shuffle-next-queue-tracks'
 import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 

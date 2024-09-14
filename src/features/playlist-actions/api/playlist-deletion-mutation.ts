@@ -1,9 +1,9 @@
 import gql from 'graphql-tag'
-import { useMutation } from '@vue/apollo-composable'
 import {
     DeletePlaylistMutation,
     DeletePlaylistMutationVariables,
 } from '@/shared/model/graphql-generated-types/graphql'
+import { useMutationWithErrorNotification } from '@/shared/utils/graphql-operations'
 
 export function usePlaylistDeletionMutation() {
     const mutation = gql`
@@ -22,7 +22,8 @@ export function usePlaylistDeletionMutation() {
         }
     `
 
-    return useMutation<DeletePlaylistMutation, DeletePlaylistMutationVariables>(
-        mutation,
-    )
+    return useMutationWithErrorNotification<
+        DeletePlaylistMutation,
+        DeletePlaylistMutationVariables
+    >(mutation)
 }

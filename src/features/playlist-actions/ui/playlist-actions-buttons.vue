@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useTracksImportMutation } from '@/features/playlist-actions/api/tracks-import-mutation'
+import { usePlaylistDeletionMutation } from '@/features/playlist-actions/api/playlist-deletion-mutation'
 import {
     TracksImportFormData,
     TracksImportFormDialog,
@@ -21,6 +23,7 @@ const emit = defineEmits<{
 }>()
 
 const { showNotification } = useNotificationsStore()
+const router = useRouter()
 
 const tracksImportDialogOpened = ref(false)
 const tracksImportMutation = useTracksImportMutation()
@@ -38,8 +41,19 @@ async function importTracks(tracksImportFormData: Required<TracksImportFormData>
         showNotification('error', result.data.importTracks.explanation)
     } else if (result?.data?.importTracks.__typename === 'PlaylistGraphQL') {
         emit('update-tracks', result.data.importTracks.tracksReferences)
+        showNotification('success', 'Imported successfully')
         tracksImportDialogOpened.value = false
     }
+}
+
+const playlistDeletionMutation = usePlaylistDeletionMutation()
+async function deletePlaylist() {
+    await playlistDeletionMutation.mutate({
+        playlistId: props.playlist.id,
+    })
+    showNotification('success', 'Deleted the playlist')
+
+    router.push('/')
 }
 </script>
 
@@ -58,7 +72,47 @@ async function importTracks(tracksImportFormData: Required<TracksImportFormData>
 
             <VList>
                 <VListItem>
-                    <VBtn prepend-icon="mdi-delete" variant="text"> Delete </VBtn>
+                    <VDialog>
+                        <template #activator="{ props: activatorProps }">
+                            <VBtn
+                                prepend-icon="mdi-delete"
+                                variant="text"
+                                v-bind="activatorProps"
+                            >
+                                Delete
+                            </VBtn>
+                        </template>
+
+                        <template #default="{ isActive }">
+                            <VCard>
+                                <VCardTitle class="text-wrap">
+                                    Are you sure you want to delete?
+                                </VCardTitle>
+
+                                <VCardActions class="justify-start">
+                                    <VBtn
+                                        color="error"
+                                        variant="flat"
+                                        :loading="
+                                            playlistDeletionMutation.loading.value
+                                        "
+                                        @click="
+                                            async () => {
+                                                await deletePlaylist()
+                                                isActive.value = false
+                                            }
+                                        "
+                                    >
+                                        Delete
+                                    </VBtn>
+
+                                    <VBtn @click="isActive.value = false">
+                                        Cancel
+                                    </VBtn>
+                                </VCardActions>
+                            </VCard>
+                        </template>
+                    </VDialog>
                 </VListItem>
 
                 <VListItem>

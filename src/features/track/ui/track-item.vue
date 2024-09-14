@@ -2,8 +2,7 @@
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import { storeToRefs } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable'
-import { queryTrackAudioFile } from '@/entities/track/api/audio-file-query'
-import type { PlaylistTrack } from '@/entities/track/model/track'
+import { queryTrackAudioFile, type PlaylistTrack } from '@/entities/tracks'
 import { usePlayerStore } from '@/features/player/model/player-store'
 import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 

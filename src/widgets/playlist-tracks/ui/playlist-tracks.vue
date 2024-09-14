@@ -7,7 +7,7 @@ import type {
     GetPlaylistWithTracksQuery,
     TrackReferenceGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
-import { PlaylistTrack } from '@/entities/track/model/track'
+import { PlaylistTrack } from '@/entities/tracks'
 
 const TRACKS_PORTION_SIZE = 30
 

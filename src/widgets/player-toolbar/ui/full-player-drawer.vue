@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import TrackTimeSlider from '@/features/player/track-time-slider/ui/track-time-slider.vue'
 import VolumeMenuButton from '@/features/player/volume-menu-button/ui/volume-menu-button.vue'
+import { CurrentTrackThumbnail } from '@/entities/tracks'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 
 import { useDisplay } from 'vuetify'
@@ -8,7 +9,6 @@ import { storeToRefs } from 'pinia'
 import anime from 'animejs'
 import { usePlayerStore } from '@/features/player/model/player-store'
 import { useNotificationsStore } from '@/shared/model/notifications'
-import CurrentTrackThumbnail from '@/entities/current-track-thumbnail/ui/current-track-thumbnail.vue'
 
 const opened = defineModel<boolean>('opened', { required: true })
 
