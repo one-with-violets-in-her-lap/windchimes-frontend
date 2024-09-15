@@ -5,7 +5,7 @@ import { usePlayerStore } from '@/features/player/model/player-store'
 export function usePlayerShortcuts() {
     const playerStore = usePlayerStore()
     const { pause, play, playNextTrack, playPreviousTrack, rewind } = playerStore
-    const { paused, currentSecond } = storeToRefs(playerStore)
+    const { paused, currentSecond, volume } = storeToRefs(playerStore)
 
     onKeyStroke(
         ' ',
@@ -45,5 +45,21 @@ export function usePlayerShortcuts() {
         }
 
         await playPreviousTrack()
+    })
+
+    onKeyStroke('ArrowUp', async event => {
+        if (!event.shiftKey) {
+            return
+        }
+
+        volume.value += 0.1
+    })
+
+    onKeyStroke('ArrowDown', async event => {
+        if (!event.shiftKey) {
+            return
+        }
+
+        volume.value -= 0.1
     })
 }
