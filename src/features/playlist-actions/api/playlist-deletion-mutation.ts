@@ -2,6 +2,7 @@ import gql from 'graphql-tag'
 import {
     DeletePlaylistMutation,
     DeletePlaylistMutationVariables,
+    PlaylistsListItemFragmentFragment,
 } from '@/shared/model/graphql-generated-types/graphql'
 import { useMutationWithErrorNotification } from '@/shared/utils/graphql-operations'
 
@@ -25,5 +26,24 @@ export function usePlaylistDeletionMutation() {
     return useMutationWithErrorNotification<
         DeletePlaylistMutation,
         DeletePlaylistMutationVariables
-    >(mutation)
+    >(mutation, {
+        update(cache, { data }) {
+            cache.modify({
+                fields: {
+                    playlists(cachedPlaylists, { readField }) {
+                        return {
+                            ...cachedPlaylists,
+                            items: cachedPlaylists.items.filter(
+                                (playlist: PlaylistsListItemFragmentFragment) =>
+                                    data?.deletePlaylist.__typename !==
+                                        'PlaylistGraphQL' ||
+                                    readField('id', playlist) !==
+                                        data.deletePlaylist.id,
+                            ),
+                        }
+                    },
+                },
+            })
+        },
+    })
 }

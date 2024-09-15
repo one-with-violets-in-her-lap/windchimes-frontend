@@ -92,8 +92,12 @@ async function updatePlaylist(formData: PlaylistFormData) {
         />
 
         <VMenu>
-            <template v-slot:activator="{ props }">
-                <VBtn icon="mdi-dots-vertical" variant="text" v-bind="props"></VBtn>
+            <template v-slot:activator="{ props: menuActivatorProps }">
+                <VBtn
+                    icon="mdi-dots-vertical"
+                    variant="text"
+                    v-bind="menuActivatorProps"
+                ></VBtn>
             </template>
 
             <VList>
