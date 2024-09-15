@@ -27,7 +27,7 @@ const { defineField, errors, meta, handleSubmit } = useForm({
     validationSchema: toTypedSchema(
         zod.object({
             name: zod.string().min(3),
-            description: zod.string().optional(),
+            description: zod.string().optional().nullable(),
         }),
     ),
     initialValues: props.initialFormData,
