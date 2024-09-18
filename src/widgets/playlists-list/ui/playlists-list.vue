@@ -1,19 +1,30 @@
 <script setup lang="ts">
-import PlaylistCard from '@/entities/playlists/ui/playlist-card.vue'
-import PlaylistCreationDialog from '@/features/playlist-creation-dialog/ui/playlist-creation-dialog.vue'
-import LoadingContent from '@/shared/ui/loading-content.vue'
 import { computed } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { usePlaylistsQuery } from '@/widgets/playlists-list/api/playlists-query'
+import { useCurrentAccountActions } from '@/features/account-menu/api/current-account-actions'
+import PlaylistCreationDialog from '@/features/playlist-creation-dialog/ui/playlist-creation-dialog.vue'
+import PlaylistCard from '@/entities/playlists/ui/playlist-card.vue'
+import LoadingContent from '@/shared/ui/loading-content.vue'
 
 const { user } = useAuth0()
+const { requestLogout } = useCurrentAccountActions()
 
-const { loading, error, result, restart } = usePlaylistsQuery(user.value?.sub || '')
+const { loading, error, result, restart, onResult } = usePlaylistsQuery(
+    user.value?.sub || '',
+)
+
 const playlistsQueryError = computed(() => {
     if (result.value?.playlists.__typename === 'ErrorGraphQL') {
         return result.value.playlists
     } else {
         return null
+    }
+})
+
+onResult(async () => {
+    if (user.value && playlistsQueryError.value?.name === 'unauthorized-error') {
+        await requestLogout()
     }
 })
 </script>
