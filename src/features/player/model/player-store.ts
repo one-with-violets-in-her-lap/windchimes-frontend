@@ -15,7 +15,7 @@ export const usePlayerStore = defineStore('player', () => {
         currentTrack,
         currentTrackId,
         tracksQueue,
-        loop,
+        loopMode,
         playNextTrack,
         playPreviousTrack,
         shuffleQueue,
@@ -53,7 +53,7 @@ export const usePlayerStore = defineStore('player', () => {
         currentTrack,
         tracksQueue,
         volume,
-        loop,
+        loopMode,
         paused,
         currentSecond,
 

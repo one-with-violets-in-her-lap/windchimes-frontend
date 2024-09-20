@@ -9,13 +9,14 @@ import { storeToRefs } from 'pinia'
 import anime from 'animejs'
 import { usePlayerStore } from '@/features/player/model/player-store'
 import { useNotificationsStore } from '@/shared/model/notifications'
+import { LOOP_MODES } from '@/entities/tracks-queue/model/tracks-queue'
 
 const opened = defineModel<boolean>('opened', { required: true })
 
 const playerStore = usePlayerStore()
 const { playNextTrack, playPreviousTrack, shuffleQueue, pause, play, audio } =
     playerStore
-const { currentTrack, currentSecond, loop, paused } = storeToRefs(playerStore)
+const { currentTrack, currentSecond, loopMode, paused } = storeToRefs(playerStore)
 const { showNotification } = useNotificationsStore()
 
 const { mobile } = useDisplay()
@@ -121,13 +122,20 @@ function shuffleTracksQueue() {
                     @click="shuffleTracksQueue"
                 />
 
-                <VBtn
-                    variant="flat"
-                    :color="loop ? 'primary' : 'surface-2'"
-                    icon="mdi-repeat"
-                    class="mr-auto ml-2"
-                    @click="loop = !loop"
-                />
+                <VTooltip open-on-click open-delay="3000ms">
+                    <template #activator="{ props: tooltipActivatorProps }">
+                        <VBtn
+                            variant="flat"
+                            :color="loopMode !== 'looping disabled' ? 'primary' : 'surface-2'"
+                            :icon="loopMode === 'loop current track' ? 'mdi-repeat-once' : 'mdi-repeat'"
+                            class="mr-auto ml-2"
+                            v-bind="tooltipActivatorProps"
+                            @click="loopMode = LOOP_MODES[LOOP_MODES.findIndex(mode => mode === loopMode) + 1] || 'looping disabled'"
+                        />
+                    </template>
+
+                    {{ loopMode }}
+                </VTooltip>
             </div>
         </div>
     </VNavigationDrawer>

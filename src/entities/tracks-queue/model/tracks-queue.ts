@@ -23,6 +23,14 @@ export class TracksQueueBoundsReachedError extends Error {
     }
 }
 
+// TODO: remake as enum
+export const LOOP_MODES = [
+    'looping disabled',
+    'loop current track',
+    'loop playlist/query',
+] as const
+export type LoopMode = (typeof LOOP_MODES)[number]
+
 /**
  * creates reactive tracks queue state, with play next/previous
  * functionality. **not a global player tracks queue state**, use
@@ -33,7 +41,7 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
 
     const tracksQueue = ref<(PlaylistTrack | TrackReferenceGraphQl)[]>([])
 
-    const loop = useLocalStorage('loop', false)
+    const loopMode = useLocalStorage<LoopMode>('loop', 'looping disabled')
 
     const currentTrackId = ref<number>()
     const currentTrack = computed(() => {
@@ -64,8 +72,13 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
             const lastIndex = tracksQueue.value.length - tracksToSkipCount
             console.log(currentTrackIndex, tracksToSkipCount)
 
-            if (currentTrackIndex >= lastIndex && loop.value) {
+            if (
+                currentTrackIndex >= lastIndex &&
+                loopMode.value === 'loop playlist/query'
+            ) {
                 await playTrackFromQueue(0)
+            } else if (loopMode.value === 'loop current track') {
+                await playTrackFromQueue(currentTrackIndex)
             } else {
                 await playTrackFromQueue(currentTrackIndex + tracksToSkipCount)
             }
@@ -147,7 +160,7 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
         tracksQueue,
         currentTrackId,
         currentTrack,
-        loop,
+        loopMode,
 
         playNextTrack,
         playPreviousTrack,
