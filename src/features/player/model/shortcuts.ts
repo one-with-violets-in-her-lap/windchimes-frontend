@@ -1,6 +1,6 @@
 import { onKeyStroke } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
-import { usePlayerStore } from '@/features/player/model/player-store'
+import { usePlayerStore } from '@/features/player'
 
 export function usePlayerShortcuts() {
     const playerStore = usePlayerStore()

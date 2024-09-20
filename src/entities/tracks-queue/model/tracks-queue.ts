@@ -4,7 +4,7 @@ import { useApolloClient } from '@vue/apollo-composable'
 import {
     usePlayerStore, // for jsdoc
     type TrackWithAudioFileUrl,
-} from '@/features/player/model/player-store'
+} from '@/features/player'
 import {
     type PlaylistTrack,
     queryTrackAudioFile,

@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import FullPlayerDrawer from '@/widgets/player-toolbar/ui/full-player-drawer.vue'
-import TrackTimeSlider from '@/features/player/track-time-slider/ui/track-time-slider.vue'
+import { TrackTimeSlider } from '@/features/player'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { usePlayerStore } from '@/features/player/model/player-store'
-import { usePlayerShortcuts } from '@/features/player/model/shortcuts'
+import { usePlayerStore, usePlayerShortcuts, TracksQueueDrawer } from '@/features/player'
 
 const playerStore = usePlayerStore()
 const { currentTrack, paused, currentSecond } = storeToRefs(playerStore)
@@ -43,14 +42,12 @@ const fullPlayerOpened = ref(false)
                         </div>
 
                         <DurationTimestamp :seconds-duration="currentSecond" />
-
-                        <VBtn icon="mdi-queue">
-                            
-                        </VBtn>
                     </div>
 
                     <TrackTimeSlider @click.stop />
                 </div>
+
+                <TracksQueueDrawer />
             </div>
         </Transition>
 

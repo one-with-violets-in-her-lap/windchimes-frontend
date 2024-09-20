@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import TrackTimeSlider from '@/features/player/track-time-slider/ui/track-time-slider.vue'
-import VolumeMenuButton from '@/features/player/volume-menu-button/ui/volume-menu-button.vue'
-import { CurrentTrackThumbnail } from '@/entities/tracks'
-import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
-
 import { useDisplay } from 'vuetify'
 import { storeToRefs } from 'pinia'
 import anime from 'animejs'
-import { usePlayerStore } from '@/features/player/model/player-store'
-import { useNotificationsStore } from '@/shared/model/notifications'
+import { TrackTimeSlider, VolumeMenuButton, usePlayerStore } from '@/features/player'
+import { CurrentTrackThumbnail } from '@/entities/tracks'
 import { LOOP_MODES } from '@/entities/tracks-queue/model/tracks-queue'
+import { useNotificationsStore } from '@/shared/model/notifications'
+import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 
 const opened = defineModel<boolean>('opened', { required: true })
 
@@ -126,11 +123,26 @@ function shuffleTracksQueue() {
                     <template #activator="{ props: tooltipActivatorProps }">
                         <VBtn
                             variant="flat"
-                            :color="loopMode !== 'looping disabled' ? 'primary' : 'surface-2'"
-                            :icon="loopMode === 'loop current track' ? 'mdi-repeat-once' : 'mdi-repeat'"
+                            :color="
+                                loopMode !== 'looping disabled'
+                                    ? 'primary'
+                                    : 'surface-2'
+                            "
+                            :icon="
+                                loopMode === 'loop current track'
+                                    ? 'mdi-repeat-once'
+                                    : 'mdi-repeat'
+                            "
                             class="mr-auto ml-2"
                             v-bind="tooltipActivatorProps"
-                            @click="loopMode = LOOP_MODES[LOOP_MODES.findIndex(mode => mode === loopMode) + 1] || 'looping disabled'"
+                            @click="
+                                loopMode =
+                                    LOOP_MODES[
+                                        LOOP_MODES.findIndex(
+                                            mode => mode === loopMode,
+                                        ) + 1
+                                    ] || 'looping disabled'
+                            "
                         />
                     </template>
 
