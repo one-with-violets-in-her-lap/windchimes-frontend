@@ -43,6 +43,10 @@ const fullPlayerOpened = ref(false)
                         </div>
 
                         <DurationTimestamp :seconds-duration="currentSecond" />
+
+                        <VBtn icon="mdi-queue">
+                            
+                        </VBtn>
                     </div>
 
                     <TrackTimeSlider @click.stop />

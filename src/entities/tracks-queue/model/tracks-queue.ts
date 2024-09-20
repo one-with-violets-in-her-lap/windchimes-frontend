@@ -27,7 +27,7 @@ export class TracksQueueBoundsReachedError extends Error {
 export const LOOP_MODES = [
     'looping disabled',
     'loop current track',
-    'loop playlist/query',
+    'loop playlist/queue',
 ] as const
 export type LoopMode = (typeof LOOP_MODES)[number]
 
@@ -74,7 +74,7 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
 
             if (
                 currentTrackIndex >= lastIndex &&
-                loopMode.value === 'loop playlist/query'
+                loopMode.value === 'loop playlist/queue'
             ) {
                 await playTrackFromQueue(0)
             } else if (loopMode.value === 'loop current track') {
