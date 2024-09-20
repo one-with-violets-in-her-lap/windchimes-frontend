@@ -45,8 +45,8 @@ onMounted(() => {
 
     requestAnimationFrame(updateWaveformAmplitude)
 })
-watch(theme.current, initializeWaveform)
 
+watch(theme.current, initializeWaveform)
 function initializeWaveform() {
     if (waveformContainer.value) {
         if (waveform) {
