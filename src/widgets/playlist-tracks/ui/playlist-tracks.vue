@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
-import TrackItem from '@/features/track/ui/track-item.vue'
+import { TrackItem } from '@/features/track'
 import { ExcludeGraphQLError } from '@/shared/utils/exclude-graphql-error'
 import type {
     GetPlaylistWithTracksQuery,

@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import FullPlayerDrawer from '@/widgets/player-toolbar/ui/full-player-drawer.vue'
-import { TrackTimeSlider } from '@/features/player'
-import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
-
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { usePlayerStore, usePlayerShortcuts, TracksQueueDrawer } from '@/features/player'
+import FullPlayerDrawer from '@/widgets/player-toolbar/ui/full-player-drawer.vue'
+import {
+    usePlayerStore,
+    usePlayerShortcuts,
+    TracksQueueDrawer,
+    TrackTimeSlider,
+} from '@/features/player'
+import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 
 const playerStore = usePlayerStore()
 const { currentTrack, paused, currentSecond } = storeToRefs(playerStore)
@@ -46,13 +49,14 @@ const fullPlayerOpened = ref(false)
 
                     <TrackTimeSlider @click.stop />
                 </div>
-
-                <TracksQueueDrawer />
             </div>
         </Transition>
 
         <FullPlayerDrawer v-model:opened="fullPlayerOpened" />
+
+        <TracksQueueDrawer :open-button-visible="Boolean(currentTrack && !fullPlayerOpened)" />
     </div>
+
 </template>
 
 <style scoped>

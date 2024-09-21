@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useDisplay } from 'vuetify'
 import { storeToRefs } from 'pinia'
 import anime from 'animejs'
 import { TrackTimeSlider, VolumeMenuButton, usePlayerStore } from '@/features/player'
@@ -7,6 +6,7 @@ import { CurrentTrackThumbnail } from '@/entities/tracks'
 import { LOOP_MODES } from '@/entities/tracks-queue/model/tracks-queue'
 import { useNotificationsStore } from '@/shared/model/notifications'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
+import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'
 
 const opened = defineModel<boolean>('opened', { required: true })
 
@@ -15,8 +15,6 @@ const { playNextTrack, playPreviousTrack, shuffleQueue, pause, play, audio } =
     playerStore
 const { currentTrack, currentSecond, loopMode, paused } = storeToRefs(playerStore)
 const { showNotification } = useNotificationsStore()
-
-const { mobile } = useDisplay()
 
 let pulseAnimation: anime.AnimeInstance | undefined = undefined
 async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
@@ -48,14 +46,8 @@ function shuffleTracksQueue() {
 </script>
 
 <template>
-    <VNavigationDrawer
-        v-model="opened"
-        width="500"
-        temporary
-        rounded
-        class="player-drawer"
-        :location="mobile ? 'bottom' : 'left'"
-        :class="{ 'player-side-drawer': !mobile }"
+    <ResponsiveDrawer
+        v-model:opened="opened"
     >
         <div v-if="currentTrack" class="drawer-content-wrapper">
             <div class="d-flex align-center gc-3 w-100 justify-center mb-2">
@@ -150,21 +142,10 @@ function shuffleTracksQueue() {
                 </VTooltip>
             </div>
         </div>
-    </VNavigationDrawer>
+    </ResponsiveDrawer>
 </template>
 
 <style scoped>
-.player-drawer {
-    padding: 20px;
-    background-color: rgba(var(--v-theme-background), 0.8);
-    backdrop-filter: blur(3px);
-}
-
-.player-side-drawer {
-    height: 100% !important;
-    top: 0px !important;
-}
-
 .drawer-content-wrapper {
     display: flex;
     align-items: center;
