@@ -77,6 +77,7 @@ async function loadMoreTracks() {
                 size="46px"
                 class="open-tracks-queue-button"
                 v-show="openButtonVisible && !opened"
+                title="Tracks queue"
                 @click.stop="opened = true"
             />
         </Transition>
