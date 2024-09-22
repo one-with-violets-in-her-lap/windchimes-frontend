@@ -52,6 +52,8 @@ function handleDrop(event: DragEvent) {
 <style scoped>
 .draggable-item {
     user-select: none;
-    transition: background-color 0.2s ease, transform 0.3s ease;
+    transition:
+        background-color 0.2s ease,
+        transform 0.3s ease;
 }
 </style>

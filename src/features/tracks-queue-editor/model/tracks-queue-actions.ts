@@ -13,7 +13,7 @@ export function useTracksQueueActions() {
         tracks: (LoadedTrackFragment | null)[],
     ) {
         const availableTracks = tracks.filter(track => track !== null)
-    
+
         tracksQueue.value.splice(
             queuePart.startIndex,
             availableTracks.length,
@@ -22,7 +22,9 @@ export function useTracksQueueActions() {
     }
 
     function clearQueue() {
-        const currentTrackInQueue = tracksQueue.value.find(track => track.id === currentTrack.value?.id)
+        const currentTrackInQueue = tracksQueue.value.find(
+            track => track.id === currentTrack.value?.id,
+        )
 
         if (currentTrackInQueue) {
             tracksQueue.value = [currentTrackInQueue]

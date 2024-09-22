@@ -14,8 +14,8 @@ defineProps<{
 const allQueueTracks = defineModel<QueueItem[]>('allQueueTracks', { required: true })
 
 function swapTracks(track1Id: string, track2Id: string) {
-    console.log('ids', track1Id, track2Id);
-    
+    console.log('ids', track1Id, track2Id)
+
     const track1Index = allQueueTracks.value.findIndex(
         track => `${track.id}` === track1Id,
     )
@@ -23,7 +23,7 @@ function swapTracks(track1Id: string, track2Id: string) {
         track => `${track.id}` === track2Id,
     )
 
-    console.log('indices', track1Index, track2Index);
+    console.log('indices', track1Index, track2Index)
 
     if (track1Index === -1 || track2Index === -1) {
         return
@@ -34,7 +34,7 @@ function swapTracks(track1Id: string, track2Id: string) {
         allQueueTracks.value[track2Index],
     ]
 
-    console.log('tracks', track1, track2);
+    console.log('tracks', track1, track2)
 
     allQueueTracks.value[track1Index] = track2
     allQueueTracks.value[track2Index] = track1

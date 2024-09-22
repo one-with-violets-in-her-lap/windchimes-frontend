@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { useDisplay } from 'vuetify'
 
-withDefaults(defineProps<{
-    fixedHeight?: string
-}>(), { fixedHeight: undefined })
+withDefaults(
+    defineProps<{
+        fixedHeight?: string
+    }>(),
+    { fixedHeight: undefined },
+)
 
 const opened = defineModel<boolean>('opened', { required: true })
 
@@ -13,16 +16,16 @@ const { mobile } = useDisplay()
 <template>
     <div>
         <VNavigationDrawer
-        v-model="opened"
-        width="500"
-        temporary
-        rounded
-        class="responsive-drawer"
-        :location="mobile ? 'bottom' : 'left'"
-        :class="{ 'side-drawer': !mobile, 'fixed-height': fixedHeight }"
-    >
-        <slot></slot>
-    </VNavigationDrawer>
+            v-model="opened"
+            width="500"
+            temporary
+            rounded
+            class="responsive-drawer"
+            :location="mobile ? 'bottom' : 'left'"
+            :class="{ 'side-drawer': !mobile, 'fixed-height': fixedHeight }"
+        >
+            <slot></slot>
+        </VNavigationDrawer>
     </div>
 </template>
 
@@ -42,6 +45,5 @@ const { mobile } = useDisplay()
 
 .fixed-height {
     min-height: v-bind(fixedHeight);
-    
 }
 </style>

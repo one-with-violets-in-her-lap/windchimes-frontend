@@ -54,9 +54,10 @@ const fullPlayerOpened = ref(false)
 
         <FullPlayerDrawer v-model:opened="fullPlayerOpened" />
 
-        <TracksQueueEditorDrawer :open-button-visible="Boolean(currentTrack && !fullPlayerOpened)" />
+        <TracksQueueEditorDrawer
+            :open-button-visible="Boolean(currentTrack && !fullPlayerOpened)"
+        />
     </div>
-
 </template>
 
 <style scoped>
