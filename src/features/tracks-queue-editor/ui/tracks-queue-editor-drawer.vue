@@ -105,7 +105,7 @@ async function loadMoreTracks() {
                     </VBtn>
                 </VSheet>
 
-                <TransitionGroup name="slide-left" rounded>
+                <TransitionGroup name="slide-left">
                     <TrackItem
                         v-for="(track, index) in loadedTracks"
                         :key="track.id"
