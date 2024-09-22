@@ -40,17 +40,26 @@ const allPlaylistTracks = computed(() => {
     const tracksReferences: (TrackReferenceGraphQl | PlaylistTrack)[] = [
         ...props.playlist.tracksReferences,
     ]
+    const unavailableTracksIds: number[] = []
 
-    availableTracks.value.forEach(loadedTrack => {
+    props.playlist.loadedTracks.forEach((loadedTrack, index) => {
+        if (loadedTrack === null) {
+            unavailableTracksIds.push(tracksReferences[index].id)
+            return
+        }
+
         const matchingTrackReferenceIndex = tracksReferences.findIndex(
-            trackReference => trackReference.id === loadedTrack.id,
+            trackReference => trackReference.id === loadedTrack?.id,
         )
+
         if (matchingTrackReferenceIndex !== -1) {
             tracksReferences[matchingTrackReferenceIndex] = loadedTrack
         }
     })
 
-    return tracksReferences
+    return tracksReferences.filter(
+        trackReference => !unavailableTracksIds.includes(trackReference.id),
+    )
 })
 </script>
 
