@@ -2,7 +2,7 @@ import { toRef } from 'vue'
 import { defineStore } from 'pinia'
 import { usePlayerVolume } from '@/features/player'
 import type { PlaylistTrack } from '@/entities/tracks'
-import { useTracksQueue } from '@/entities/tracks-queue/model/tracks-queue'
+import { useTracksQueue } from '@/entities/tracks-queue'
 import { useAudio } from '@/shared/model/reactive-audio'
 
 export type TrackWithAudioFileUrl = Omit<

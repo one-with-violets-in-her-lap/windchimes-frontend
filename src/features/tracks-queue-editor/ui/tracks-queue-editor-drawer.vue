@@ -2,9 +2,9 @@
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { usePlayerStore } from '@/features/player'
-import { TrackItem } from '@/features/track'
 import { useLazyTracksQuery } from '@/features/tracks-queue-editor/api/tracks-query'
 import { useTracksQueueActions } from '@/features/tracks-queue-editor/model/tracks-queue-actions'
+import { DraggableQueueTracksList } from '@/entities/tracks-queue'
 import { PlaylistTrack, TRACKS_PORTION_SIZE } from '@/entities/tracks'
 import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'
 import PaginatedContent from '@/shared/ui/paginated-content.vue'
@@ -88,7 +88,12 @@ async function loadMoreTracks() {
                 :total-items="tracksQueue.length"
                 @load-more="loadMoreTracks"
             >
-                <VSheet color="primary" class="queue-action-buttons" rounded tag="header">
+                <VSheet
+                    color="primary"
+                    class="queue-action-buttons"
+                    rounded
+                    tag="header"
+                >
                     <VBtn
                         prepend-icon="mdi-notification-clear-all"
                         variant="flat"
@@ -106,15 +111,10 @@ async function loadMoreTracks() {
                     </VBtn>
                 </VSheet>
 
-                <TransitionGroup name="slide-left">
-                    <TrackItem
-                        v-for="(track, index) in loadedTracks"
-                        :key="track.id"
-                        :track-number="index + 1"
-                        :track="track"
-                        :all-playlist-tracks="tracksQueue"
-                    />
-                </TransitionGroup>
+                <DraggableQueueTracksList
+                    v-model:all-queue-tracks="tracksQueue"
+                    :loaded-tracks="loadedTracks"
+                />
             </PaginatedContent>
         </ResponsiveDrawer>
     </div>
@@ -138,6 +138,7 @@ async function loadMoreTracks() {
     position: sticky;
     top: 0;
     margin-right: 20px;
+    margin-bottom: 12px;
     z-index: 2;
 }
 

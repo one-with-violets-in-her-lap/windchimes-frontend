@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia'
 import anime from 'animejs'
 import { TrackTimeSlider, VolumeMenuButton, usePlayerStore } from '@/features/player'
 import { CurrentTrackThumbnail } from '@/entities/tracks'
-import { LOOP_MODES } from '@/entities/tracks-queue/model/tracks-queue'
+import { LOOP_MODES } from '@/entities/tracks-queue'
 import { useNotificationsStore } from '@/shared/model/notifications'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'
@@ -46,9 +46,7 @@ function shuffleTracksQueue() {
 </script>
 
 <template>
-    <ResponsiveDrawer
-        v-model:opened="opened"
-    >
+    <ResponsiveDrawer v-model:opened="opened">
         <div v-if="currentTrack" class="drawer-content-wrapper">
             <div class="d-flex align-center gc-3 w-100 justify-center mb-2">
                 <VBtn
