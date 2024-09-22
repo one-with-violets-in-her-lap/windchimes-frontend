@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 import { useQuery } from '@vue/apollo-composable'
-import { PLAYLIST_LOADED_TRACK_FRAGMENT } from '@/entities/tracks'
+import { LOADED_TRACK_FRAGMENT } from '@/entities/tracks'
 import {
     GetPlaylistWithTracksQuery,
     GetPlaylistWithTracksQueryVariables,
@@ -12,7 +12,7 @@ export function usePlaylistWithTracksQuery(
 ) {
     return useQuery<GetPlaylistWithTracksQuery, GetPlaylistWithTracksQueryVariables>(
         gql`
-            ${PLAYLIST_LOADED_TRACK_FRAGMENT}
+            ${LOADED_TRACK_FRAGMENT}
 
             query GetPlaylistWithTracks($playlistId: Int!, $tracksToLoadIds: [Int!]) {
                 playlist(playlistId: $playlistId, tracksToLoadIds: $tracksToLoadIds) {
@@ -30,7 +30,7 @@ export function usePlaylistWithTracksQuery(
                         }
 
                         loadedTracks {
-                            ...PlaylistLoadedTrack
+                            ...LoadedTrack
                         }
                     }
 

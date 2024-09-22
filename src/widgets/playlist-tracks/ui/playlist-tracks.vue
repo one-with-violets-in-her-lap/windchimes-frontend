@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useIntersectionObserver } from '@vueuse/core'
+import { computed } from 'vue'
 import { TrackItem } from '@/features/track'
+import { PlaylistTrack, TRACKS_PORTION_SIZE } from '@/entities/tracks'
 import { ExcludeGraphQLError } from '@/shared/utils/exclude-graphql-error'
 import type {
     GetPlaylistWithTracksQuery,
     TrackReferenceGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
-import { PlaylistTrack } from '@/entities/tracks'
-
-const TRACKS_PORTION_SIZE = 30
+import PaginatedContent from '@/shared/ui/paginated-content.vue'
 
 const props = defineProps<{
     playlist: ExcludeGraphQLError<GetPlaylistWithTracksQuery['playlist']>
@@ -19,19 +17,16 @@ const emit = defineEmits<{
     (event: 'load-more', tracksToLoadIds: number[]): void
 }>()
 
-const loadMoreTriggerElement = ref<HTMLElement>()
-useIntersectionObserver(loadMoreTriggerElement, entries => {
-    if (entries[0].isIntersecting) {
-        const lastLoadedIndex = props.playlist.loadedTracks.length - 1
+function loadMoreTracks() {
+    const lastLoadedIndex = props.playlist.loadedTracks.length - 1
 
-        emit(
-            'load-more',
-            props.playlist.tracksReferences
-                .slice(lastLoadedIndex + 1, lastLoadedIndex + TRACKS_PORTION_SIZE + 1)
-                .map(trackReference => trackReference.id),
-        )
-    }
-})
+    emit(
+        'load-more',
+        props.playlist.tracksReferences
+            .slice(lastLoadedIndex + 1, lastLoadedIndex + TRACKS_PORTION_SIZE + 1)
+            .map(trackReference => trackReference.id),
+    )
+}
 
 const availableTracks = computed(() => {
     return props.playlist.loadedTracks.filter(track => track !== null)
@@ -60,8 +55,13 @@ const allPlaylistTracks = computed(() => {
 </script>
 
 <template>
-    <div>
-        <VList v-if="playlist.loadedTracks.length > 0" rounded class="mb-3">
+    <PaginatedContent
+        v-if="playlist.tracksReferences.length > 0"
+        :total-items="playlist.tracksReferences.length"
+        :items-loaded="playlist.loadedTracks.length"
+        @load-more="loadMoreTracks"
+    >
+        <VList>
             <TrackItem
                 v-for="(track, index) in availableTracks"
                 :key="track.id"
@@ -70,18 +70,11 @@ const allPlaylistTracks = computed(() => {
                 :track-number="index + 1"
             />
         </VList>
+    </PaginatedContent>
 
-        <VCard v-else elevation="0">
-            <VCardText class="text-surface-4"> No tracks were added yet </VCardText>
-        </VCard>
-
-        <VProgressCircular
-            v-if="playlist.loadedTracks.length < playlist.tracksReferences.length"
-            ref="loadMoreTriggerElement"
-            indeterminate
-            size="40"
-        ></VProgressCircular>
-    </div>
+    <VCard v-else elevation="0">
+        <VCardText class="text-surface-4"> No tracks were added yet </VCardText>
+    </VCard>
 </template>
 
 <style scoped></style>

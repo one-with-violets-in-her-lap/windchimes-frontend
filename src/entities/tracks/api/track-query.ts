@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 import { ApolloClient } from '@apollo/client/core'
-import { PLAYLIST_LOADED_TRACK_FRAGMENT } from '@/entities/tracks'
+import { LOADED_TRACK_FRAGMENT } from '@/entities/tracks'
 import {
     GetTrackByReferenceQuery,
     GetTrackByReferenceQueryVariables,
@@ -12,11 +12,11 @@ export async function queryLoadedTrack(
     trackReference: TrackQueryInput,
 ) {
     const query = gql`
-        ${PLAYLIST_LOADED_TRACK_FRAGMENT}
+        ${LOADED_TRACK_FRAGMENT}
 
         query GetTrackByReference($trackReference: TrackQueryInput!) {
             track(trackReference: $trackReference) {
-                ...PlaylistLoadedTrack
+                ...LoadedTrack
             }
         }
     `

@@ -5,9 +5,9 @@ import FullPlayerDrawer from '@/widgets/player-toolbar/ui/full-player-drawer.vue
 import {
     usePlayerStore,
     usePlayerShortcuts,
-    TracksQueueDrawer,
     TrackTimeSlider,
 } from '@/features/player'
+import { TracksQueueEditorDrawer } from '@/features/tracks-queue-editor'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 
 const playerStore = usePlayerStore()
@@ -54,7 +54,7 @@ const fullPlayerOpened = ref(false)
 
         <FullPlayerDrawer v-model:opened="fullPlayerOpened" />
 
-        <TracksQueueDrawer :open-button-visible="Boolean(currentTrack && !fullPlayerOpened)" />
+        <TracksQueueEditorDrawer :open-button-visible="Boolean(currentTrack && !fullPlayerOpened)" />
     </div>
 
 </template>
