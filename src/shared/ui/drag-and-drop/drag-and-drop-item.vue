@@ -31,7 +31,7 @@ onUnmounted(() => {
     document.removeEventListener('pointermove', highlightIfDraggedOver)
 })
 
-function handleDrag(event: PointerEvent) {
+function handleDrag() {
     dragged.value = true
 }
 
@@ -96,13 +96,13 @@ function highlightIfDraggedOver(event: PointerEvent) {
         <slot></slot>
 
         <div
-            class="drag-handle"
+            class="drag-handle flex-shrink-0"
             @pointerdown="handleDrag"
             @touchstart.prevent
             @touchend.prevent
         >
             <slot name="drag-handle">
-                <VIcon icon="mdi-drag" />
+                <VIcon icon="mdi-drag" size="24px" />
             </slot>
         </div>
     </VSheet>
@@ -110,8 +110,8 @@ function highlightIfDraggedOver(event: PointerEvent) {
 
 <style scoped>
 .drag-and-drop-item {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 34px;
     align-items: center;
     column-gap: 10px;
     user-select: none;
