@@ -16,3 +16,9 @@ export class NotFoundError extends FatalError {
         super('not-found-error', explanation)
     }
 }
+
+export class DragAndDropError extends Error {
+    constructor(readonly explanation?: string) {
+        super(explanation || 'failed to handle drag and drop action')
+    }
+}

@@ -3,9 +3,9 @@ import type { ThemeDefinition } from 'vuetify'
 export const teaGreenLightTheme: ThemeDefinition = {
     dark: false,
     colors: {
-        background: '#FFFFFF',
         'background-contrast': '#1C1C1C',
-        surface: '#F4F4F4',
+        background: '#FFFFFF',
+        surface: '#ededed',
         'surface-2': '#DDDDDD',
         'surface-3': '#C1C1C1',
         'surface-4': '#878787',
@@ -24,8 +24,8 @@ export const teaGreenLightTheme: ThemeDefinition = {
 export const teaGreenDarkTheme: ThemeDefinition = {
     dark: true,
     colors: {
-        background: '#1C1C1C',
         'background-contrast': '#FFFFFF',
+        background: '#1C1C1C',
         surface: '#282828',
         'surface-2': '#353535',
         'surface-3': '#474747',

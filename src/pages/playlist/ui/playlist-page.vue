@@ -5,7 +5,7 @@ import { useRoute } from 'vue-router'
 import { useFatalErrorStore } from '@/app/model/fatal-error-store'
 import { usePlaylistWithTracksQuery } from '@/pages/playlist/api/playlist-with-tracks-query'
 import { PlaylistActionsButtons } from '@/features/playlist-actions'
-import { NotFoundError } from '@/shared/model/fatal-errors'
+import { NotFoundError } from '@/shared/model/errors'
 
 const playlistId = useRoute().params.id.toString()
 
