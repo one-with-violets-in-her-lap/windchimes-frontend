@@ -5,7 +5,7 @@ export const teaGreenLightTheme: ThemeDefinition = {
     colors: {
         'background-contrast': '#1C1C1C',
         background: '#FFFFFF',
-        surface: '#ededed',
+        surface: '#efefef',
         'surface-2': '#DDDDDD',
         'surface-3': '#C1C1C1',
         'surface-4': '#878787',
