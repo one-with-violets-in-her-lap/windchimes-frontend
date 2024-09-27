@@ -10,7 +10,7 @@ const { currentTrack, currentSecond } = storeToRefs(playerStore)
 <template>
     <VSlider
         class="track-progress-slider"
-        color="white"
+        color="background-contrast"
         thumb-size="14"
         track-size="2"
         center-affix
