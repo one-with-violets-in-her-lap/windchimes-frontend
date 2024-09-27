@@ -37,14 +37,14 @@ const fullPlayerOpened = ref(false)
                 />
 
                 <div class="w-100">
-                    <div class="d-flex">
+                    <div class="playing-track-line">
                         <div class="track-name text-truncate">
                             {{ currentTrack.owner.name }}
                             -
                             {{ currentTrack.name }}
                         </div>
 
-                        <DurationTimestamp :seconds-duration="currentSecond" />
+                        <DurationTimestamp :seconds-duration="currentSecond" class="d-none d-sm-block" />
                     </div>
 
                     <TrackProgressBar @click.stop />
@@ -60,7 +60,7 @@ const fullPlayerOpened = ref(false)
     </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .player-controls-bar {
     position: fixed;
     bottom: 0px;
@@ -75,9 +75,11 @@ const fullPlayerOpened = ref(false)
     backdrop-filter: blur(3px);
 }
 
-.track-name {
-    display: inline-block;
-    max-width: 70%;
-    margin-right: 6px;
+.playing-track-line {
+    display: flex;
+    justify-content: start;
+    column-gap: 13px;
+    padding-right: 90px;
+    overflow: hidden;
 }
 </style>

@@ -124,7 +124,7 @@ async function loadMoreTracks() {
 .open-tracks-queue-button {
     position: fixed;
     right: 10px;
-    bottom: 40px;
+    bottom: 44px;
 }
 
 .tracks-queue-drawer {
