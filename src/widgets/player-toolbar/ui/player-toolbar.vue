@@ -44,7 +44,10 @@ const fullPlayerOpened = ref(false)
                             {{ currentTrack.name }}
                         </div>
 
-                        <DurationTimestamp :seconds-duration="currentSecond" class="d-none d-sm-block" />
+                        <DurationTimestamp
+                            :seconds-duration="currentSecond"
+                            class="d-none d-sm-block"
+                        />
                     </div>
 
                     <TrackProgressBar @click.stop />
