@@ -102,7 +102,7 @@ async function updatePlaylist(formData: PlaylistFormData) {
 
             <VList>
                 <VListItem>
-                    <VDialog>
+                    <VDialog max-width="500px">
                         <template #activator="{ props: activatorProps }">
                             <VBtn
                                 prepend-icon="mdi-delete"
