@@ -40,6 +40,11 @@ function moveBeforeTrack(trackToMoveId: string, beforeTrackId: string) {
     allQueueTracks.value.splice(trackToMoveIndex, 1)
     allQueueTracks.value.splice(beforeTrackIndex, 0, trackToMoveData)
 }
+
+function deleteTrack(id: number) {
+    const trackIndex = allQueueTracks.value.findIndex(track => id === track.id)
+    allQueueTracks.value.splice(trackIndex, 1)
+}
 </script>
 
 <template>
@@ -56,7 +61,24 @@ function moveBeforeTrack(trackToMoveId: string, beforeTrackId: string) {
                     :track-number="index + 1"
                     :track="track"
                     :all-playlist-tracks="allQueueTracks"
-                />
+                    compact
+                    class="pr-0"
+                    v-touch="{
+                        right: () => deleteTrack(track.id),
+                    }"
+                >
+                    <template #append>
+                        <VBtn
+                            title="Delete from queue"
+                            variant="text"
+                            size="32px"
+                            icon
+                            @click="deleteTrack(track.id)"
+                        >
+                            <VIcon icon="mdi-playlist-remove" size="22px" />
+                        </VBtn>
+                    </template>
+                </TrackItem>
             </DragAndDropItem>
         </template>
     </DragAndDropList>

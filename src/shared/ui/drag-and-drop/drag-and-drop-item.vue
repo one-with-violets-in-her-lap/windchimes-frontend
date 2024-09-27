@@ -113,7 +113,6 @@ function highlightIfDraggedOver(event: PointerEvent) {
     display: grid;
     grid-template-columns: 1fr 34px;
     align-items: center;
-    column-gap: 10px;
     user-select: none;
     transition:
         background-color 0.2s ease,
