@@ -53,7 +53,7 @@ async function playTrack() {
                 <template #activator="{ props: activatorProps }">
                     <span
                         v-bind="activatorProps"
-                        @pointerdown="titleTooltipVisible = true"
+                        @click="titleTooltipVisible = true"
                         class="text-sm-body-1 text-body-2"
                     >
                         {{ track.owner.name }} - {{ track.name }}
