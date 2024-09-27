@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import anime from 'animejs'
-import { TrackTimeSlider, VolumeMenuButton, usePlayerStore } from '@/features/player'
+import { TrackProgressBar, VolumeMenuButton, usePlayerStore } from '@/features/player'
 import { CurrentTrackThumbnail } from '@/entities/tracks'
 import { LOOP_MODES } from '@/entities/tracks-queue'
 import { useNotificationsStore } from '@/shared/model/notifications'
@@ -90,7 +90,7 @@ function shuffleTracksQueue() {
                 />
             </span>
 
-            <TrackTimeSlider class="track-time-slider" />
+            <TrackProgressBar class="track-progress-bar" />
 
             <div class="mb-3 text-surface-3">
                 <DurationTimestamp :seconds-duration="currentSecond" />
@@ -154,7 +154,7 @@ function shuffleTracksQueue() {
     transition: none;
 }
 
-.track-time-slider {
+.track-progress-bar {
     width: 90% !important;
     margin-bottom: 8px;
 }

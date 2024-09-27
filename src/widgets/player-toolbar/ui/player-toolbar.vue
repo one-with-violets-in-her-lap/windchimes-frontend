@@ -5,7 +5,7 @@ import FullPlayerDrawer from '@/widgets/player-toolbar/ui/full-player-drawer.vue
 import {
     usePlayerStore,
     usePlayerShortcuts,
-    TrackTimeSlider,
+    TrackProgressBar,
 } from '@/features/player'
 import { TracksQueueEditorDrawer } from '@/features/tracks-queue-editor'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
@@ -47,7 +47,7 @@ const fullPlayerOpened = ref(false)
                         <DurationTimestamp :seconds-duration="currentSecond" />
                     </div>
 
-                    <TrackTimeSlider @click.stop />
+                    <TrackProgressBar @click.stop />
                 </div>
             </div>
         </Transition>
