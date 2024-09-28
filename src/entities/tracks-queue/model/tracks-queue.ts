@@ -83,9 +83,8 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
                 await playTrackFromQueue(currentTrackIndex + tracksToSkipCount)
             }
         } catch (error) {
-            console.log(error)
-
-            if (error instanceof TrackLoadError) {
+            if (!(error instanceof TracksQueueBoundsReachedError)) {
+                console.error(error)
                 await playNextTrack(tracksToSkipCount + 1)
             }
         }
@@ -103,50 +102,55 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
 
             await playTrackFromQueue(currentTrackIndex - tracksToSkipCount)
         } catch (error) {
-            if (error instanceof TrackLoadError) {
+            if (!(error instanceof TracksQueueBoundsReachedError)) {
+                console.error(error)
                 await playPreviousTrack(tracksToSkipCount + 1)
             }
         }
     }
 
     async function playTrackFromQueue(index: number) {
-        console.log(index)
-
         let track = tracksQueue.value[index]
 
         if (!track) {
             throw new TracksQueueBoundsReachedError()
         }
 
-        if (track.__typename !== 'TrackGraphQL') {
-            const loadedTrackResponse = await queryLoadedTrack(apolloClient, {
-                id: track.id,
-                platform: track.platform,
-                platformId: track.platformId,
-            })
+        try {
+            if (track.__typename !== 'TrackGraphQL') {
+                const loadedTrackResponse = await queryLoadedTrack(apolloClient, {
+                    id: track.id,
+                    platform: track.platform,
+                    platformId: track.platformId,
+                })
 
-            if (!loadedTrackResponse.data.track) {
-                throw new TrackLoadError("couldn't obtain requested track data")
+                if (!loadedTrackResponse.data.track) {
+                    throw new TrackLoadError("couldn't obtain requested track data")
+                }
+
+                track = loadedTrackResponse.data.track
+                tracksQueue.value[index] = track
             }
 
-            track = loadedTrackResponse.data.track
-            tracksQueue.value[index] = track
-        }
+            const audioFileUrlQuery = await queryTrackAudioFile(apolloClient, track)
+            if (
+                !audioFileUrlQuery.data.trackAudioFile ||
+                audioFileUrlQuery.data.trackAudioFile.__typename !==
+                    'TrackAudioFileGraphQL'
+            ) {
+                console.error(audioFileUrlQuery.data.trackAudioFile)
+                throw new TrackLoadError("couldn't obtain audio file url of a track")
+            }
 
-        const audioFileUrlQuery = await queryTrackAudioFile(apolloClient, track)
-        if (
-            !audioFileUrlQuery.data.trackAudioFile ||
-            audioFileUrlQuery.data.trackAudioFile.__typename !==
-                'TrackAudioFileGraphQL'
-        ) {
-            console.error(audioFileUrlQuery.data.trackAudioFile)
-            throw new TrackLoadError("couldn't obtain audio file url of a track")
+            playTrack({
+                ...track,
+                trackAudioFileUrl: audioFileUrlQuery.data.trackAudioFile.url,
+            })
+        } catch (error) {
+            throw new TrackLoadError(
+                `failed to load track data or its audio file. more info: ${error}`,
+            )
         }
-
-        playTrack({
-            ...track,
-            trackAudioFileUrl: audioFileUrlQuery.data.trackAudioFile.url,
-        })
     }
 
     function shuffleQueue() {
