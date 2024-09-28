@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
-
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable'
 import { queryTrackAudioFile, type PlaylistTrack } from '@/entities/tracks'
 import { usePlayerStore } from '@/features/player'
 import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
+import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 
 const props = defineProps<{
     track: PlaylistTrack
@@ -44,7 +43,7 @@ async function playTrack() {
 <template>
     <VListItem lines="two" :class="{ 'px-3 py-1': compact }">
         <template #title>
-            <VTooltip
+            <!-- <VTooltip
                 v-model="titleTooltipVisible"
                 :text="`${track.owner.name} - ${track.name}`"
                 location="end center"
@@ -59,7 +58,12 @@ async function playTrack() {
                         {{ track.owner.name }} - {{ track.name }}
                     </span>
                 </template>
-            </VTooltip>
+            </VTooltip> -->
+            <span
+                class="text-sm-body-1 text-body-2"
+            >
+                {{ track.owner.name }} - {{ track.name }}
+            </span>
         </template>
 
         <template #subtitle>
