@@ -6,6 +6,8 @@ UI for a multi-source music player, allows streaming and managing music from pla
 
 [try the web-version](https://windchimes.hopto.org)
 
+https://github.com/user-attachments/assets/d0db5652-e2c0-42e8-939d-8923c7864509
+
 ## features
 
 -   playlists creation, tracks import from other platforms. only youtube and soundcloud are supported for now
