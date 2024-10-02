@@ -6,6 +6,12 @@ import {
     LOOP_MODES,
     TracksQueueBoundsReachedError,
 } from '@/entities/tracks-queue/model/tracks-queue'
+import {
+    QueueTrackNotFoundError,
+    shuffleQueue,
+    moveQueueTracks,
+    clearQueue,
+} from '@/entities/tracks-queue/model/tracks-queue-actions'
 import DraggableQueueTracksList from '@/entities/tracks-queue/ui/draggable-queue-tracks-list.vue'
 
 export {
@@ -16,4 +22,8 @@ export {
     LoopMode,
     LOOP_MODES,
     TracksQueueBoundsReachedError,
+    QueueTrackNotFoundError as QueueTracksNotFoundError,
+    shuffleQueue,
+    moveQueueTracks,
+    clearQueue
 }

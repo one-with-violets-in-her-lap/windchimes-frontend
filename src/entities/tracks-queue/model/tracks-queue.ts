@@ -10,7 +10,6 @@ import {
     queryTrackAudioFile,
     queryLoadedTrack,
 } from '@/entities/tracks'
-import { shuffleNextQueueTracks } from '@/entities/tracks-queue/utils/shuffle-next-queue-tracks'
 import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 
 export class TrackLoadError extends Error {}
@@ -153,13 +152,6 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
         }
     }
 
-    function shuffleQueue() {
-        tracksQueue.value = shuffleNextQueueTracks(
-            tracksQueue.value,
-            currentTrackId.value,
-        )
-    }
-
     return {
         tracksQueue,
         currentTrackId,
@@ -167,7 +159,6 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
         loopMode,
 
         playNextTrack,
-        playPreviousTrack,
-        shuffleQueue,
+        playPreviousTrack
     }
 }

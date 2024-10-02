@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia'
 import anime from 'animejs'
 import { TrackProgressBar, VolumeMenuButton, usePlayerStore } from '@/features/player'
 import { CurrentTrackThumbnail } from '@/entities/tracks'
-import { LOOP_MODES } from '@/entities/tracks-queue'
+import { LOOP_MODES, shuffleQueue } from '@/entities/tracks-queue'
 import { useNotificationsStore } from '@/shared/model/notifications'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'
@@ -11,9 +11,9 @@ import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'
 const opened = defineModel<boolean>('opened', { required: true })
 
 const playerStore = usePlayerStore()
-const { playNextTrack, playPreviousTrack, shuffleQueue, pause, play, audio } =
-    playerStore
-const { currentTrack, currentSecond, loopMode, paused } = storeToRefs(playerStore)
+const { playNextTrack, playPreviousTrack, pause, play, audio } = playerStore
+const { currentTrack, currentSecond, loopMode, paused, tracksQueue } =
+    storeToRefs(playerStore)
 const { showNotification } = useNotificationsStore()
 
 let pulseAnimation: anime.AnimeInstance | undefined = undefined
@@ -40,7 +40,7 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
 }
 
 function shuffleTracksQueue() {
-    shuffleQueue()
+    tracksQueue.value = shuffleQueue(tracksQueue.value, currentTrack.value?.id)
     showNotification('success', 'next tracks will appear in random order')
 }
 </script>

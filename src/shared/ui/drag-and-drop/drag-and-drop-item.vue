@@ -14,7 +14,7 @@ const emit = defineEmits<{
     (event: 'move-before', itemToMoveId: string, beforeItemId: string): void
 }>()
 
-const dragged = ref(false)
+const dragged = defineModel<boolean>('dragged')
 const dragAndDropItemElement = ref<HTMLElement>()
 
 const { elementX: mouseX, elementY: mouseY } = useMouseInElement(
@@ -31,8 +31,9 @@ onUnmounted(() => {
     document.removeEventListener('pointermove', highlightIfDraggedOver)
 })
 
-function handleDrag() {
+function handleDrag(event: Event) {
     dragged.value = true
+    event.stopPropagation()
 }
 
 function handleDrop(event: PointerEvent) {

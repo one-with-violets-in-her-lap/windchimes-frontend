@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { usePlayerStore } from '@/features/player'
 import { useLazyTracksQuery } from '@/features/tracks-queue-editor/api/tracks-query'
-import { useTracksQueueActions } from '@/features/tracks-queue-editor/model/tracks-queue-actions'
-import { DraggableQueueTracksList } from '@/entities/tracks-queue'
+import { insertLoadedTracks } from '@/features/tracks-queue-editor/model/insert-loaded-tracks'
+import { usePlayerStore } from '@/features/player'
+import {
+    clearQueue,
+    DraggableQueueTracksList,
+    shuffleQueue,
+} from '@/entities/tracks-queue'
 import { PlaylistTrack, TRACKS_PORTION_SIZE } from '@/entities/tracks'
 import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'
 import PaginatedContent from '@/shared/ui/paginated-content.vue'
@@ -15,8 +19,7 @@ defineProps<{
 
 const opened = ref(false)
 
-const { tracksQueue } = storeToRefs(usePlayerStore())
-const { clearQueue, insertLoadedTracks, shuffleQueue } = useTracksQueueActions()
+const { tracksQueue, currentTrack } = storeToRefs(usePlayerStore())
 
 const loadedTracks = computed(() => {
     const firstNotLoadedTrackIndex = tracksQueue.value.findIndex(
@@ -51,7 +54,11 @@ async function loadMoreTracks() {
         })
 
         if (result && result.tracks.__typename === 'LoadedTracksResponseGraphQL') {
-            insertLoadedTracks(queuePartToLoad, result.tracks.items)
+            tracksQueue.value = insertLoadedTracks(
+                tracksQueue.value,
+                queuePartToLoad,
+                result.tracks.items,
+            )
         }
     } else {
         const result = await tracksQuery.fetchMore({
@@ -61,7 +68,11 @@ async function loadMoreTracks() {
         })
 
         if (result?.data.tracks.__typename === 'LoadedTracksResponseGraphQL') {
-            insertLoadedTracks(queuePartToLoad, result.data.tracks.items)
+            tracksQueue.value = insertLoadedTracks(
+                tracksQueue.value,
+                queuePartToLoad,
+                result.data.tracks.items,
+            )
         }
     }
 }
@@ -97,7 +108,9 @@ async function loadMoreTracks() {
                     <VBtn
                         prepend-icon="mdi-notification-clear-all"
                         variant="flat"
-                        @click="clearQueue"
+                        @click="
+                            tracksQueue = clearQueue(tracksQueue, currentTrack?.id)
+                        "
                     >
                         Clear
                     </VBtn>
@@ -105,7 +118,9 @@ async function loadMoreTracks() {
                     <VBtn
                         prepend-icon="mdi-shuffle"
                         variant="outlined"
-                        @click="shuffleQueue"
+                        @click="
+                            tracksQueue = shuffleQueue(tracksQueue, currentTrack?.id)
+                        "
                     >
                         Shuffle
                     </VBtn>

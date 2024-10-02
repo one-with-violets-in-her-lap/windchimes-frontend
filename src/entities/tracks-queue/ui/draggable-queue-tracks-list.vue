@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { TrackItem } from '@/features/track'
+import DraggableQueueTrack from '@/entities/tracks-queue/ui/draggable-queue-track.vue'
+import {
+    moveQueueTracks,
+    QueueTrackNotFoundError,
+} from '@/entities/tracks-queue/model/tracks-queue-actions'
 import { QueueItem } from '@/entities/tracks-queue/model/queue-item'
-import { DragAndDropItem, DragAndDropList } from '@/shared/ui/drag-and-drop'
-import { DragAndDropError } from '@/shared/model/errors'
+import { DragAndDropList } from '@/shared/ui/drag-and-drop'
 import { LoadedTrackFragment } from '@/shared/model/graphql-generated-types/graphql'
+import { DragAndDropError } from '@/shared/model/errors'
 
 defineProps<{
     /**
@@ -15,30 +19,19 @@ defineProps<{
 const allQueueTracks = defineModel<QueueItem[]>('allQueueTracks', { required: true })
 
 function moveBeforeTrack(trackToMoveId: string, beforeTrackId: string) {
-    console.log('ids', trackToMoveId, beforeTrackId)
+    try {
+        allQueueTracks.value = moveQueueTracks(
+            allQueueTracks.value,
+            +trackToMoveId,
+            +beforeTrackId,
+        )
+    } catch (error) {
+        if (error instanceof QueueTrackNotFoundError) {
+            throw new DragAndDropError(error.message)
+        }
 
-    const trackToMoveIndex = allQueueTracks.value.findIndex(
-        track => `${track.id}` === trackToMoveId,
-    )
-    const beforeTrackIndex = allQueueTracks.value.findIndex(
-        track => `${track.id}` === beforeTrackId,
-    )
-
-    console.log(
-        `placing ${trackToMoveId} (prev index: ${trackToMoveIndex}) ` +
-            `at the index ${beforeTrackIndex}`,
-    )
-
-    if (beforeTrackIndex === -1 || trackToMoveIndex === -1) {
-        throw new DragAndDropError('')
+        throw new DragAndDropError(`queue drag and drop failed: ${error}`)
     }
-
-    const trackToMoveData = allQueueTracks.value[trackToMoveIndex]
-
-    console.log('tracks to move', trackToMoveData)
-
-    allQueueTracks.value.splice(trackToMoveIndex, 1)
-    allQueueTracks.value.splice(beforeTrackIndex, 0, trackToMoveData)
 }
 
 function deleteTrack(id: number) {
@@ -48,38 +41,18 @@ function deleteTrack(id: number) {
 </script>
 
 <template>
-    <DragAndDropList name="slide-left">
+    <DragAndDropList>
         <template #default="{ dragAndDropListElement }">
-            <DragAndDropItem
+            <DraggableQueueTrack
                 v-for="(track, index) in loadedTracks"
-                :drag-and-drop-parent="dragAndDropListElement"
-                :id="`${track.id}`"
                 :key="track.id"
+                :track="track"
+                :track-number="index + 1"
+                :all-queue-tracks="allQueueTracks"
+                :drag-and-drop-parent="dragAndDropListElement"
+                @delete="deleteTrack(track.id)"
                 @move-before="moveBeforeTrack"
-            >
-                <TrackItem
-                    :track-number="index + 1"
-                    :track="track"
-                    :all-playlist-tracks="allQueueTracks"
-                    compact
-                    class="pr-0"
-                    v-touch="{
-                        right: () => deleteTrack(track.id),
-                    }"
-                >
-                    <template #append>
-                        <VBtn
-                            title="Delete from queue"
-                            variant="text"
-                            size="32px"
-                            icon
-                            @click="deleteTrack(track.id)"
-                        >
-                            <VIcon icon="mdi-playlist-remove" size="22px" />
-                        </VBtn>
-                    </template>
-                </TrackItem>
-            </DragAndDropItem>
+            />
         </template>
     </DragAndDropList>
 </template>
