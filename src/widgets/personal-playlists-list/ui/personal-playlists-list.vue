@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue'
-import { usePlaylistsQuery } from '@/widgets/playlists-list/api/playlists-query'
+import { usePlaylistsQuery } from '@/widgets/personal-playlists-list/api/playlists-query'
 import { useCurrentAccountActions } from '@/features/account-menu/api/current-account-actions'
 import PlaylistCreationDialog from '@/features/playlist-creation-dialog/ui/playlist-creation-dialog.vue'
-import PlaylistCard from '@/entities/playlists/ui/playlist-card.vue'
+import { PlaylistsList } from '@/entities/playlists'
 import LoadingContent from '@/shared/ui/loading-content.vue'
 
 const { user } = useAuth0()
@@ -38,31 +38,14 @@ onResult(async () => {
         >
             <PlaylistCreationDialog />
 
-            <Transition name="slide-left" appear>
-                <div
-                    v-if="
-                        result?.playlists.__typename ===
-                            'PlaylistGraphQLListResponseWrapperGraphQL' &&
-                        result.playlists.items.length > 0
-                    "
-                >
-                    <PlaylistCard
-                        v-for="playlist in result.playlists.items"
-                        :key="playlist.id"
-                        :playlist="playlist"
-                    />
-                </div>
-
-                <div
-                    v-else-if="
-                        result?.playlists.__typename ===
-                            'PlaylistGraphQLListResponseWrapperGraphQL' &&
-                        result.playlists.items.length === 0
-                    "
-                >
-                    <p class="mb-4">You don't have any playlists</p>
-                </div>
-            </Transition>
+            <PlaylistsList
+                v-if="
+                    result?.playlists.__typename ===
+                    'PlaylistGraphQLListResponseWrapperGraphQL'
+                "
+                :playlists="result.playlists.items"
+                :no-playlists-message="'You don\'t have any playlists'"
+            />
         </LoadingContent>
     </div>
 

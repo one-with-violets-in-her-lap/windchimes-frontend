@@ -6,7 +6,7 @@ import {
 } from '@/shared/model/graphql-generated-types/graphql'
 
 export const PLAYLISTS_LIST_ITEM_FRAGMENT = gql`
-    fragment PlaylistsListItemFragment on PlaylistGraphQL {
+    fragment PlaylistsListItem on PlaylistGraphQL {
         id
         createdAt
         name
@@ -31,7 +31,7 @@ export function usePlaylistsQuery(ownerAuth0Id: string) {
 
                     ... on PlaylistGraphQLListResponseWrapperGraphQL {
                         items {
-                            ...PlaylistsListItemFragment
+                            ...PlaylistsListItem
                         }
                     }
                 }
