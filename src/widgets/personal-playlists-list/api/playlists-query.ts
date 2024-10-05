@@ -17,13 +17,13 @@ export const PLAYLISTS_LIST_ITEM_FRAGMENT = gql`
     }
 `
 
-export function usePlaylistsQuery(ownerAuth0Id: string) {
+export function usePlaylistsQuery(ownerUserId: string) {
     return useQuery<GetPlaylistsQuery, GetPlaylistsQueryVariables>(
         gql`
             ${PLAYLISTS_LIST_ITEM_FRAGMENT}
 
-            query GetPlaylists($ownerAuth0Id: String!) {
-                playlists(ownerAuth0Id: $ownerAuth0Id) {
+            query GetPlaylists($ownerUserId: String!) {
+                playlists(ownerUserId: $ownerUserId) {
                     ... on ErrorGraphQL {
                         name
                         explanation
@@ -37,6 +37,6 @@ export function usePlaylistsQuery(ownerAuth0Id: string) {
                 }
             }
         `,
-        { ownerAuth0Id: ownerAuth0Id },
+        { ownerUserId },
     )
 }
