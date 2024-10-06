@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable'
 import { queryTrackAudioFile, type PlaylistTrack } from '@/entities/tracks'
@@ -19,8 +18,6 @@ const { client: apolloClient } = useApolloClient()
 const playerStore = usePlayerStore()
 const { tracksQueue } = storeToRefs(playerStore)
 const { play } = playerStore
-
-const titleTooltipVisible = ref(false)
 
 async function playTrack() {
     const response = await queryTrackAudioFile(apolloClient, props.track)
@@ -43,22 +40,6 @@ async function playTrack() {
 <template>
     <VListItem lines="two" :class="{ 'px-3 py-1': compact }">
         <template #title>
-            <!-- <VTooltip
-                v-model="titleTooltipVisible"
-                :text="`${track.owner.name} - ${track.name}`"
-                location="end center"
-                class="text-sm-body-1 text-body-2"
-            >
-                <template #activator="{ props: activatorProps }">
-                    <span
-                        v-bind="activatorProps"
-                        @click="titleTooltipVisible = true"
-                        class="text-sm-body-1 text-body-2"
-                    >
-                        {{ track.owner.name }} - {{ track.name }}
-                    </span>
-                </template>
-            </VTooltip> -->
             <span class="text-sm-body-1 text-body-2">
                 {{ track.owner.name }} - {{ track.name }}
             </span>

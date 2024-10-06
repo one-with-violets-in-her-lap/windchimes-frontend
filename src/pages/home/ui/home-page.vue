@@ -8,9 +8,7 @@ import LoadingContent from '@/shared/ui/loading-content.vue'
 
 const { user } = useAuth0()
 
-const { loading, error, result, restart, onResult } = usePlaylistsFeedQuery(
-    user.value?.sub,
-)
+const { loading, error, result, restart } = usePlaylistsFeedQuery(user.value?.sub)
 
 const playlistsFeedQueryError = computed(() => {
     if (
