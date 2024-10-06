@@ -59,9 +59,7 @@ async function playTrack() {
                     </span>
                 </template>
             </VTooltip> -->
-            <span
-                class="text-sm-body-1 text-body-2"
-            >
+            <span class="text-sm-body-1 text-body-2">
                 {{ track.owner.name }} - {{ track.name }}
             </span>
         </template>

@@ -159,6 +159,6 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
         loopMode,
 
         playNextTrack,
-        playPreviousTrack
+        playPreviousTrack,
     }
 }

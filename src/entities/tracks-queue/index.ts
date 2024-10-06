@@ -25,5 +25,5 @@ export {
     QueueTrackNotFoundError as QueueTracksNotFoundError,
     shuffleQueue,
     moveQueueTracks,
-    clearQueue
+    clearQueue,
 }

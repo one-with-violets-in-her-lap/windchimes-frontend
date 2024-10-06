@@ -17,7 +17,11 @@ withDefaults(
 <template>
     <Transition name="slide-left" appear>
         <VRow v-if="playlists && playlists.length > 0" class="playlists-row">
-            <VCol v-for="playlist in playlists" :key="playlist.id" :cols="smAndDown ? 12 : 4">
+            <VCol
+                v-for="playlist in playlists"
+                :key="playlist.id"
+                :cols="smAndDown ? 12 : 4"
+            >
                 <PlaylistCard :playlist="playlist" class="h-100" />
             </VCol>
         </VRow>
