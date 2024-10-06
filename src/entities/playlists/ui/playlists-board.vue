@@ -34,6 +34,6 @@ withDefaults(
 
 <style scoped>
 .playlists-row {
-    max-width: 1200px;
+    max-width: 1300px;
 }
 </style>

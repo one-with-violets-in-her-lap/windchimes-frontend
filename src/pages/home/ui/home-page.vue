@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { usePlaylistsFeedQuery } from '@/pages/home/api/playlists-feed-query'
 import PlaylistCreationDialog from '@/features/playlist-creation-dialog/ui/playlist-creation-dialog.vue'
-import { PlaylistsList } from '@/entities/playlists'
+import { PlaylistsBoard } from '@/entities/playlists'
 import LoadingContent from '@/shared/ui/loading-content.vue'
 
 const { user } = useAuth0()
@@ -42,7 +42,7 @@ const playlistsFeedQueryError = computed(() => {
         >
             <PlaylistCreationDialog />
 
-            <PlaylistsList
+            <PlaylistsBoard
                 :playlists="result.personalPlaylists.items"
                 :no-playlists-message="'You don\'t have any playlists'"
             />
@@ -62,7 +62,7 @@ const playlistsFeedQueryError = computed(() => {
                 <VIcon icon="mdi-headphones" size="32px" color="surface-3" />
             </h2>
 
-            <PlaylistsList
+            <PlaylistsBoard
                 v-if="
                     result?.otherPublicPlaylists.__typename ===
                     'PlaylistGraphQLListResponseWrapperGraphQL'

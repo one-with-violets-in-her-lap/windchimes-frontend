@@ -26,7 +26,7 @@ const formattedCreationDate = computed(() =>
                 class="playlist-card"
             >
                 <template #title>
-                    <h3 class="text-h6 text-wrap">
+                    <h3 class="text-h6 text-truncate">
                         {{ playlist.name }}
                     </h3>
                 </template>
