@@ -7,6 +7,7 @@ import { useFatalErrorStore } from '@/app/model/fatal-error-store'
 import { usePlaylistWithTracksQuery } from '@/pages/playlist/api/playlist-with-tracks-query'
 import { PlaylistActionsButtons } from '@/features/playlist-actions'
 import { NotFoundError } from '@/shared/model/errors'
+import ExpandableParagraph from '@/shared/ui/expandable-paragraph.vue'
 
 const playlistId = useRoute().params.id.toString()
 
@@ -105,12 +106,12 @@ function loadMoreTracks(ids: number[]) {
                 {{ result.playlist.tracksReferences.length }} tracks
             </div>
 
-            <p
+            <ExpandableParagraph
                 v-if="result.playlist.description"
-                class="text-subtitle-1 mb-5 playlist-description"
+                class="playlist-description text-subtitle-1 mb-5"
             >
                 {{ result.playlist.description }}
-            </p>
+            </ExpandableParagraph>
 
             <PlaylistActionsButtons
                 v-if="result.playlist.auth0UserId === user?.sub"
@@ -131,5 +132,6 @@ function loadMoreTracks(ids: number[]) {
 <style scoped>
 .playlist-description {
     white-space: pre-wrap;
+    max-width: 800px;
 }
 </style>
