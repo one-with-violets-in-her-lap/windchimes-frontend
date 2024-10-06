@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useAuth0 } from '@auth0/auth0-vue'
 import LoadingContent from '@/shared/ui/loading-content.vue'
 import PlaylistTracks from '@/widgets/playlist-tracks/ui/playlist-tracks.vue'
 import { useRoute } from 'vue-router'
@@ -8,6 +9,8 @@ import { PlaylistActionsButtons } from '@/features/playlist-actions'
 import { NotFoundError } from '@/shared/model/errors'
 
 const playlistId = useRoute().params.id.toString()
+
+const { user } = useAuth0()
 
 const { handleError } = useFatalErrorStore()
 
@@ -109,7 +112,11 @@ function loadMoreTracks(ids: number[]) {
                 {{ result.playlist.description }}
             </p>
 
-            <PlaylistActionsButtons :playlist="result.playlist" @update="refetch()" />
+            <PlaylistActionsButtons
+                v-if="result.playlist.auth0UserId === user?.sub"
+                :playlist="result.playlist"
+                @update="refetch()"
+            />
 
             <Transition name="scale-up" appear>
                 <PlaylistTracks

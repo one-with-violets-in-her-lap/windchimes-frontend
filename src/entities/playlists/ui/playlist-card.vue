@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { PlaylistsListItemFragmentFragment } from '@/shared/model/graphql-generated-types/graphql'
+import { PlaylistsListItemFragment } from '@/shared/model/graphql-generated-types/graphql'
 
 const props = defineProps<{
-    playlist: PlaylistsListItemFragmentFragment
+    playlist: PlaylistsListItemFragment
 }>()
 
 const formattedCreationDate = computed(() =>
@@ -19,11 +19,11 @@ const formattedCreationDate = computed(() =>
     <VHover>
         <template #default="{ isHovering, props }">
             <VCard
-                v-bind="props"
+                v-bind="{ ...props, ...$attrs }"
                 variant="flat"
                 :color="isHovering ? 'surface-2' : undefined"
                 :to="{ name: 'playlist', params: { id: playlist.id } }"
-                class="mb-4"
+                class="playlist-card"
             >
                 <template #title>
                     <h3 class="text-h6 text-wrap">
@@ -56,4 +56,8 @@ const formattedCreationDate = computed(() =>
     </VHover>
 </template>
 
-<style scoped></style>
+<style scoped>
+.playlist-card :deep(.v-card-item) {
+    height: 100%;
+}
+</style>
