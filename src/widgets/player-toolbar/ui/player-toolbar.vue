@@ -74,7 +74,7 @@ const fullPlayerOpened = ref(false)
     display: flex;
     align-items: center;
 
-    background-color: rgba(var(--v-theme-surface), 0.85);
+    background-color: rgba(var(--v-theme-surface), 0.7);
     backdrop-filter: blur(3px);
 }
 

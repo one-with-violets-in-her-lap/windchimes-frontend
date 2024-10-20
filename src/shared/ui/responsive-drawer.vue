@@ -32,7 +32,7 @@ const { mobile } = useDisplay()
 <style scoped>
 .responsive-drawer {
     padding: 20px;
-    background-color: rgba(var(--v-theme-background), 0.8);
+    background-color: rgba(var(--v-theme-background), 0.75);
     backdrop-filter: blur(3px);
     max-height: 90%;
 }
