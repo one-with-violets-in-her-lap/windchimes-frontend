@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useDisplay } from 'vuetify'
 import { PlaylistsListItemFragment } from '@/shared/model/graphql-generated-types/graphql'
 
 const props = defineProps<{
     playlist: PlaylistsListItemFragment
 }>()
+
+const { smAndDown } = useDisplay()
 
 const formattedCreationDate = computed(() =>
     new Date(props.playlist.createdAt).toLocaleDateString(undefined, {
@@ -48,7 +51,7 @@ const formattedCreationDate = computed(() =>
                         color="surface-2"
                         rounded
                         tile
-                        size="100px"
+                        :size="smAndDown ? '80px' : '100px'"
                     />
                 </template>
             </VCard>
