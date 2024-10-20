@@ -48,7 +48,7 @@ const formattedCreationDate = computed(() =>
                         color="surface-2"
                         rounded
                         tile
-                        size="70px"
+                        size="100px"
                     />
                 </template>
             </VCard>
