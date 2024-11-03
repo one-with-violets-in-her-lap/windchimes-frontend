@@ -2,7 +2,9 @@
 
 🎧 🎐
 
-UI for a multi-source music player, allows streaming and managing music from platforms like youtube and soundcloud in one place
+UI for a multi-platform music player that lets you listen to the music from different platforms like Youtube and Soundcloud in one place
+
+it fixes the problem of constant platform switching just to listen to some youtube exclusive podcast, for example
 
 [try the web-version](https://windchimes.hopto.org)
 
