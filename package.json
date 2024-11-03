@@ -5,17 +5,14 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "run-p type-check \"build-only {@}\" --",
-        "preview": "vite preview",
-        "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
-        "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
-        "test:unit": "cypress run --component",
-        "test:unit:dev": "cypress open --component",
-        "build-only": "vite build",
         "type-check": "vue-tsc --build --force",
+        "build-only": "vite build",
+        "build": "run-p type-check \"build-only {@}\" --",
         "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
         "format": "prettier --write src/",
-        "graphql-codegen": "graphql-codegen --config graphql-codegen.ts"
+        "graphql-codegen": "graphql-codegen --config graphql-codegen.ts",
+
+        "start-mobile-app": "npm run build && cap run android"
     },
     "dependencies": {
         "@apollo/client": "^3.11.2",
