@@ -43,18 +43,16 @@ const swipePopUpPosition = computed(() => {
     const verticalSwipeDistance = Math.abs(
         touchPosition.value.y - touchStartPosition.value.y,
     )
-    const horizontalSwipeDistance = Math.abs(
-        touchPosition.value.x - touchStartPosition.value.x,
-    )
+    const leftSwipeDistance = touchPosition.value.x - touchStartPosition.value.x
 
     if (
         verticalSwipeDistance > MAX_VERTICAL_SWIPE_DISTANCE ||
-        horizontalSwipeDistance < MIN_HORIZONTAL_SWIPE_DISTANCE
+        leftSwipeDistance < MIN_HORIZONTAL_SWIPE_DISTANCE
     ) {
         return POP_UP_INITIAL_X_POSITION
     }
 
-    return Math.min(horizontalSwipeDistance, POP_UP_WIDTH)
+    return Math.min(leftSwipeDistance, POP_UP_WIDTH)
 })
 
 function handleTouchMove(event: TouchEvent) {
