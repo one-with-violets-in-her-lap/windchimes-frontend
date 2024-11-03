@@ -13,7 +13,7 @@ export const teaGreenLightTheme: ThemeDefinition = {
         secondary: '#FF7759',
         error: '#E87474',
         info: '#3ca7d8',
-        success: '#68CC76',
+        success: '#3bbf69',
         warning: '#FFC960',
     },
 }
@@ -31,7 +31,7 @@ export const teaGreenDarkTheme: ThemeDefinition = {
         secondary: '#FF7759',
         error: '#e87474',
         info: '#3ca7d8',
-        success: '#8DE599',
+        success: '#3bbf69',
         warning: '#FFC960',
     },
 }
