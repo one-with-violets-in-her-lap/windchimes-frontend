@@ -8,7 +8,7 @@ it fixes the problem of constant platform switching just to listen to some youtu
 
 [try the web-version](https://windchimes.hopto.org)
 
-https://github.com/user-attachments/assets/d0db5652-e2c0-42e8-939d-8923c7864509
+https://github.com/user-attachments/assets/2e7b06ad-f6fa-4508-b300-c0539c76344c
 
 ## features
 
