@@ -1,3 +1,4 @@
+import { ERROR_FRAGMENT } from '@/shared/api/error-fragment'
 import {
     UpdatePlaylistMutation,
     UpdatePlaylistMutationVariables,
@@ -7,13 +8,14 @@ import gql from 'graphql-tag'
 
 export function usePlaylistUpdateMutation() {
     const mutation = gql`
+        ${ERROR_FRAGMENT}
+
         mutation UpdatePlaylist(
             $playlistId: Int!
             $newData: UpdatePlaylistInputGraphQL!
         ) {
             updatePlaylist(playlistId: $playlistId, newData: $newData) {
-                name
-                explanation
+                ...Error
             }
         }
     `

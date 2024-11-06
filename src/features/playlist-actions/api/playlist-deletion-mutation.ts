@@ -5,9 +5,12 @@ import {
     PlaylistsListItemFragment,
 } from '@/shared/model/graphql-generated-types/graphql'
 import { useMutationWithErrorNotification } from '@/shared/utils/graphql-operations'
+import { ERROR_FRAGMENT } from '@/shared/api/error-fragment'
 
 export function usePlaylistDeletionMutation() {
     const mutation = gql`
+        ${ERROR_FRAGMENT}
+
         mutation DeletePlaylist($playlistId: Int!) {
             deletePlaylist(playlistId: $playlistId) {
                 ... on PlaylistGraphQL {
@@ -16,8 +19,7 @@ export function usePlaylistDeletionMutation() {
                 }
 
                 ... on ErrorGraphQL {
-                    name
-                    explanation
+                    ...Error
                 }
             }
         }

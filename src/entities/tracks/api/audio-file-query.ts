@@ -1,6 +1,7 @@
 import gql from 'graphql-tag'
 import { type ApolloClient } from '@apollo/client/core'
 import type { PlaylistTrack } from '@/entities/tracks'
+import { ERROR_FRAGMENT } from '@/shared/api/error-fragment'
 import type {
     GetTrackAudioFileUrlQuery,
     GetTrackAudioFileUrlQueryVariables,
@@ -11,6 +12,8 @@ export async function queryTrackAudioFile(
     track: PlaylistTrack,
 ) {
     const audioFileQuery = gql`
+        ${ERROR_FRAGMENT}
+
         query GetTrackAudioFileUrl($trackToReadData: TrackAudioFileQueryInput!) {
             trackAudioFile(trackToReadData: $trackToReadData) {
                 ... on TrackAudioFileGraphQL {
@@ -18,8 +21,7 @@ export async function queryTrackAudioFile(
                 }
 
                 ... on ErrorGraphQL {
-                    name
-                    explanation
+                    ...Error
                 }
             }
         }

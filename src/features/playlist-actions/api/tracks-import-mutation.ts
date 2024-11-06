@@ -4,9 +4,12 @@ import {
     ImportTracksMutationVariables,
 } from '@/shared/model/graphql-generated-types/graphql'
 import { useMutationWithErrorNotification } from '@/shared/utils/graphql-operations'
+import { ERROR_FRAGMENT } from '@/shared/api/error-fragment'
 
 export function useTracksImportMutation() {
     const mutation = gql`
+        ${ERROR_FRAGMENT}
+
         mutation ImportTracks(
             $fromPlaylist: PlaylistToImportFromGraphQL!
             $toPlaylistId: Int!
@@ -27,8 +30,7 @@ export function useTracksImportMutation() {
                 }
 
                 ... on ErrorGraphQL {
-                    name
-                    explanation
+                    ...Error
                 }
             }
         }

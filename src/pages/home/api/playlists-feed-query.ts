@@ -4,6 +4,7 @@ import {
     GetPlaylistsFeedQueryVariables,
     GetPlaylistsFeedQuery,
 } from '@/shared/model/graphql-generated-types/graphql'
+import { ERROR_FRAGMENT } from '@/shared/api/error-fragment'
 
 export const PLAYLISTS_LIST_ITEM_FRAGMENT = gql`
     fragment PlaylistsListItem on PlaylistGraphQL {
@@ -21,6 +22,7 @@ export function usePlaylistsFeedQuery(currentUserId?: string) {
     return useQuery<GetPlaylistsFeedQuery, GetPlaylistsFeedQueryVariables>(
         gql`
             ${PLAYLISTS_LIST_ITEM_FRAGMENT}
+            ${ERROR_FRAGMENT}
 
             query GetPlaylistsFeed(
                 $currentUserId: String
@@ -28,8 +30,7 @@ export function usePlaylistsFeedQuery(currentUserId?: string) {
             ) {
                 personalPlaylists: playlists(ownerUserId: $currentUserId) {
                     ... on ErrorGraphQL {
-                        name
-                        explanation
+                        ...Error
                     }
 
                     ... on PlaylistGraphQLListResponseWrapperGraphQL {
@@ -43,8 +44,7 @@ export function usePlaylistsFeedQuery(currentUserId?: string) {
                     excludeOwnedPlaylists: $excludeOwnedPlaylists
                 ) {
                     ... on ErrorGraphQL {
-                        name
-                        explanation
+                        ...Error
                     }
 
                     ... on PlaylistGraphQLListResponseWrapperGraphQL {

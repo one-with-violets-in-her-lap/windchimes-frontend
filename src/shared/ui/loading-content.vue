@@ -26,6 +26,7 @@ const emit = defineEmits<{
         <p class="my-3" v-if="error instanceof ApolloError">
             <b>Error:</b> {{ error.message }}
         </p>
+
         <p class="my-3" v-else><b>Error:</b> {{ error.explanation }}</p>
 
         <VBtn prepend-icon="mdi-reload" @click="emit('retry')"> Try again </VBtn>

@@ -5,6 +5,7 @@ import {
     GetPlaylistWithTracksQuery,
     GetPlaylistWithTracksQueryVariables,
 } from '@/shared/model/graphql-generated-types/graphql'
+import { ERROR_FRAGMENT } from '@/shared/api/error-fragment'
 
 export function usePlaylistWithTracksQuery(
     playlistId: number,
@@ -13,6 +14,7 @@ export function usePlaylistWithTracksQuery(
     return useQuery<GetPlaylistWithTracksQuery, GetPlaylistWithTracksQueryVariables>(
         gql`
             ${LOADED_TRACK_FRAGMENT}
+            ${ERROR_FRAGMENT}
 
             query GetPlaylistWithTracks($playlistId: Int!, $tracksToLoadIds: [Int!]) {
                 playlist(playlistId: $playlistId, tracksToLoadIds: $tracksToLoadIds) {
@@ -36,8 +38,7 @@ export function usePlaylistWithTracksQuery(
                     }
 
                     ... on ErrorGraphQL {
-                        name
-                        explanation
+                        ...Error
                     }
                 }
             }
