@@ -4,7 +4,7 @@ import { useAuth0 } from '@auth0/auth0-vue'
 import { usePlaylistsFeedQuery } from '@/pages/home/api/playlists-feed-query'
 import PlaylistCreationDialog from '@/features/playlist-creation-dialog/ui/playlist-creation-dialog.vue'
 import { PlaylistsBoard } from '@/entities/playlists'
-import LoadingContent from '@/shared/ui/loading-content.vue'
+import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
 
 const { user } = useAuth0()
 
