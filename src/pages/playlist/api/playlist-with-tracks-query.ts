@@ -24,7 +24,7 @@ export function usePlaylistWithTracksQuery(
                         name
                         pictureUrl
                         description
-                        auth0UserId
+                        ownerUserId
 
                         tracksReferences {
                             id
