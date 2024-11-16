@@ -35,7 +35,7 @@ const formattedCreationDate = computed(() =>
                 </template>
 
                 <template #subtitle>
-                    {{ playlist.tracksReferences.length }} tracks ·
+                    {{ playlist.tracksCount }} tracks ·
                     <time
                         :datetime="playlist.createdAt"
                         :title="new Date(playlist.createdAt).toLocaleString()"

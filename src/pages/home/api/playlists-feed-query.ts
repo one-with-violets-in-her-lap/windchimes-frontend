@@ -12,9 +12,7 @@ export const PLAYLISTS_LIST_ITEM_FRAGMENT = gql`
         createdAt
         name
         pictureUrl
-        tracksReferences {
-            id
-        }
+        tracksCount
     }
 `
 
