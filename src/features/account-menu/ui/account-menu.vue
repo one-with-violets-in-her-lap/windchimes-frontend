@@ -42,7 +42,7 @@ const { requestLogIn, requestLogout } = useCurrentAccountActions()
             </div>
         </template>
 
-        <VList>
+        <VList elevation="0" bg-color="suraface" class="mt-1">
             <VListItem>
                 <ThemeToggleButtons />
             </VListItem>
