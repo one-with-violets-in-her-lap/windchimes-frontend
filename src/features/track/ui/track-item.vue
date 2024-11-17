@@ -5,6 +5,7 @@ import { queryTrackAudioFile, type PlaylistTrack } from '@/entities/tracks'
 import { usePlayerStore } from '@/features/player'
 import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
+import { computed } from 'vue'
 
 const props = defineProps<{
     track: PlaylistTrack
@@ -16,10 +17,18 @@ const props = defineProps<{
 const { client: apolloClient } = useApolloClient()
 
 const playerStore = usePlayerStore()
-const { tracksQueue } = storeToRefs(playerStore)
-const { play } = playerStore
+const { tracksQueue, currentTrack, paused } = storeToRefs(playerStore)
+const { play, pause } = playerStore
+
+const isCurrentTrack = computed(() => currentTrack.value?.id === props.track.id)
+const playing = computed(() => isCurrentTrack.value && !paused.value)
 
 async function playTrack() {
+    if (isCurrentTrack.value) {
+        play()
+        return
+    }
+
     const response = await queryTrackAudioFile(apolloClient, props.track)
 
     if (response.data.trackAudioFile?.__typename === 'TrackAudioFileGraphQL') {
@@ -40,9 +49,22 @@ async function playTrack() {
 <template>
     <VListItem lines="two" :class="{ 'px-3 py-1': compact }">
         <template #title>
-            <span class="text-sm-body-1 text-body-2">
-                {{ track.owner.name }} - {{ track.name }}
-            </span>
+            <div class="d-flex gc-1 align-center">
+                <VIcon
+                    v-show="isCurrentTrack"
+                    icon="mdi-equalizer"
+                    size="20"
+                    color="primary"
+                    :class="{ 'pulse-animation': playing }"
+                />
+
+                <span
+                    class="text-sm-body-1 text-body-2"
+                    :class="{ 'text-primary': isCurrentTrack }"
+                >
+                    {{ track.owner.name }} - {{ track.name }}
+                </span>
+            </div>
         </template>
 
         <template #subtitle>
@@ -70,11 +92,11 @@ async function playTrack() {
 
                 <VBtn
                     v-if="!compact"
-                    icon="mdi-play"
-                    variant="flat"
+                    :icon="playing ? 'mdi-pause' : 'mdi-play'"
+                    :variant="isCurrentTrack ? 'tonal' : 'flat'"
                     color="primary"
                     size="38px"
-                    @click="playTrack"
+                    @click="playing ? pause() : playTrack()"
                 />
             </div>
         </template>
@@ -85,4 +107,23 @@ async function playTrack() {
     </VListItem>
 </template>
 
-<style scoped></style>
+<style scoped>
+.pulse-animation {
+    animation-name: pulse;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+
+    transition: transform 0.3s ease;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1.1);
+    }
+}
+</style>
