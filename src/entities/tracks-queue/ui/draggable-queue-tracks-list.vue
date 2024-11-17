@@ -42,7 +42,7 @@ function deleteTrack(id: number) {
 </script>
 
 <template>
-    <DragAndDropList>
+    <DragAndDropList class="tracks-list">
         <template #default="{ dragAndDropListElement }">
             <DraggableQueueTrack
                 v-for="(track, index) in loadedTracks"
@@ -58,3 +58,9 @@ function deleteTrack(id: number) {
         </template>
     </DragAndDropList>
 </template>
+
+<style scoped>
+.tracks-list {
+    min-height: 200px;
+}
+</style>
