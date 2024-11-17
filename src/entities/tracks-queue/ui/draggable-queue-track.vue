@@ -10,6 +10,7 @@ defineProps<{
     dragAndDropParent?: HTMLElement
     track: LoadedTrackFragment
     trackNumber: number
+    currentTrack: boolean
     allQueueTracks: QueueItem[]
 }>()
 
@@ -32,7 +33,10 @@ const dragged = ref(false)
                 emit('move-before', itemToMoveId, beforeItemId)
         "
     >
-        <SwipableElement @swipe="emit('delete')" :swipe-enabled="!dragged">
+        <SwipableElement
+            @swipe="emit('delete')"
+            :swipe-enabled="!dragged && !currentTrack"
+        >
             <TrackItem
                 :track-number="trackNumber"
                 :track="track"
@@ -42,11 +46,12 @@ const dragged = ref(false)
             >
                 <template #append>
                     <VBtn
+                        v-show="!currentTrack"
                         title="Delete from queue"
                         variant="text"
                         size="32px"
                         icon
-                        class="d-none d-sm-block"
+                        :class="{ 'd-none d-sm-block': !currentTrack }"
                         @click="emit('delete')"
                     >
                         <VIcon icon="mdi-playlist-remove" size="22px" />

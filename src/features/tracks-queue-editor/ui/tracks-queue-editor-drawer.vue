@@ -128,6 +128,7 @@ async function loadMoreTracks() {
 
                 <DraggableQueueTracksList
                     v-model:all-queue-tracks="tracksQueue"
+                    :current-track-id="currentTrack?.id"
                     :loaded-tracks="loadedTracks"
                 />
             </PaginatedContent>

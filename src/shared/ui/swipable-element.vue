@@ -19,7 +19,7 @@ interface Position {
     y: number
 }
 
-withDefaults(
+const props = withDefaults(
     defineProps<{
         swipeEnabled?: boolean
     }>(),
@@ -72,11 +72,12 @@ function handleTouchStart(event: TouchEvent) {
 }
 
 function handleTouchEnd() {
-    if (swipePopUpPosition.value >= 80) {
+    if (swipePopUpPosition.value >= 80 && props.swipeEnabled) {
         emit('swipe')
     }
 
-    ;[touchPosition.value, touchStartPosition.value] = [undefined, undefined]
+    touchPosition.value = undefined
+    touchStartPosition.value = undefined
 }
 </script>
 
