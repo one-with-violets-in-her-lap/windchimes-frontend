@@ -47,7 +47,12 @@ async function playTrack() {
 </script>
 
 <template>
-    <VListItem lines="two" :class="{ 'px-3 py-1': compact }">
+    <VListItem
+        lines="two"
+        :class="{ 'px-3 py-1': compact }"
+        :ripple="false"
+        @click="playing ? pause() : playTrack()"
+    >
         <template #title>
             <div class="d-flex gc-1 align-center">
                 <VIcon
@@ -96,7 +101,7 @@ async function playTrack() {
                     :variant="isCurrentTrack ? 'tonal' : 'flat'"
                     color="primary"
                     size="38px"
-                    @click="playing ? pause() : playTrack()"
+                    @click.stop="playing ? pause() : playTrack()"
                 />
             </div>
         </template>
