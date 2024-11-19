@@ -28,6 +28,6 @@ const route = useRoute()
 
 <style scoped>
 .z-index-default {
-    z-index: 0 !important;
+    z-index: 1 !important;
 }
 </style>

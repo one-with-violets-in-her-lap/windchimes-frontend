@@ -20,7 +20,7 @@ const fullPlayerOpened = ref(false)
 </script>
 
 <template>
-    <div class="position-fix h-100">
+    <div class="position-fix">
         <Transition name="slide-up">
             <div
                 v-if="currentTrack && !fullPlayerOpened"
