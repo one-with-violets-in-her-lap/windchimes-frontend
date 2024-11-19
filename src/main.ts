@@ -5,8 +5,8 @@ import '@/assets/styles/transitions.css'
 // Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
-import { teaGreenLightTheme, teaGreenDarkTheme } from '@/app/ui/vuetify-themes'
 import '@mdi/font/css/materialdesignicons.css'
+import { vuetifyConfig } from '@/app/config/vuetify'
 
 import { createPinia } from 'pinia'
 import { DefaultApolloClient } from '@vue/apollo-composable'
@@ -22,14 +22,7 @@ const app = createApp(App)
 app.provide(DefaultApolloClient, apolloClient)
 app.use(createPinia())
 app.use(router)
-app.use(
-    createVuetify({
-        theme: {
-            defaultTheme: localStorage.getItem('theme') || 'teaGreenLightTheme',
-            themes: { teaGreenLightTheme, teaGreenDarkTheme },
-        },
-    }),
-)
+app.use(createVuetify(vuetifyConfig))
 app.use(auth0)
 
 const { handleError, clearError } = useFatalErrorStore()
