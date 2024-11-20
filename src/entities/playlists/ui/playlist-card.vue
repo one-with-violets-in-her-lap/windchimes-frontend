@@ -7,8 +7,6 @@ const props = defineProps<{
     playlist: PlaylistsListItemFragment
 }>()
 
-const { smAndDown } = useDisplay()
-
 const formattedCreationDate = computed(() =>
     new Date(props.playlist.createdAt).toLocaleDateString(undefined, {
         month: '2-digit',
