@@ -73,11 +73,7 @@ const link = computed(() => ({ name: 'playlist', params: { id: props.playlist.id
                 </VCardItem>
 
                 <VCardActions class="pa-4 gc-1">
-                    <VBtn
-                        variant="tonal"
-                        color="primary"
-                        prepend-icon="mdi-play"
-                    >
+                    <VBtn variant="tonal" color="primary" prepend-icon="mdi-play">
                         Play
                     </VBtn>
 
