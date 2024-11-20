@@ -93,7 +93,7 @@ async function loadMoreTracks() {
             />
         </Transition>
 
-        <ResponsiveDrawer v-model:opened="opened" fixed-height="70%">
+        <ResponsiveDrawer v-model:opened="opened" fixed-height="70%" draggable="false">
             <PaginatedContent
                 :items-loaded="loadedTracks.length"
                 :total-items="tracksQueue.length"
