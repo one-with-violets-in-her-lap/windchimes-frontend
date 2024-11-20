@@ -34,7 +34,7 @@ const playlistsFeedQueryError = computed(() => {
             :class="{ 'lighting-desktop': mdAndUp }"
         ></div>
 
-        <div class="position-relative pa-10">
+        <div class="position-relative pa-3" :class="{ 'pa-8': mdAndUp }">
             <h1 class="text-h3 font-weight-bold mb-6">MUSIC</h1>
 
             <LoadingContent
