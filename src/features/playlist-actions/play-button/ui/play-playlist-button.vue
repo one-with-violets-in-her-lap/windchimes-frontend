@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { usePlayerStore } from '@/features/player'
 import { usePlaylistWithTracksLazyQuery } from '@/features/playlist-actions/api/playlist-with-tracks-query'
@@ -17,35 +18,42 @@ const { tracksQueue } = storeToRefs(playerStore)
 const { showNotification } = useNotificationsStore()
 
 const playlistWithTracksLazyQuery = usePlaylistWithTracksLazyQuery(props.playlist.id)
+const loading = ref(false)
 
 async function playRightAway() {
     const PLAYLIST_QUERY_ERROR_MESSAGE =
         "Couldn't request playlist tracks from the server"
 
-    const playlistWithTracks = await playlistWithTracksLazyQuery.load()
+    loading.value = true
 
-    if (!playlistWithTracks) {
-        showNotification('error', PLAYLIST_QUERY_ERROR_MESSAGE)
-        return
+    try {
+        const playlistWithTracks = await playlistWithTracksLazyQuery.load()
+
+        if (!playlistWithTracks) {
+            showNotification('error', PLAYLIST_QUERY_ERROR_MESSAGE)
+            return
+        }
+
+        if (playlistWithTracks.playlist?.__typename !== 'PlaylistWithTracksGraphQL') {
+            showNotification(
+                'error',
+                playlistWithTracks.playlist?.__typename === 'ErrorGraphQL'
+                    ? playlistWithTracks.playlist.explanation
+                    : PLAYLIST_QUERY_ERROR_MESSAGE,
+            )
+            return
+        }
+
+        if (playlistWithTracks.playlist.tracksReferences.length === 0) {
+            showNotification('error', 'This playlist does not have any tracks')
+            return
+        }
+
+        tracksQueue.value = [...playlistWithTracks.playlist.tracksReferences]
+        await playTrackFromQueue(0)
+    } finally {
+        loading.value = false
     }
-
-    if (playlistWithTracks.playlist?.__typename !== 'PlaylistWithTracksGraphQL') {
-        showNotification(
-            'error',
-            playlistWithTracks.playlist?.__typename === 'ErrorGraphQL'
-                ? playlistWithTracks.playlist.explanation
-                : PLAYLIST_QUERY_ERROR_MESSAGE,
-        )
-        return
-    }
-
-    if (playlistWithTracks.playlist.tracksReferences.length === 0) {
-        showNotification('error', 'This playlist does not have any tracks')
-        return
-    }
-
-    tracksQueue.value = [...playlistWithTracks.playlist.tracksReferences]
-    await playTrackFromQueue(0)
 }
 </script>
 
@@ -57,7 +65,7 @@ async function playRightAway() {
                 variant="tonal"
                 color="primary"
                 prepend-icon="mdi-play"
-                :loading="playlistWithTracksLazyQuery.loading.value"
+                :loading="loading"
                 @click="playRightAway"
             >
                 Play
