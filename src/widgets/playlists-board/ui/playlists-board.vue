@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useDisplay } from 'vuetify'
-import PlaylistCard from '@/entities/playlists/ui/playlist-card.vue'
+import { PlayPlaylistButton } from '@/features/playlist-actions'
+import { PlaylistCard } from '@/entities/playlists'
 import { PlaylistsListItemFragment } from '@/shared/model/graphql-generated-types/graphql'
-
-const { smAndUp, mdAndUp, lgAndUp } = useDisplay()
 
 withDefaults(
     defineProps<{
@@ -13,6 +12,8 @@ withDefaults(
     }>(),
     { noPlaylistsMessage: 'No playlists were found' },
 )
+
+const { smAndUp, mdAndUp, lgAndUp } = useDisplay()
 
 const columnsCount = computed(() => {
     if (lgAndUp.value) {
@@ -39,7 +40,11 @@ const columnsCount = computed(() => {
                 :key="playlist.id"
                 :cols="columnsCount"
             >
-                <PlaylistCard :playlist="playlist" class="h-100" />
+                <PlaylistCard :playlist="playlist" class="h-100">
+                    <template #append-playlist-action-buttons>
+                        <PlayPlaylistButton :playlist="playlist" />
+                    </template>
+                </PlaylistCard>
             </VCol>
         </VRow>
 

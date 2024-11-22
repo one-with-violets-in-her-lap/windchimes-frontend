@@ -18,6 +18,7 @@ export const usePlayerStore = defineStore('player', () => {
         loopMode,
         playNextTrack,
         playPreviousTrack,
+        playTrackFromQueue,
     } = useTracksQueue(play)
 
     const { audio, currentSecond, pauseAudio, paused, playAudio, rewind } = useAudio(
@@ -63,5 +64,6 @@ export const usePlayerStore = defineStore('player', () => {
         rewind,
         playNextTrack,
         playPreviousTrack,
+        playTrackFromQueue
     }
 })
