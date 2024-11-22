@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { TrackItem } from '@/features/track'
-import { PlaylistTrack, TRACKS_PORTION_SIZE } from '@/entities/tracks'
+import { TRACKS_PORTION_SIZE } from '@/entities/tracks'
 import { ExcludeGraphQLError } from '@/shared/utils/exclude-graphql-error'
-import type {
-    GetPlaylistWithTracksQuery,
-    TrackReferenceGraphQl,
-} from '@/shared/model/graphql-generated-types/graphql'
+import type { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
 import PaginatedContent from '@/shared/ui/paginated-content.vue'
+import { includeLoadedTracksInPlaylistTracks } from '@/entities/playlists/model/include-loaded-tracks-in-playlist-tracks'
 
 const props = defineProps<{
     playlist: ExcludeGraphQLError<GetPlaylistWithTracksQuery['playlist']>
@@ -36,31 +34,12 @@ const availableTracks = computed(() => {
  * all playlist tracks include tracks that are not loaded via virtual scroll,
  * these are tracks references that have only track's id and platform
  */
-const allPlaylistTracks = computed(() => {
-    const tracksReferences: (TrackReferenceGraphQl | PlaylistTrack)[] = [
-        ...props.playlist.tracksReferences,
-    ]
-    const unavailableTracksIds: number[] = []
-
-    props.playlist.loadedTracks.forEach((loadedTrack, index) => {
-        if (loadedTrack === null) {
-            unavailableTracksIds.push(tracksReferences[index].id)
-            return
-        }
-
-        const matchingTrackReferenceIndex = tracksReferences.findIndex(
-            trackReference => trackReference.id === loadedTrack?.id,
-        )
-
-        if (matchingTrackReferenceIndex !== -1) {
-            tracksReferences[matchingTrackReferenceIndex] = loadedTrack
-        }
-    })
-
-    return tracksReferences.filter(
-        trackReference => !unavailableTracksIds.includes(trackReference.id),
-    )
-})
+const allPlaylistTracks = computed(() =>
+    includeLoadedTracksInPlaylistTracks(
+        props.playlist.tracksReferences,
+        props.playlist.loadedTracks,
+    ),
+)
 </script>
 
 <template>
