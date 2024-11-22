@@ -64,6 +64,6 @@ export const usePlayerStore = defineStore('player', () => {
         rewind,
         playNextTrack,
         playPreviousTrack,
-        playTrackFromQueue
+        playTrackFromQueue,
     }
 })

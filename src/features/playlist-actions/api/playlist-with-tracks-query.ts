@@ -41,7 +41,7 @@ const playlistWithTracksQuery = gql`
 
 export function usePlaylistWithTracksQuery(
     playlistId: number,
-    tracksToLoadIds?: number[]
+    tracksToLoadIds?: number[],
 ) {
     return useQuery<GetPlaylistWithTracksQuery, GetPlaylistWithTracksQueryVariables>(
         playlistWithTracksQuery,
@@ -51,10 +51,10 @@ export function usePlaylistWithTracksQuery(
 
 export function usePlaylistWithTracksLazyQuery(
     playlistId: number,
-    tracksToLoadIds?: number[]
+    tracksToLoadIds?: number[],
 ) {
-    return useLazyQuery<GetPlaylistWithTracksQuery, GetPlaylistWithTracksQueryVariables>(
-        playlistWithTracksQuery,
-        { playlistId, tracksToLoadIds },
-    )
+    return useLazyQuery<
+        GetPlaylistWithTracksQuery,
+        GetPlaylistWithTracksQueryVariables
+    >(playlistWithTracksQuery, { playlistId, tracksToLoadIds })
 }

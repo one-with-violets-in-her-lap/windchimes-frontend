@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-    <VMenu >
+    <VMenu>
         <template #activator="{ props }">
             <slot name="activator" v-bind="{ props }"></slot>
         </template>
