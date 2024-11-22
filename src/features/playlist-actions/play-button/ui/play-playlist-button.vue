@@ -20,6 +20,12 @@ const { showNotification } = useNotificationsStore()
 const playlistWithTracksLazyQuery = usePlaylistWithTracksLazyQuery(props.playlist.id)
 const loading = ref(false)
 
+async function handlePlayButtonClick() {
+    if (tracksQueue.value.length === 0) {
+        await playRightAway()
+    }
+}
+
 async function playRightAway() {
     const PLAYLIST_QUERY_ERROR_MESSAGE =
         "Couldn't request playlist tracks from the server"
@@ -66,7 +72,7 @@ async function playRightAway() {
                 color="primary"
                 prepend-icon="mdi-play"
                 :loading="loading"
-                @click="playRightAway"
+                @click="handlePlayButtonClick"
             >
                 Play
             </VBtn>
