@@ -1,11 +1,11 @@
 import type { QueueItem, TracksQueue } from '@/entities/tracks-queue/model/queue-item'
 import {
     TrackLoadError,
-    useTracksQueue,
+    useTracksQueueStore,
     type LoopMode,
     LOOP_MODES,
     TracksQueueBoundsReachedError,
-} from '@/entities/tracks-queue/model/tracks-queue'
+} from '@/entities/tracks-queue/model/tracks-queue-store'
 import {
     QueueTrackNotFoundError,
     shuffleQueue,
@@ -18,7 +18,7 @@ export {
     DraggableQueueTracksList,
     QueueItem,
     TracksQueue,
-    useTracksQueue,
+    useTracksQueueStore,
     TrackLoadError,
     LoopMode,
     LOOP_MODES,

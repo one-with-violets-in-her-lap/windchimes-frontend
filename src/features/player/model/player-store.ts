@@ -1,8 +1,8 @@
 import { toRef } from 'vue'
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { usePlayerVolume } from '@/features/player'
 import type { PlaylistTrack } from '@/entities/tracks'
-import { useTracksQueue } from '@/entities/tracks-queue'
+import { useTracksQueueStore } from '@/entities/tracks-queue'
 import { useAudio } from '@/shared/model/reactive-audio'
 
 export type TrackWithAudioFileUrl = Omit<
@@ -11,15 +11,9 @@ export type TrackWithAudioFileUrl = Omit<
 >
 
 export const usePlayerStore = defineStore('player', () => {
-    const {
-        currentTrack,
-        currentTrackId,
-        tracksQueue,
-        loopMode,
-        playNextTrack,
-        playPreviousTrack,
-        playTrackFromQueue,
-    } = useTracksQueue(play)
+    const tracksQueueStore = useTracksQueueStore()
+    const { currentTrackId, currentTrack } = storeToRefs(tracksQueueStore)
+    const { playNextTrack, playPreviousTrack, playTrackFromQueue } = tracksQueueStore
 
     const { audio, currentSecond, pauseAudio, paused, playAudio, rewind } = useAudio(
         toRef(() => currentTrack.value?.secondsDuration),
@@ -51,9 +45,7 @@ export const usePlayerStore = defineStore('player', () => {
 
     return {
         currentTrack,
-        tracksQueue,
         volume,
-        loopMode,
         paused,
         currentSecond,
 

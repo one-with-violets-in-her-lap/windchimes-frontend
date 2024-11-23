@@ -1,9 +1,9 @@
-import { computed, ref } from 'vue'
+import { computed, readonly, ref } from 'vue'
+import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
 import { useApolloClient } from '@vue/apollo-composable'
 import {
     usePlayerStore, // for jsdoc
-    type TrackWithAudioFileUrl,
 } from '@/features/player'
 import {
     type PlaylistTrack,
@@ -35,8 +35,10 @@ export type LoopMode = (typeof LOOP_MODES)[number]
  * functionality. **not a global player tracks queue state**, use
  * {@link usePlayerStore} for this purpose
  */
-export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => void) {
+export const useTracksQueueStore = defineStore('tracksQueue', () => {
     const { client: apolloClient } = useApolloClient()
+
+    const { play } = usePlayerStore()
 
     const tracksQueue = ref<(PlaylistTrack | TrackReferenceGraphQl)[]>([])
 
@@ -140,7 +142,7 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
                 throw new TrackLoadError("couldn't obtain audio file url of a track")
             }
 
-            playTrack({
+            play({
                 ...track,
                 trackAudioFileUrl: audioFileUrlQuery.data.trackAudioFile.url,
             })
@@ -161,4 +163,4 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
         playPreviousTrack,
         playTrackFromQueue,
     }
-}
+})
