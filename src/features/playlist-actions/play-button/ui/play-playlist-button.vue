@@ -22,7 +22,11 @@ const { tracksQueue } = storeToRefs(playerStore)
 
 const { showNotification } = useNotificationsStore()
 
-const playlistWithTracksLazyQuery = usePlaylistWithTracksLazyQuery(props.playlist.id)
+const playlistWithTracksLazyQuery = usePlaylistWithTracksLazyQuery(
+    props.playlist.id,
+    undefined,
+    false,
+)
 const loading = ref(false)
 
 async function handlePlayButtonClick() {
@@ -35,10 +39,7 @@ async function playRightAway() {
     loading.value = true
 
     try {
-        tracksQueue.value = await playPlaylistInNewQueue(
-            props.playlist.id,
-            playlistWithTracksLazyQuery,
-        )
+        tracksQueue.value = await playPlaylistInNewQueue(playlistWithTracksLazyQuery)
         await playTrackFromQueue(0)
     } catch (error) {
         if (error instanceof PlaylistPlayError) {
@@ -56,7 +57,6 @@ async function addToQueue() {
 
     try {
         tracksQueue.value = await getQueueWithPlaylistAdded(
-            props.playlist.id,
             playlistWithTracksLazyQuery,
             tracksQueue.value,
         )

@@ -11,8 +11,16 @@ const playlistWithTracksQuery = gql`
     ${LOADED_TRACK_FRAGMENT}
     ${ERROR_FRAGMENT}
 
-    query GetPlaylistWithTracks($playlistId: Int!, $tracksToLoadIds: [Int!]) {
-        playlist(playlistId: $playlistId, tracksToLoadIds: $tracksToLoadIds) {
+    query GetPlaylistWithTracks(
+        $playlistId: Int!
+        $tracksToLoadIds: [Int!]
+        $loadFirstTracks: Boolean
+    ) {
+        playlist(
+            playlistId: $playlistId
+            tracksToLoadIds: $tracksToLoadIds
+            loadFirstTracks: $loadFirstTracks
+        ) {
             ... on PlaylistWithTracksGraphQL {
                 id
                 createdAt
@@ -42,19 +50,21 @@ const playlistWithTracksQuery = gql`
 export function usePlaylistWithTracksQuery(
     playlistId: number,
     tracksToLoadIds?: number[],
+    loadFirstTracks = true,
 ) {
     return useQuery<GetPlaylistWithTracksQuery, GetPlaylistWithTracksQueryVariables>(
         playlistWithTracksQuery,
-        { playlistId, tracksToLoadIds },
+        { playlistId, tracksToLoadIds, loadFirstTracks },
     )
 }
 
 export function usePlaylistWithTracksLazyQuery(
     playlistId: number,
     tracksToLoadIds?: number[],
+    loadFirstTracks = true,
 ) {
     return useLazyQuery<
         GetPlaylistWithTracksQuery,
         GetPlaylistWithTracksQueryVariables
-    >(playlistWithTracksQuery, { playlistId, tracksToLoadIds })
+    >(playlistWithTracksQuery, { playlistId, tracksToLoadIds, loadFirstTracks })
 }

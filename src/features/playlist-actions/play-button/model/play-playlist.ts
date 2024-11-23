@@ -22,13 +22,12 @@ type PlaylistWithTracksQuery = ReturnType<
 >
 
 export async function playPlaylistInNewQueue(
-    playlistId: number,
     playlistLazyQuery: PlaylistWithTracksQuery,
 ) {
     try {
         const playlistWithTracks =
             playlistLazyQuery.result.value === undefined
-                ? await playlistLazyQuery.load(null, { playlistId })
+                ? await playlistLazyQuery.load()
                 : playlistLazyQuery.result.value
 
         if (!playlistWithTracks) {
@@ -49,21 +48,19 @@ export async function playPlaylistInNewQueue(
 
         return [...playlistWithTracks.playlist.tracksReferences]
     } catch (error) {
+        console.error(error)
         throw new PlaylistPlayError()
     }
 }
 
 export async function getQueueWithPlaylistAdded(
-    playlistToAddId: number,
     playlistToAddLazyQuery: PlaylistWithTracksQuery,
     currentTracksQueue: TracksQueue,
 ) {
     try {
         const playlistWithTracks =
             playlistToAddLazyQuery.result.value === undefined
-                ? await playlistToAddLazyQuery.load(null, {
-                      playlistId: playlistToAddId,
-                  })
+                ? await playlistToAddLazyQuery.load()
                 : playlistToAddLazyQuery.result.value
 
         if (!playlistWithTracks) {
@@ -87,6 +84,7 @@ export async function getQueueWithPlaylistAdded(
             ...playlistWithTracks.playlist.tracksReferences,
         ]
     } catch (error) {
+        console.error(error)
         throw new PlaylistPlayError()
     }
 }
