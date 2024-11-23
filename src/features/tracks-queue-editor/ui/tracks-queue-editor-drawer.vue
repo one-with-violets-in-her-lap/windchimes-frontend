@@ -3,11 +3,11 @@ import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useLazyTracksQuery } from '@/features/tracks-queue-editor/api/tracks-query'
 import { insertLoadedTracks } from '@/features/tracks-queue-editor/model/insert-loaded-tracks'
-import { usePlayerStore } from '@/features/player'
 import {
     clearQueue,
     DraggableQueueTracksList,
     shuffleQueue,
+    useTracksQueueStore,
 } from '@/entities/tracks-queue'
 import { PlaylistTrack, TRACKS_PORTION_SIZE } from '@/entities/tracks'
 import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'
@@ -19,7 +19,7 @@ defineProps<{
 
 const opened = ref(false)
 
-const { tracksQueue, currentTrack } = storeToRefs(usePlayerStore())
+const { tracksQueue, currentTrack } = storeToRefs(useTracksQueueStore())
 
 const loadedTracks = computed(() => {
     const firstNotLoadedTrackIndex = tracksQueue.value.findIndex(

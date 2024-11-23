@@ -2,8 +2,9 @@
 import { storeToRefs } from 'pinia'
 import anime from 'animejs'
 import { TrackProgressBar, VolumeMenuButton, usePlayerStore } from '@/features/player'
+import { LOOP_MODES } from '@/features/player'
+import { shuffleQueue, useTracksQueueStore } from '@/entities/tracks-queue'
 import { CurrentTrackThumbnail } from '@/entities/tracks'
-import { LOOP_MODES, shuffleQueue } from '@/entities/tracks-queue'
 import { useNotificationsStore } from '@/shared/model/notifications'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'
@@ -12,8 +13,10 @@ const opened = defineModel<boolean>('opened', { required: true })
 
 const playerStore = usePlayerStore()
 const { playNextTrack, playPreviousTrack, pause, play, audio } = playerStore
-const { currentTrack, currentSecond, loopMode, paused, tracksQueue } =
-    storeToRefs(playerStore)
+const { currentSecond, loopMode, paused } = storeToRefs(playerStore)
+
+const { tracksQueue, currentTrack } = storeToRefs(useTracksQueueStore())
+
 const { showNotification } = useNotificationsStore()
 
 let pulseAnimation: anime.AnimeInstance | undefined = undefined

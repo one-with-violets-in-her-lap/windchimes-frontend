@@ -1,9 +1,8 @@
 import { computed, ref } from 'vue'
-import { useLocalStorage } from '@vueuse/core'
+import { defineStore, storeToRefs } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable'
 import {
     usePlayerStore, // for jsdoc
-    type TrackWithAudioFileUrl,
 } from '@/features/player'
 import {
     type PlaylistTrack,
@@ -22,25 +21,15 @@ export class TracksQueueBoundsReachedError extends Error {
     }
 }
 
-// TODO: remake as enum
-export const LOOP_MODES = [
-    'looping disabled',
-    'loop current track',
-    'loop playlist/queue',
-] as const
-export type LoopMode = (typeof LOOP_MODES)[number]
-
 /**
  * creates reactive tracks queue state, with play next/previous
  * functionality. **not a global player tracks queue state**, use
  * {@link usePlayerStore} for this purpose
  */
-export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => void) {
+export const useTracksQueueStore = defineStore('tracksQueue', () => {
     const { client: apolloClient } = useApolloClient()
 
     const tracksQueue = ref<(PlaylistTrack | TrackReferenceGraphQl)[]>([])
-
-    const loopMode = useLocalStorage<LoopMode>('loop', 'looping disabled')
 
     const currentTrackId = ref<number>()
     const currentTrack = computed(() => {
@@ -64,6 +53,8 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
      * queue is not reached
      */
     async function playNextTrack(tracksToSkipCount = 1) {
+        const { loopMode } = storeToRefs(usePlayerStore())
+
         try {
             const currentTrackIndex = tracksQueue.value.findIndex(
                 track => track.id === currentTrackId.value,
@@ -108,6 +99,8 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
     }
 
     async function playTrackFromQueue(index: number) {
+        const { play } = usePlayerStore()
+
         let track = tracksQueue.value[index]
 
         if (!track) {
@@ -140,7 +133,7 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
                 throw new TrackLoadError("couldn't obtain audio file url of a track")
             }
 
-            playTrack({
+            play({
                 ...track,
                 trackAudioFileUrl: audioFileUrlQuery.data.trackAudioFile.url,
             })
@@ -155,10 +148,9 @@ export function useTracksQueue(playTrack: (track?: TrackWithAudioFileUrl) => voi
         tracksQueue,
         currentTrackId,
         currentTrack,
-        loopMode,
 
         playNextTrack,
         playPreviousTrack,
         playTrackFromQueue,
     }
-}
+})

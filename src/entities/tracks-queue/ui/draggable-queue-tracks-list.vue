@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import DraggableQueueTrack from '@/entities/tracks-queue/ui/draggable-queue-track.vue'
-import {
-    moveQueueTracks,
-    QueueTrackNotFoundError,
-} from '@/entities/tracks-queue/model/tracks-queue-actions'
+import { moveQueueTracks, QueueTrackNotFoundError } from '@/entities/tracks-queue'
 import { QueueItem } from '@/entities/tracks-queue/model/queue-item'
 import { DragAndDropList } from '@/shared/ui/drag-and-drop'
 import { LoadedTrackFragment } from '@/shared/model/graphql-generated-types/graphql'

@@ -6,6 +6,7 @@ import { usePlayerStore } from '@/features/player'
 import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import { computed } from 'vue'
+import { useTracksQueueStore } from '@/entities/tracks-queue'
 
 const props = defineProps<{
     track: PlaylistTrack
@@ -17,8 +18,10 @@ const props = defineProps<{
 const { client: apolloClient } = useApolloClient()
 
 const playerStore = usePlayerStore()
-const { tracksQueue, currentTrack, paused } = storeToRefs(playerStore)
+const { currentTrack, paused } = storeToRefs(playerStore)
 const { play, pause } = playerStore
+
+const { tracksQueue } = storeToRefs(useTracksQueueStore())
 
 const isCurrentTrack = computed(() => currentTrack.value?.id === props.track.id)
 const playing = computed(() => isCurrentTrack.value && !paused.value)
