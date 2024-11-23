@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useDisplay } from 'vuetify'
 import { PlaylistsListItemFragment } from '@/shared/model/graphql-generated-types/graphql'
 
 const props = defineProps<{
@@ -71,9 +70,7 @@ const link = computed(() => ({ name: 'playlist', params: { id: props.playlist.id
                 </VCardItem>
 
                 <VCardActions class="pa-4 gc-1">
-                    <VBtn variant="tonal" color="primary" prepend-icon="mdi-play">
-                        Play
-                    </VBtn>
+                    <slot name="append-playlist-action-buttons"></slot>
 
                     <VBtn
                         variant="text"
