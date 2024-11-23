@@ -1,4 +1,4 @@
-import type { QueueItem } from '@/entities/tracks-queue/model/queue-item'
+import type { QueueItem, TracksQueue } from '@/entities/tracks-queue/model/queue-item'
 import {
     TrackLoadError,
     useTracksQueue,
@@ -17,6 +17,7 @@ import DraggableQueueTracksList from '@/entities/tracks-queue/ui/draggable-queue
 export {
     DraggableQueueTracksList,
     QueueItem,
+    TracksQueue,
     useTracksQueue,
     TrackLoadError,
     LoopMode,
