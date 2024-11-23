@@ -29,10 +29,6 @@ export class TracksQueueBoundsReachedError extends Error {
 export const useTracksQueueStore = defineStore('tracksQueue', () => {
     const { client: apolloClient } = useApolloClient()
 
-    const playerStore = usePlayerStore()
-    const { play } = playerStore
-    const { loopMode } = storeToRefs(playerStore)
-
     const tracksQueue = ref<(PlaylistTrack | TrackReferenceGraphQl)[]>([])
 
     const currentTrackId = ref<number>()
@@ -57,6 +53,8 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
      * queue is not reached
      */
     async function playNextTrack(tracksToSkipCount = 1) {
+        const { loopMode } = storeToRefs(usePlayerStore())
+
         try {
             const currentTrackIndex = tracksQueue.value.findIndex(
                 track => track.id === currentTrackId.value,
@@ -101,6 +99,8 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
     }
 
     async function playTrackFromQueue(index: number) {
+        const { play } = usePlayerStore()
+
         let track = tracksQueue.value[index]
 
         if (!track) {
