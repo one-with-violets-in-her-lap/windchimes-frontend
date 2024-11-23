@@ -6,9 +6,11 @@ import { usePlaylistWithTracksLazyQuery } from '@/features/playlist-actions/api/
 import { PlaylistsListItemFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { DropdownMenu, DropdownButton } from '@/shared/ui/dropdown-menu'
 import { useNotificationsStore } from '@/shared/model/notifications'
-
-const PLAYLIST_QUERY_ERROR_MESSAGE =
-    "Couldn't request playlist tracks from the server"
+import {
+    getQueueWithPlaylistAdded,
+    PlaylistPlayError,
+    playPlaylistInNewQueue,
+} from '../model/play-playlist'
 
 const props = defineProps<{
     playlist: PlaylistsListItemFragment
@@ -33,33 +35,17 @@ async function playRightAway() {
     loading.value = true
 
     try {
-        const playlistWithTracks =
-            playlistWithTracksLazyQuery.result.value === undefined
-                ? await playlistWithTracksLazyQuery.load()
-                : playlistWithTracksLazyQuery.result.value
-
-        if (!playlistWithTracks) {
-            showNotification('error', PLAYLIST_QUERY_ERROR_MESSAGE)
-            return
-        }
-
-        if (playlistWithTracks.playlist?.__typename !== 'PlaylistWithTracksGraphQL') {
-            showNotification(
-                'error',
-                playlistWithTracks.playlist?.__typename === 'ErrorGraphQL'
-                    ? playlistWithTracks.playlist.explanation
-                    : PLAYLIST_QUERY_ERROR_MESSAGE,
-            )
-            return
-        }
-
-        if (playlistWithTracks.playlist.tracksReferences.length === 0) {
-            showNotification('error', 'This playlist does not have any tracks')
-            return
-        }
-
-        tracksQueue.value = [...playlistWithTracks.playlist.tracksReferences]
+        tracksQueue.value = await playPlaylistInNewQueue(
+            props.playlist.id,
+            playlistWithTracksLazyQuery,
+        )
         await playTrackFromQueue(0)
+    } catch (error) {
+        if (error instanceof PlaylistPlayError) {
+            showNotification('error', error.message)
+        } else {
+            showNotification('error', 'Error occurred when playing the playlist')
+        }
     } finally {
         loading.value = false
     }
@@ -69,35 +55,17 @@ async function addToQueue() {
     loading.value = true
 
     try {
-        const playlistWithTracks =
-            playlistWithTracksLazyQuery.result.value === undefined
-                ? await playlistWithTracksLazyQuery.load()
-                : playlistWithTracksLazyQuery.result.value
-
-        if (!playlistWithTracks) {
-            showNotification('error', PLAYLIST_QUERY_ERROR_MESSAGE)
-            return
+        tracksQueue.value = await getQueueWithPlaylistAdded(
+            props.playlist.id,
+            playlistWithTracksLazyQuery,
+            tracksQueue.value,
+        )
+    } catch (error) {
+        if (error instanceof PlaylistPlayError) {
+            showNotification('error', error.message)
+        } else {
+            showNotification('error', 'Error occurred when playing the playlist')
         }
-
-        if (playlistWithTracks.playlist?.__typename !== 'PlaylistWithTracksGraphQL') {
-            showNotification(
-                'error',
-                playlistWithTracks.playlist?.__typename === 'ErrorGraphQL'
-                    ? playlistWithTracks.playlist.explanation
-                    : PLAYLIST_QUERY_ERROR_MESSAGE,
-            )
-            return
-        }
-
-        if (playlistWithTracks.playlist.tracksReferences.length === 0) {
-            showNotification('error', 'This playlist does not have any tracks')
-            return
-        }
-
-        tracksQueue.value = [
-            ...tracksQueue.value,
-            ...playlistWithTracks.playlist.tracksReferences,
-        ]
     } finally {
         loading.value = false
     }
