@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { usePlaylistUpdateMutation } from '@/features/playlist-actions/api/playlist-update-mutation'
 import { useTracksImportMutation } from '@/features/playlist-actions/api/tracks-import-mutation'
 import { usePlaylistDeletionMutation } from '@/features/playlist-actions/api/playlist-deletion-mutation'
 import {
@@ -11,18 +12,19 @@ import { useNotificationsStore } from '@/shared/model/notifications'
 import { ExcludeGraphQLError } from '@/shared/utils/exclude-graphql-error'
 import { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
 import { PlaylistFormData, PlaylistFormDialog } from '@/entities/playlists'
-import { usePlaylistUpdateMutation } from '../api/playlist-update-mutation'
+import { PlayPlaylistButton } from '..'
 
 const props = defineProps<{
     playlist: ExcludeGraphQLError<GetPlaylistWithTracksQuery['playlist']>
+    userIsOwner: boolean
 }>()
 
 const emit = defineEmits<{
     (event: 'update'): void
 }>()
 
-const { showNotification } = useNotificationsStore()
 const router = useRouter()
+const { showNotification } = useNotificationsStore()
 
 const tracksImportDialogOpened = ref(false)
 const tracksImportMutation = useTracksImportMutation()
@@ -84,17 +86,24 @@ async function updatePlaylist(formData: PlaylistFormData) {
 </script>
 
 <template>
-    <div class="d-flex align-center gc-3 mb-7">
+    <div class="d-flex align-center ga-3 mb-7 flex-wrap">
+        <PlayPlaylistButton
+            :playlist-id="playlist.id"
+            :tracks-references="playlist.tracksReferences"
+            variant="flat"
+        />
+
         <TracksImportFormDialog
+            v-if="userIsOwner"
             v-model:opened="tracksImportDialogOpened"
             :loading="tracksImportMutation.loading.value"
             @submit="importTracks"
         />
 
-        <VMenu>
+        <VMenu v-if="userIsOwner">
             <template v-slot:activator="{ props: menuActivatorProps }">
                 <VBtn
-                    icon="mdi-dots-vertical"
+                    icon="mdi-dots-horizontal"
                     variant="text"
                     v-bind="menuActivatorProps"
                 ></VBtn>

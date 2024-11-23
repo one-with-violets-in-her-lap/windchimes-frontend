@@ -116,8 +116,8 @@ function loadMoreTracks(ids: number[]) {
             </ExpandableParagraph>
 
             <PlaylistActionsButtons
-                v-if="result.playlist.ownerUserId === user?.sub"
                 :playlist="result.playlist"
+                :user-is-owner="result.playlist.ownerUserId === user?.sub"
                 @update="refetch()"
             />
 

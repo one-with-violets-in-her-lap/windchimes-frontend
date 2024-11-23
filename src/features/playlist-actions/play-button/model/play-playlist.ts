@@ -1,9 +1,10 @@
 import { useLazyQuery } from '@vue/apollo-composable'
+import { TracksQueue } from '@/entities/tracks-queue'
 import {
     GetPlaylistWithTracksQuery,
     GetPlaylistWithTracksQueryVariables,
+    TrackReferenceGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
-import { TracksQueue } from '@/entities/tracks-queue'
 
 export class PlaylistPlayError extends Error {
     constructor(message = 'Failed to play the playlist') {
@@ -21,9 +22,24 @@ type PlaylistWithTracksQuery = ReturnType<
     >
 >
 
+/**
+ * creates new tracks queue with tracks from playlist requested with specified query
+ *
+ * @param playlistLazyQuery query to get playlist tracks references with
+ *
+ * @param playlistTracks already loaded playlist tracks reference. if specified, the
+ * function **uses them instead of sending a query to the server**
+ *
+ * @returns new tracks queue
+ */
 export async function playPlaylistInNewQueue(
     playlistLazyQuery: PlaylistWithTracksQuery,
+    playlistTracks?: TrackReferenceGraphQl[],
 ) {
+    if (playlistTracks !== undefined) {
+        return [...playlistTracks]
+    }
+
     try {
         const playlistWithTracks =
             playlistLazyQuery.result.value === undefined
@@ -53,10 +69,27 @@ export async function playPlaylistInNewQueue(
     }
 }
 
+/**
+ * creates new tracks queue with tracks from playlist
+ * (_requested with query specified in `playlistToAddLazyQuery`_)
+ * added to the end of the query
+ *
+ * @param playlistLazyQuery query to get playlist tracks references with
+ *
+ * @param playlistTracks already loaded playlist tracks reference. if specified, the
+ * function **uses them instead of sending a query to the server**
+ *
+ * @returns new tracks queue
+ */
 export async function getQueueWithPlaylistAdded(
-    playlistToAddLazyQuery: PlaylistWithTracksQuery,
     currentTracksQueue: TracksQueue,
+    playlistToAddLazyQuery: PlaylistWithTracksQuery,
+    playlistTracks?: TrackReferenceGraphQl[],
 ) {
+    if (playlistTracks !== undefined) {
+        return [...currentTracksQueue, ...playlistTracks]
+    }
+
     try {
         const playlistWithTracks =
             playlistToAddLazyQuery.result.value === undefined

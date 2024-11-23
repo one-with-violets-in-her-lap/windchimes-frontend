@@ -9,12 +9,16 @@ import {
 import { usePlayerStore } from '@/features/player'
 import { usePlaylistWithTracksLazyQuery } from '@/features/playlist-actions/api/playlist-with-tracks-query'
 import { useTracksQueueStore } from '@/entities/tracks-queue'
-import { PlaylistsListItemFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { DropdownMenu, DropdownButton } from '@/shared/ui/dropdown-menu'
 import { useNotificationsStore } from '@/shared/model/notifications'
+import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 
 const props = defineProps<{
-    playlist: PlaylistsListItemFragment
+    playlistId: number
+    /**
+     * tracks references of a playlist to play. if not specified, loads from server
+     */
+    tracksReferences?: TrackReferenceGraphQl[]
 }>()
 
 const playerStore = usePlayerStore()
@@ -25,7 +29,7 @@ const { tracksQueue } = storeToRefs(useTracksQueueStore())
 const { showNotification } = useNotificationsStore()
 
 const playlistWithTracksLazyQuery = usePlaylistWithTracksLazyQuery(
-    props.playlist.id,
+    props.playlistId,
     undefined,
     false,
 )
@@ -41,7 +45,11 @@ async function playRightAway() {
     loading.value = true
 
     try {
-        tracksQueue.value = await playPlaylistInNewQueue(playlistWithTracksLazyQuery)
+        tracksQueue.value = await playPlaylistInNewQueue(
+            playlistWithTracksLazyQuery,
+            props.tracksReferences,
+        )
+
         await playTrackFromQueue(0)
     } catch (error) {
         if (error instanceof PlaylistPlayError) {
@@ -60,8 +68,9 @@ async function addToQueue() {
 
     try {
         tracksQueue.value = await getQueueWithPlaylistAdded(
-            playlistWithTracksLazyQuery,
             tracksQueue.value,
+            playlistWithTracksLazyQuery,
+            props.tracksReferences,
         )
 
         showNotification('success', 'Added to the end of the queue')
@@ -82,11 +91,11 @@ async function addToQueue() {
     <DropdownMenu :disabled="tracksQueue.length === 0 || loading">
         <template #activator="{ props: playMenuActivatorProps }">
             <VBtn
-                v-bind="playMenuActivatorProps"
                 variant="tonal"
                 color="primary"
                 prepend-icon="mdi-play"
                 :loading="loading"
+                v-bind="{ ...playMenuActivatorProps, ...$attrs }"
                 @click="handlePlayButtonClick"
             >
                 Play

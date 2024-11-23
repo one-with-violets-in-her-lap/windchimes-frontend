@@ -59,6 +59,7 @@ const handleFormSubmit = handleSubmit(values => {
             <template #activator="{ props }">
                 <VBtn
                     color="background-contrast"
+                    variant="outlined"
                     prepend-icon="mdi-import"
                     v-bind="props"
                 >

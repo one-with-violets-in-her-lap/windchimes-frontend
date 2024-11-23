@@ -42,7 +42,7 @@ const columnsCount = computed(() => {
             >
                 <PlaylistCard :playlist="playlist" class="h-100">
                     <template #append-playlist-action-buttons>
-                        <PlayPlaylistButton :playlist="playlist" />
+                        <PlayPlaylistButton :playlist-id="playlist.id" />
                     </template>
                 </PlaylistCard>
             </VCol>
