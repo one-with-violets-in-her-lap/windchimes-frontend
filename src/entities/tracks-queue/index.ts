@@ -23,7 +23,7 @@ export {
     LoopMode,
     LOOP_MODES,
     TracksQueueBoundsReachedError,
-    QueueTrackNotFoundError as QueueTracksNotFoundError,
+    QueueTrackNotFoundError,
     shuffleQueue,
     moveQueueTracks,
     clearQueue,
