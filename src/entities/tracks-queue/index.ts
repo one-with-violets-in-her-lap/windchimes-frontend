@@ -2,8 +2,6 @@ import type { QueueItem, TracksQueue } from '@/entities/tracks-queue/model/queue
 import {
     TrackLoadError,
     useTracksQueueStore,
-    type LoopMode,
-    LOOP_MODES,
     TracksQueueBoundsReachedError,
 } from '@/entities/tracks-queue/model/tracks-queue-store'
 import {
@@ -20,8 +18,6 @@ export {
     TracksQueue,
     useTracksQueueStore,
     TrackLoadError,
-    LoopMode,
-    LOOP_MODES,
     TracksQueueBoundsReachedError,
     QueueTrackNotFoundError,
     shuffleQueue,
