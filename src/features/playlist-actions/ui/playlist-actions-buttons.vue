@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { usePlaylistUpdateMutation } from '@/features/playlist-actions/api/playlist-update-mutation'
 import { useTracksImportMutation } from '@/features/playlist-actions/api/tracks-import-mutation'
 import { usePlaylistDeletionMutation } from '@/features/playlist-actions/api/playlist-deletion-mutation'
+import PlayPlaylistButton from '@/features/playlist-actions/play-button/ui/play-playlist-button.vue'
 import {
     TracksImportFormData,
     TracksImportFormDialog,
@@ -12,7 +13,7 @@ import { useNotificationsStore } from '@/shared/model/notifications'
 import { ExcludeGraphQLError } from '@/shared/utils/exclude-graphql-error'
 import { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
 import { PlaylistFormData, PlaylistFormDialog } from '@/entities/playlists'
-import { PlayPlaylistButton } from '..'
+import { DropdownMenu } from '@/shared/ui/dropdown-menu'
 
 const props = defineProps<{
     playlist: ExcludeGraphQLError<GetPlaylistWithTracksQuery['playlist']>
@@ -100,7 +101,7 @@ async function updatePlaylist(formData: PlaylistFormData) {
             @submit="importTracks"
         />
 
-        <VMenu v-if="userIsOwner">
+        <DropdownMenu v-if="userIsOwner">
             <template v-slot:activator="{ props: menuActivatorProps }">
                 <VBtn
                     icon="mdi-dots-horizontal"
@@ -109,71 +110,67 @@ async function updatePlaylist(formData: PlaylistFormData) {
                 ></VBtn>
             </template>
 
-            <VList>
-                <VListItem>
-                    <VDialog max-width="500px">
-                        <template #activator="{ props: activatorProps }">
-                            <VBtn
-                                prepend-icon="mdi-delete"
-                                variant="text"
-                                v-bind="activatorProps"
-                            >
-                                Delete
-                            </VBtn>
-                        </template>
+            <VListItem>
+                <VDialog max-width="500px">
+                    <template #activator="{ props: activatorProps }">
+                        <VBtn
+                            prepend-icon="mdi-delete"
+                            variant="text"
+                            v-bind="activatorProps"
+                        >
+                            Delete
+                        </VBtn>
+                    </template>
 
-                        <template #default="{ isActive }">
-                            <VCard>
-                                <VCardTitle class="text-wrap">
-                                    Are you sure you want to delete?
-                                </VCardTitle>
+                    <template #default="{ isActive }">
+                        <VCard>
+                            <VCardTitle class="text-wrap">
+                                Are you sure you want to delete?
+                            </VCardTitle>
 
-                                <VCardActions class="justify-start">
-                                    <VBtn
-                                        color="error"
-                                        variant="flat"
-                                        :loading="deletionMutation.loading.value"
-                                        @click="
-                                            async () => {
-                                                await deletePlaylist()
-                                                isActive.value = false
-                                            }
-                                        "
-                                    >
-                                        Delete
-                                    </VBtn>
+                            <VCardActions class="justify-start">
+                                <VBtn
+                                    color="error"
+                                    variant="flat"
+                                    :loading="deletionMutation.loading.value"
+                                    @click="
+                                        async () => {
+                                            await deletePlaylist()
+                                            isActive.value = false
+                                        }
+                                    "
+                                >
+                                    Delete
+                                </VBtn>
 
-                                    <VBtn @click="isActive.value = false">
-                                        Cancel
-                                    </VBtn>
-                                </VCardActions>
-                            </VCard>
-                        </template>
-                    </VDialog>
-                </VListItem>
+                                <VBtn @click="isActive.value = false"> Cancel </VBtn>
+                            </VCardActions>
+                        </VCard>
+                    </template>
+                </VDialog>
+            </VListItem>
 
-                <VListItem>
-                    <PlaylistFormDialog
-                        title="Edit the playlist"
-                        submit-button-text="Update"
-                        :loading="updateMutation.loading.value"
-                        :initial-form-data="playlist"
-                        v-model:visible="updateFormDialogVisible"
-                        @submit="updatePlaylist"
-                    >
-                        <template #activator="{ activatorProps }">
-                            <VBtn
-                                prepend-icon="mdi-pencil"
-                                variant="text"
-                                v-bind="activatorProps"
-                            >
-                                Edit
-                            </VBtn>
-                        </template>
-                    </PlaylistFormDialog>
-                </VListItem>
-            </VList>
-        </VMenu>
+            <VListItem>
+                <PlaylistFormDialog
+                    title="Edit the playlist"
+                    submit-button-text="Update"
+                    :loading="updateMutation.loading.value"
+                    :initial-form-data="playlist"
+                    v-model:visible="updateFormDialogVisible"
+                    @submit="updatePlaylist"
+                >
+                    <template #activator="{ activatorProps }">
+                        <VBtn
+                            prepend-icon="mdi-pencil"
+                            variant="text"
+                            v-bind="activatorProps"
+                        >
+                            Edit
+                        </VBtn>
+                    </template>
+                </PlaylistFormDialog>
+            </VListItem>
+        </DropdownMenu>
     </div>
 </template>
 
