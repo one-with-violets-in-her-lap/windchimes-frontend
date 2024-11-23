@@ -6,10 +6,15 @@
             <slot name="activator" v-bind="{ props }"></slot>
         </template>
 
-        <VList elevation="0" class="mt-1">
+        <VList elevation="0" class="mt-1 border dropdown-list" bg-color="background">
             <slot></slot>
         </VList>
     </VMenu>
 </template>
 
-<style scoped></style>
+<style scoped>
+.dropdown-list {
+    backdrop-filter: blur(2px);
+    background-color: rgba(var(--v-theme-background), 0.9) !important;
+}
+</style>
