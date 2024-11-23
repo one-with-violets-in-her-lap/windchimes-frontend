@@ -1,4 +1,5 @@
-import { toRef } from 'vue'
+import { computed, ref, toRef } from 'vue'
+import { useLocalStorage } from '@vueuse/core'
 import { defineStore, storeToRefs } from 'pinia'
 import { usePlayerVolume } from '@/features/player'
 import type { PlaylistTrack } from '@/entities/tracks'
@@ -10,10 +11,21 @@ export type TrackWithAudioFileUrl = Omit<
     '__typename'
 >
 
+// TODO: remake as enum
+export const LOOP_MODES = [
+    'looping disabled',
+    'loop current track',
+    'loop playlist/queue',
+] as const
+export type LoopMode = (typeof LOOP_MODES)[number]
+
 export const usePlayerStore = defineStore('player', () => {
     const tracksQueueStore = useTracksQueueStore()
-    const { currentTrackId, currentTrack } = storeToRefs(tracksQueueStore)
     const { playNextTrack, playPreviousTrack, playTrackFromQueue } = tracksQueueStore
+    const { currentTrack, currentTrackId } =
+        storeToRefs(tracksQueueStore)
+
+    const loopMode = useLocalStorage<LoopMode>('loop', 'looping disabled')
 
     const { audio, currentSecond, pauseAudio, paused, playAudio, rewind } = useAudio(
         toRef(() => currentTrack.value?.secondsDuration),
@@ -45,9 +57,12 @@ export const usePlayerStore = defineStore('player', () => {
 
     return {
         currentTrack,
+        currentTrackId,
+
         volume,
         paused,
         currentSecond,
+        loopMode,
 
         audio,
 

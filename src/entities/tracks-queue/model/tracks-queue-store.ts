@@ -1,6 +1,5 @@
-import { computed, readonly, ref } from 'vue'
-import { defineStore } from 'pinia'
-import { useLocalStorage } from '@vueuse/core'
+import { computed, ref } from 'vue'
+import { defineStore, storeToRefs } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable'
 import {
     usePlayerStore, // for jsdoc
@@ -22,14 +21,6 @@ export class TracksQueueBoundsReachedError extends Error {
     }
 }
 
-// TODO: remake as enum
-export const LOOP_MODES = [
-    'looping disabled',
-    'loop current track',
-    'loop playlist/queue',
-] as const
-export type LoopMode = (typeof LOOP_MODES)[number]
-
 /**
  * creates reactive tracks queue state, with play next/previous
  * functionality. **not a global player tracks queue state**, use
@@ -38,11 +29,11 @@ export type LoopMode = (typeof LOOP_MODES)[number]
 export const useTracksQueueStore = defineStore('tracksQueue', () => {
     const { client: apolloClient } = useApolloClient()
 
-    const { play } = usePlayerStore()
+    const playerStore = usePlayerStore()
+    const { play } = playerStore
+    const { loopMode } = storeToRefs(playerStore)
 
     const tracksQueue = ref<(PlaylistTrack | TrackReferenceGraphQl)[]>([])
-
-    const loopMode = useLocalStorage<LoopMode>('loop', 'looping disabled')
 
     const currentTrackId = ref<number>()
     const currentTrack = computed(() => {
@@ -157,7 +148,6 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
         tracksQueue,
         currentTrackId,
         currentTrack,
-        loopMode,
 
         playNextTrack,
         playPreviousTrack,
