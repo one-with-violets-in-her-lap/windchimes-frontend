@@ -1,4 +1,4 @@
-import { computed, ref, toRef } from 'vue'
+import { toRef } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 import { defineStore, storeToRefs } from 'pinia'
 import { usePlayerVolume } from '@/features/player'
@@ -22,8 +22,7 @@ export type LoopMode = (typeof LOOP_MODES)[number]
 export const usePlayerStore = defineStore('player', () => {
     const tracksQueueStore = useTracksQueueStore()
     const { playNextTrack, playPreviousTrack, playTrackFromQueue } = tracksQueueStore
-    const { currentTrack, currentTrackId } =
-        storeToRefs(tracksQueueStore)
+    const { currentTrack, currentTrackId } = storeToRefs(tracksQueueStore)
 
     const loopMode = useLocalStorage<LoopMode>('loop', 'looping disabled')
 
