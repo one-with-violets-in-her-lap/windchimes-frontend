@@ -7,6 +7,9 @@ import { PlaylistsListItemFragment } from '@/shared/model/graphql-generated-type
 import { DropdownMenu, DropdownButton } from '@/shared/ui/dropdown-menu'
 import { useNotificationsStore } from '@/shared/model/notifications'
 
+const PLAYLIST_QUERY_ERROR_MESSAGE =
+    "Couldn't request playlist tracks from the server"
+
 const props = defineProps<{
     playlist: PlaylistsListItemFragment
 }>()
@@ -27,13 +30,13 @@ async function handlePlayButtonClick() {
 }
 
 async function playRightAway() {
-    const PLAYLIST_QUERY_ERROR_MESSAGE =
-        "Couldn't request playlist tracks from the server"
-
     loading.value = true
 
     try {
-        const playlistWithTracks = await playlistWithTracksLazyQuery.load()
+        const playlistWithTracks =
+            playlistWithTracksLazyQuery.result.value === undefined
+                ? await playlistWithTracksLazyQuery.load()
+                : playlistWithTracksLazyQuery.result.value
 
         if (!playlistWithTracks) {
             showNotification('error', PLAYLIST_QUERY_ERROR_MESSAGE)
@@ -61,10 +64,48 @@ async function playRightAway() {
         loading.value = false
     }
 }
+
+async function addToQueue() {
+    loading.value = true
+
+    try {
+        const playlistWithTracks =
+            playlistWithTracksLazyQuery.result.value === undefined
+                ? await playlistWithTracksLazyQuery.load()
+                : playlistWithTracksLazyQuery.result.value
+
+        if (!playlistWithTracks) {
+            showNotification('error', PLAYLIST_QUERY_ERROR_MESSAGE)
+            return
+        }
+
+        if (playlistWithTracks.playlist?.__typename !== 'PlaylistWithTracksGraphQL') {
+            showNotification(
+                'error',
+                playlistWithTracks.playlist?.__typename === 'ErrorGraphQL'
+                    ? playlistWithTracks.playlist.explanation
+                    : PLAYLIST_QUERY_ERROR_MESSAGE,
+            )
+            return
+        }
+
+        if (playlistWithTracks.playlist.tracksReferences.length === 0) {
+            showNotification('error', 'This playlist does not have any tracks')
+            return
+        }
+
+        tracksQueue.value = [
+            ...tracksQueue.value,
+            ...playlistWithTracks.playlist.tracksReferences,
+        ]
+    } finally {
+        loading.value = false
+    }
+}
 </script>
 
 <template>
-    <DropdownMenu :disabled="tracksQueue.length === 0">
+    <DropdownMenu :disabled="tracksQueue.length === 0 || loading">
         <template #activator="{ props: playMenuActivatorProps }">
             <VBtn
                 v-bind="playMenuActivatorProps"
@@ -78,9 +119,11 @@ async function playRightAway() {
             </VBtn>
         </template>
 
-        <DropdownButton prepend-icon="mdi-play"> Play right away </DropdownButton>
+        <DropdownButton prepend-icon="mdi-play" @click="playRightAway">
+            Play right away
+        </DropdownButton>
 
-        <DropdownButton prepend-icon="mdi-plus-box-multiple">
+        <DropdownButton prepend-icon="mdi-plus-box-multiple" @click="addToQueue">
             Add to queue
         </DropdownButton>
     </DropdownMenu>
