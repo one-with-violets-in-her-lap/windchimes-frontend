@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { PlaylistTrack } from '@/entities/tracks'
+import WaveformVisualizer from '@/shared/ui/waveform-visualizer.vue'
 
 defineProps<{
     currentTrack: PlaylistTrack
@@ -22,11 +23,17 @@ defineProps<{
         </VAvatar>
 
         <VOverlay
-            :model-value="paused"
+            :model-value="true"
             contained
             content-class="d-flex justify-center align-center w-100 h-100"
         >
-            <VIcon v-show="paused" icon="mdi-pause" color="white" size="60" />
+            <Transition name="scale-up">
+                <VIcon v-show="paused" icon="mdi-pause" color="white" size="60" />
+            </Transition>
+
+            <Transition name="scale-up">
+                <WaveformVisualizer v-show="!paused" :audio="audio" class="w-100" />
+            </Transition>
         </VOverlay>
     </button>
 </template>
