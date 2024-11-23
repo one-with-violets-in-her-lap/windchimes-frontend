@@ -26,7 +26,6 @@ export function useAudio(
     const currentSecond = ref(0)
 
     const audio = new Audio()
-    audio.crossOrigin = 'anonymous'
 
     audio.addEventListener('pause', () => {
         paused.value = true
