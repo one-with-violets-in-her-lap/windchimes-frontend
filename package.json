@@ -12,8 +12,8 @@
         "format": "prettier --write src/",
         "graphql-codegen": "graphql-codegen --config graphql-codegen.ts",
         "capacitor:dev": "npm run build && cap run android",
-        "capacitor:build-debug": "npm run build && cap build android --keystorepath ~/.android/debug.keystore --keystorepass android --keystorealias androiddebugkey --keystorealiaspass android",
-        "capacitor:build": "./build-apk.sh",
+        "capacitor:build-debug": "npm run build && cap build android --keystorepath ~/.android/debug.keystore --keystorepass android --keystorealias androiddebugkey --keystorealiaspass android --androidreleasetype \"APK\"",
+        "capacitor:build": "npm run build && ./build-apk.sh",
         "capacitor:generate-splash-icons": "capacitor-assets generate"
     },
     "dependencies": {
