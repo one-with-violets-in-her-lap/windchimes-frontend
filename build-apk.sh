@@ -5,4 +5,4 @@ read -p "alias: " alias
 echo ""
 
 npx cap build android --keystorepath $keystore_path --keystorepass \
-    $password --keystorealias $alias --keystorealiaspass $password --androidreleasetype "APK"
+    $password --keystorealias $alias --keystorealiaspass $password --androidreleasetype "APK" --signing-type apksigner
