@@ -42,13 +42,13 @@ async function copyMoreInfo(moreInfo: string) {
 </script>
 
 <template>
-    <VAlert title="Something went wrong when loading playlists" type="error">
+    <VAlert title="Something went wrong when loading playlists" type="error" variant="tonal" max-width="800">
         <p class="my-3">{{ errorData.explanation }}</p>
 
         <div class="d-flex ga-2 flex-wrap">
             <VBtn
                 variant="flat"
-                color="white"
+                color="error"
                 prepend-icon="mdi-reload"
                 class="w-sm-auto w-100"
                 @click="emit('retry')"
