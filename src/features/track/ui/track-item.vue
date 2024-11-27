@@ -7,6 +7,7 @@ import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/gr
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import { computed } from 'vue'
 import { useTracksQueueStore } from '@/entities/tracks-queue'
+import { DropdownButton, DropdownMenu } from '@/shared/ui/dropdown-menu'
 
 const props = defineProps<{
     track: PlaylistTrack
@@ -52,8 +53,9 @@ async function playTrack() {
 <template>
     <VListItem
         lines="two"
-        :class="{ 'px-3 py-1': compact }"
-        :ripple="false"
+        class="px-3 py-2"
+        :class="{ 'py-1': compact }"
+        v-bind="props"
         @click="playing ? pause() : playTrack()"
     >
         <template #title>
@@ -67,24 +69,31 @@ async function playTrack() {
                 />
 
                 <span
-                    class="text-sm-body-1 text-body-2"
+                    class="text-sm-body-1 text-body-2 text-truncate"
                     :class="{ 'text-primary': isCurrentTrack }"
                 >
-                    {{ track.owner.name }} - {{ track.name }}
+                    {{ track.name }}
                 </span>
             </div>
         </template>
 
         <template #subtitle>
-            {{ trackNumber }} ·
+            <div class="text-sm-body-1 text-body-2 text-truncate mb-1">
+                {{ track.owner.name }}
+            </div>
 
-            <DurationTimestamp
-                :seconds-duration="track.secondsDuration"
-                unstyled
-                class="mr-2"
-            />
+            <div class="d-flex gc-1 align-center">
+                {{ trackNumber }} ·
 
-            <VIcon :icon="`mdi-${track.platform.toLowerCase()}`" />
+                <DurationTimestamp
+                    :seconds-duration="track.secondsDuration"
+                    unstyled
+                />
+
+                ·
+
+                <VIcon :icon="`mdi-${track.platform.toLowerCase()}`" size="20px" />
+            </div>
         </template>
 
         <template #prepend>
@@ -97,19 +106,30 @@ async function playTrack() {
                     tile
                     rounded
                 />
-
-                <VBtn
-                    v-if="!compact"
-                    :icon="playing ? 'mdi-pause' : 'mdi-play'"
-                    :variant="isCurrentTrack ? 'tonal' : 'flat'"
-                    color="primary"
-                    size="38px"
-                    @click.stop="playing ? pause() : playTrack()"
-                />
             </div>
         </template>
 
         <template #append>
+            <DropdownMenu>
+                <template #activator="{ props }">
+                    <VBtn
+                        v-bind="props"
+                        icon="mdi-dots-horizontal"
+                        variant="text"
+                        density="comfortable"
+                        @click.stop
+                    ></VBtn>
+                </template>
+
+                <DropdownButton prepend-icon="mdi-play-box-multiple">
+                    Play next
+                </DropdownButton>
+
+                <DropdownButton prepend-icon="mdi-playlist-plus">
+                    Add to queue
+                </DropdownButton>
+            </DropdownMenu>
+
             <slot name="append"></slot>
         </template>
     </VListItem>
