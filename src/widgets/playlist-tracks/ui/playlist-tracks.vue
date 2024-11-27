@@ -49,7 +49,7 @@ const allPlaylistTracks = computed(() =>
         :items-loaded="playlist.loadedTracks.length"
         @load-more="loadMoreTracks"
     >
-        <VList>
+        <VList max-width="1200">
             <TrackItem
                 v-for="(track, index) in availableTracks"
                 :key="track.id"
