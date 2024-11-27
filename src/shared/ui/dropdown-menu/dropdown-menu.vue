@@ -15,6 +15,6 @@
 <style scoped>
 .dropdown-list {
     backdrop-filter: blur(2px);
-    background-color: rgba(var(--v-theme-background), 0.9) !important;
+    background-color: rgba(var(--v-theme-background), 0.86) !important;
 }
 </style>
