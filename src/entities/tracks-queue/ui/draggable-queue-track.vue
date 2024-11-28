@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TrackItem } from '@/features/track'
+import { TrackItem } from '@/entities/tracks'
 import { QueueItem } from '@/entities/tracks-queue/model/queue-item'
 import { LoadedTrackFragment } from '@/shared/model/graphql-generated-types/graphql'
 import SwipableElement from '@/shared/ui/swipable-element.vue'
