@@ -51,88 +51,110 @@ async function playTrack() {
 </script>
 
 <template>
-    <VListItem
-        lines="two"
-        class="px-3 py-2"
-        :class="{ 'py-1': compact }"
-        v-bind="props"
-        @click="playing ? pause() : playTrack()"
-    >
-        <template #title>
-            <div class="d-flex gc-1 align-center">
-                <VIcon
-                    v-show="isCurrentTrack"
-                    icon="mdi-equalizer"
-                    size="20"
-                    color="primary"
-                    :class="{ 'pulse-animation': playing }"
-                />
+    <VHover>
+        <template #default="{ isHovering, props: propsForHoverEffect }">
+            <VListItem
+                lines="two"
+                class="px-3 py-2"
+                :class="{ 'py-1': compact }"
+                v-bind="{ ...propsForHoverEffect, ...$attrs }"
+                @click="playing ? pause() : playTrack()"
+            >
+                <template #title>
+                    <div class="d-flex gc-1 align-center">
+                        <VIcon
+                            v-show="isCurrentTrack"
+                            icon="mdi-equalizer"
+                            size="20"
+                            color="primary"
+                            :class="{ 'pulse-animation': playing }"
+                        />
 
-                <span
-                    class="text-sm-body-1 text-body-2 text-truncate"
-                    :class="{ 'text-primary': isCurrentTrack }"
-                >
-                    {{ track.name }}
-                </span>
-            </div>
-        </template>
-
-        <template #subtitle>
-            <div class="text-sm-body-1 text-body-2 text-truncate mb-1">
-                {{ track.owner.name }}
-            </div>
-
-            <div class="d-flex gc-1 align-center">
-                {{ trackNumber }} ·
-
-                <DurationTimestamp
-                    :seconds-duration="track.secondsDuration"
-                    unstyled
-                />
-
-                ·
-
-                <VIcon :icon="`mdi-${track.platform.toLowerCase()}`" size="20px" />
-            </div>
-        </template>
-
-        <template #prepend>
-            <div class="d-flex gc-3 mr-4 align-center">
-                <VAvatar
-                    :image="track.pictureUrl || undefined"
-                    icon="mdi-music"
-                    :size="compact ? '30px' : '34px'"
-                    color="surface-3"
-                    tile
-                    rounded
-                />
-            </div>
-        </template>
-
-        <template #append>
-            <DropdownMenu>
-                <template #activator="{ props }">
-                    <VBtn
-                        v-bind="props"
-                        icon="mdi-dots-horizontal"
-                        variant="text"
-                        density="comfortable"
-                        @click.stop
-                    ></VBtn>
+                        <span
+                            class="text-sm-body-1 text-body-2 text-truncate"
+                            :class="{ 'text-primary': isCurrentTrack }"
+                        >
+                            {{ track.name }}
+                        </span>
+                    </div>
                 </template>
 
-                <DropdownButton prepend-icon="mdi-play-box-multiple">
-                    Play next
-                </DropdownButton>
+                <template #subtitle>
+                    <div class="text-sm-body-1 text-body-2 text-truncate mb-1">
+                        {{ track.owner.name }}
+                    </div>
 
-                <DropdownButton prepend-icon="mdi-playlist-plus">
-                    Add to queue
-                </DropdownButton>
-            </DropdownMenu>
+                    <div class="d-flex gc-1 align-center">
+                        {{ trackNumber }} ·
 
-            <slot name="append"></slot>
+                        <DurationTimestamp
+                            :seconds-duration="track.secondsDuration"
+                            unstyled
+                        />
+
+                        ·
+
+                        <VIcon
+                            :icon="`mdi-${track.platform.toLowerCase()}`"
+                            size="20px"
+                        />
+                    </div>
+                </template>
+
+                <template #prepend>
+                    <div class="position-relative d-flex gc-3 mr-4 align-center">
+                        <VAvatar
+                            :image="track.pictureUrl || undefined"
+                            icon="mdi-music"
+                            :size="compact ? '30px' : '34px'"
+                            color="surface-3"
+                            tile
+                            rounded
+                        />
+
+                        <VOverlay
+                            contained
+                            :model-value="isHovering === true || isCurrentTrack"
+                            class="d-flex justify-center align-center"
+                        >
+                            <VIcon
+                                :icon="
+                                    isCurrentTrack && playing
+                                        ? 'mdi-pause'
+                                        : 'mdi-play'
+                                "
+                                color="background"
+                            />
+                        </VOverlay>
+                    </div>
+                </template>
+
+                <template #append>
+                    <DropdownMenu>
+                        <template #activator="{ props }">
+                            <VBtn
+                                v-bind="props"
+                                icon="mdi-dots-horizontal"
+                                variant="text"
+                                density="comfortable"
+                                @click.stop
+                            ></VBtn>
+                        </template>
+
+                        <DropdownButton prepend-icon="mdi-play-box-multiple">
+                            Play next
+                        </DropdownButton>
+
+                        <DropdownButton prepend-icon="mdi-playlist-plus">
+                            Add to queue
+                        </DropdownButton>
+                    </DropdownMenu>
+
+                    <slot name="append"></slot>
+                </template>
+            </VListItem>
         </template>
-    </VListItem>
+    </VHover>
 </template>
 
 <style scoped>
