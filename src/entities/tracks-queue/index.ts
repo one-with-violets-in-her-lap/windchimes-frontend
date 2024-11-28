@@ -10,10 +10,8 @@ import {
     moveQueueTracks,
     clearQueue,
 } from '@/entities/tracks-queue/model/tracks-queue-actions'
-import DraggableQueueTracksList from '@/entities/tracks-queue/ui/draggable-queue-tracks-list.vue'
 
 export {
-    DraggableQueueTracksList,
     QueueItem,
     TracksQueue,
     useTracksQueueStore,
