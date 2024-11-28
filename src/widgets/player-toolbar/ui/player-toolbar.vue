@@ -2,12 +2,12 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import FullPlayerDrawer from '@/widgets/player-toolbar/ui/full-player-drawer.vue'
+import { TracksQueueEditorDrawer } from '@/widgets/tracks-queue-editor'
 import {
     usePlayerStore,
     usePlayerShortcuts,
     TrackProgressBar,
 } from '@/features/player'
-import { TracksQueueEditorDrawer } from '@/features/tracks-queue-editor'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 
 const playerStore = usePlayerStore()
