@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { useAuth0 } from '@auth0/auth0-vue'
 import { PlaylistTrack } from '@/entities/tracks/model/track'
 import { useTracksQueueStore } from '@/entities/tracks-queue'
 import { useNotificationsStore } from '@/shared/model/notifications'
 import { DropdownButton, DropdownMenu } from '@/shared/ui/dropdown-menu'
+import AddToPlaylistDialog from '@/entities/tracks/ui/add-to-playlist-window.vue'
 
 const props = defineProps<{
     track: PlaylistTrack
 }>()
+
+const { user } = useAuth0()
 
 const { showNotification } = useNotificationsStore()
 const { tracksQueue, currentTrackId } = storeToRefs(useTracksQueueStore())
@@ -31,6 +35,8 @@ async function addToQueue() {
     tracksQueue.value = [...tracksQueue.value, props.track]
     showNotification('success', 'Track will be played next')
 }
+
+async function openAddToPlaylistModal() {}
 </script>
 
 <template>
@@ -52,6 +58,18 @@ async function addToQueue() {
         <DropdownButton prepend-icon="mdi-playlist-plus" @click="addToQueue">
             Add to queue
         </DropdownButton>
+
+        <AddToPlaylistDialog v-if="user?.sub" :track :current-user-id="user.sub">
+            <template #activator="{ openDialogButtonProps }">
+                <DropdownButton
+                    v-bind="openDialogButtonProps"
+                    prepend-icon="mdi-plus"
+                    @click="openAddToPlaylistModal"
+                >
+                    Add to the playlist
+                </DropdownButton>
+            </template>
+        </AddToPlaylistDialog>
     </DropdownMenu>
 </template>
 
