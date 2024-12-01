@@ -21,6 +21,7 @@ const { mobile } = useDisplay()
             temporary
             rounded
             class="responsive-drawer"
+            touchless
             :location="mobile ? 'bottom' : 'left'"
             :class="{ 'side-drawer': !mobile, 'fixed-height': fixedHeight }"
         >
