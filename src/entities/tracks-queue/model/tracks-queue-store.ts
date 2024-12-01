@@ -21,11 +21,6 @@ export class TracksQueueBoundsReachedError extends Error {
     }
 }
 
-/**
- * creates reactive tracks queue state, with play next/previous
- * functionality. **not a global player tracks queue state**, use
- * {@link usePlayerStore} for this purpose
- */
 export const useTracksQueueStore = defineStore('tracksQueue', () => {
     const { client: apolloClient } = useApolloClient()
 
