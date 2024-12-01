@@ -6,7 +6,7 @@ import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 
 export function useAddTrackToPlaylistMutation() {
-    const query = gql`
+    const mutation = gql`
         mutation AddTrackToPlaylist($playlistsIds: [Int!]!, $trackId: Int!) {
             addTrackToPlaylists(playlistsIds: $playlistsIds, trackId: $trackId) {
                 ... on ErrorGraphQL {
@@ -21,9 +21,14 @@ export function useAddTrackToPlaylistMutation() {
     return useMutation<
         AddTrackToPlaylistMutation,
         AddTrackToPlaylistMutationVariables
-    >(query, {
-        update: cache => {
-            cache.evict({ id: 'GetPlaylistsFeed', fieldName: 'playlists' })
+    >(mutation, {
+        update(cache, _, options) {
+            cache.evict({ fieldName: 'playlists' })
+
+            const ids = options.variables?.playlistsIds as number[]
+            ids.forEach(id => {
+                cache.evict({ fieldName: 'playlist', args: { playlistId: id } })
+            })
         },
     })
 }
