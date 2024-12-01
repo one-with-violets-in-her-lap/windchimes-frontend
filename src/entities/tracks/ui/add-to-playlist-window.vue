@@ -1,15 +1,29 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import anime from 'animejs'
 import { PlaylistTrack } from '@/entities/tracks/model/track'
 import { useLazyPlaylistsBasicInfoQuery } from '@/entities/tracks/api/playlists-basic-info-query'
+import { useNotificationsStore } from '@/shared/model/notifications'
 import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
+import { useAddTrackToPlaylistMutation } from '../api/add-track-to-playlist-mutation'
 
 const props = defineProps<{
     track: PlaylistTrack
     currentUserId: string
 }>()
 
+const opened = defineModel<boolean>('opened')
+
+const { showNotification } = useNotificationsStore()
+
 const playlistsQuery = useLazyPlaylistsBasicInfoQuery(props.currentUserId)
+
+watch(opened, () => {
+    if (opened.value) {
+        // loads the playlists when windows opens, if they are not already loaded
+        playlistsQuery.load()
+    }
+})
 
 const playlistsQueryError = computed(() => {
     if (playlistsQuery.result.value?.playlists.__typename === 'ErrorGraphQL') {
@@ -29,28 +43,75 @@ const playlists = computed(() =>
 )
 
 const selectedPlaylistsIds = ref<number[]>([])
+function selectAllPlaylists() {
+    selectedPlaylistsIds.value = playlists.value?.map(playlist => playlist.id) || []
+}
+
+const addTrackToPlaylistMutation = useAddTrackToPlaylistMutation()
+
+async function addToSelectedPlaylists() {
+    try {
+        const mutationResult = await addTrackToPlaylistMutation.mutate({
+            playlistsIds: selectedPlaylistsIds.value,
+            trackId: props.track.id,
+        })
+
+        if (
+            mutationResult?.data?.addTrackToPlaylists?.__typename === 'ErrorGraphQL'
+        ) {
+            showNotification(
+                'error',
+                mutationResult.data.addTrackToPlaylists.explanation,
+            )
+            return
+        }
+
+        await anime({
+            targets: '#playlistsToSelectContainer',
+            scale: 0.1,
+            opacity: 0,
+            endDelay: 80,
+            duration: 160,
+            easing: 'linear',
+        }).finished
+
+        opened.value = false
+
+        showNotification('success', 'Added to playlists')
+    } catch (error) {
+        console.error(error)
+        showNotification('error', 'Failed to add the track to playlists')
+    }
+}
 </script>
 
 <template>
-    <VBottomSheet @update:model-value="playlistsQuery.load()" inset>
+    <VBottomSheet v-model="opened" inset>
         <template #activator="{ props: openDialogButtonProps }">
             <slot name="activator" v-bind="{ openDialogButtonProps }"></slot>
         </template>
 
-        <template #default="{ isActive }">
-            <VCard title="Add to playlists" class="h-100">
+        <template #default>
+            <VCard
+                title="Add to playlists"
+                elevation="0"
+                :subtitle="`${track.owner.name} - ${track.name}`"
+                class="h-100"
+            >
                 <VCardItem class="pt-0">
                     <LoadingContent
                         :error="playlistsQueryError"
                         :loading="playlistsQuery.loading.value"
                     >
-                        <p class="mb-5">Select the playlists to add the track to</p>
-
                         <VForm
                             v-if="playlists && playlists.length > 0"
                             @submit.prevent
                         >
-                            <VSheet class="pa-0 mb-5 overflow-y-auto" height="40vh">
+                            <VSheet
+                                id="playlistsToSelectContainer"
+                                class="pa-0 mb-5 overflow-y-auto"
+                                height="40vh"
+                            >
                                 <VCheckbox
                                     v-for="playlist in playlists"
                                     v-model="selectedPlaylistsIds"
@@ -71,6 +132,10 @@ const selectedPlaylistsIds = ref<number[]>([])
                                     prepend-icon="mdi-check"
                                     type="submit"
                                     class="w-100 mb-3"
+                                    :loading="
+                                        addTrackToPlaylistMutation.loading.value
+                                    "
+                                    @click="addToSelectedPlaylists"
                                 >
                                     Add to selected
                                 </VBtn>
@@ -84,11 +149,7 @@ const selectedPlaylistsIds = ref<number[]>([])
                                     variant="tonal"
                                     color="primary"
                                     class="w-100"
-                                    @click="
-                                        selectedPlaylistsIds = playlists.map(
-                                            playlist => playlist.id,
-                                        )
-                                    "
+                                    @click="selectAllPlaylists"
                                 >
                                     Select all
                                 </VBtn>
@@ -119,7 +180,7 @@ const selectedPlaylistsIds = ref<number[]>([])
                                 variant="flat"
                                 color="primary"
                                 prepend-icon="mdi-close"
-                                @click="isActive.value = false"
+                                @click="opened = false"
                             >
                                 Close
                             </VBtn>
