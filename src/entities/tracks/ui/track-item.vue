@@ -12,9 +12,15 @@ import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 
 const props = defineProps<{
     track: PlaylistTrack
-    allPlaylistTracks: (TrackReferenceGraphQl | PlaylistTrack)[]
     trackNumber: number
     compact?: boolean
+    /**
+     * all tracks of playlist in which current track is located
+     *
+     * this prop is needed to construct a next tracks queue when the
+     * track is played
+     */
+    allPlaylistTracks: (TrackReferenceGraphQl | PlaylistTrack)[]
 }>()
 
 const { client: apolloClient } = useApolloClient()
