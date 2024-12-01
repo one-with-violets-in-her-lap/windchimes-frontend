@@ -34,7 +34,7 @@ export const usePlayerStore = defineStore('player', () => {
         },
     )
 
-    const { volume } = usePlayerVolume(audio)
+    const { volume, setVolume } = usePlayerVolume(audio)
 
     /**
      * resumes the current track or plays a new one if `track` param is specified
@@ -59,6 +59,8 @@ export const usePlayerStore = defineStore('player', () => {
         currentTrackId,
 
         volume,
+        setVolume,
+
         paused,
         currentSecond,
         loopMode,

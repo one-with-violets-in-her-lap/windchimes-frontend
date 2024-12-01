@@ -1,4 +1,4 @@
-import { onMounted, watch } from 'vue'
+import { onMounted, readonly, watch } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 import { usePlayerStore } from '@/features/player' // for jsdoc
 
@@ -27,5 +27,17 @@ export function usePlayerVolume(audio: HTMLAudioElement) {
         audio.volume = +volume.value
     }
 
-    return { volume }
+    function setVolume(newVolume: number) {
+        if (newVolume > 1 || newVolume < 0) {
+            console.warn(
+                `requested volume change to "${newVolume}" was ignored because` +
+                    'the value is invalid',
+            )
+            return
+        }
+
+        volume.value = newVolume
+    }
+
+    return { volume: readonly(volume), setVolume }
 }

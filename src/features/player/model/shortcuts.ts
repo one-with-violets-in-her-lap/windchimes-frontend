@@ -1,11 +1,15 @@
 import { onKeyStroke } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { usePlayerStore } from '@/features/player'
+import { useNotificationsStore } from '@/shared/model/notifications'
 
 export function usePlayerShortcuts() {
     const playerStore = usePlayerStore()
-    const { pause, play, playNextTrack, playPreviousTrack, rewind } = playerStore
+    const { pause, play, playNextTrack, playPreviousTrack, rewind, setVolume } =
+        playerStore
     const { paused, currentSecond, volume } = storeToRefs(playerStore)
+
+    const { showNotification } = useNotificationsStore()
 
     onKeyStroke(
         ' ',
@@ -52,7 +56,12 @@ export function usePlayerShortcuts() {
             return
         }
 
-        volume.value += 0.1
+        setVolume(volume.value + 0.1)
+
+        showNotification(
+            'success',
+            `Volume set to ${Math.round(volume.value * 100)}%`,
+        )
     })
 
     onKeyStroke('ArrowDown', async event => {
@@ -60,6 +69,11 @@ export function usePlayerShortcuts() {
             return
         }
 
-        volume.value -= 0.1
+        setVolume(volume.value - 0.1)
+
+        showNotification(
+            'success',
+            `Volume set to ${Math.round(volume.value * 100)}%`,
+        )
     })
 }
