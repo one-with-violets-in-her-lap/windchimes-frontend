@@ -26,5 +26,5 @@ export function usePlaylistCreationMutation() {
     return useMutationWithErrorNotification<
         CreatePlaylistMutation,
         CreatePlaylistMutationVariables
-    >(mutation, { refetchQueries: ['GetPlaylists'] })
+    >(mutation, { refetchQueries: ['GetPlaylistsFeed'] })
 }
