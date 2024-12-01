@@ -123,6 +123,7 @@ async function playTrack() {
                             contained
                             :model-value="isHovering === true || isCurrentTrack"
                             class="d-flex justify-center align-center"
+                            z-index="0"
                         >
                             <VIcon
                                 :icon="
