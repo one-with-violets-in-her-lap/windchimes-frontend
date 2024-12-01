@@ -1,19 +1,26 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable'
-import { queryTrackAudioFile, type PlaylistTrack } from '@/entities/tracks'
 import { usePlayerStore } from '@/features/player'
+import { queryTrackAudioFile } from '@/entities/tracks/api/audio-file-query'
+import { type PlaylistTrack } from '@/entities/tracks/model/track'
+import TrackOptionsDropdown from '@/entities/tracks/ui/track-options-dropdown.vue'
+import { useTracksQueueStore } from '@/entities/tracks-queue'
 import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
-import { computed } from 'vue'
-import { useTracksQueueStore } from '@/entities/tracks-queue'
-import { DropdownButton, DropdownMenu } from '@/shared/ui/dropdown-menu'
 
 const props = defineProps<{
     track: PlaylistTrack
-    allPlaylistTracks: (TrackReferenceGraphQl | PlaylistTrack)[]
     trackNumber: number
     compact?: boolean
+    /**
+     * all tracks of playlist in which current track is located
+     *
+     * this prop is needed to construct a next tracks queue when the
+     * track is played
+     */
+    allPlaylistTracks: (TrackReferenceGraphQl | PlaylistTrack)[]
 }>()
 
 const { client: apolloClient } = useApolloClient()
@@ -116,6 +123,7 @@ async function playTrack() {
                             contained
                             :model-value="isHovering === true || isCurrentTrack"
                             class="d-flex justify-center align-center"
+                            z-index="0"
                         >
                             <VIcon
                                 :icon="
@@ -130,25 +138,7 @@ async function playTrack() {
                 </template>
 
                 <template #append>
-                    <DropdownMenu>
-                        <template #activator="{ props }">
-                            <VBtn
-                                v-bind="props"
-                                icon="mdi-dots-horizontal"
-                                variant="text"
-                                density="comfortable"
-                                @click.stop
-                            ></VBtn>
-                        </template>
-
-                        <DropdownButton prepend-icon="mdi-play-box-multiple">
-                            Play next
-                        </DropdownButton>
-
-                        <DropdownButton prepend-icon="mdi-playlist-plus">
-                            Add to queue
-                        </DropdownButton>
-                    </DropdownMenu>
+                    <TrackOptionsDropdown :track />
 
                     <slot name="append"></slot>
                 </template>

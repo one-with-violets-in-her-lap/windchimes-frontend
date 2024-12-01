@@ -5,7 +5,7 @@ import {
     getQueueWithPlaylistAdded,
     PlaylistPlayError,
     playPlaylistInNewQueue,
-} from '@/features/playlist-actions/play-button/model/play-playlist'
+} from '@/entities/tracks-queue/model/tracks-queue-actions'
 import { usePlayerStore } from '@/features/player'
 import { usePlaylistWithTracksLazyQuery } from '@/features/playlist-actions/api/playlist-with-tracks-query'
 import { useTracksQueueStore } from '@/entities/tracks-queue'

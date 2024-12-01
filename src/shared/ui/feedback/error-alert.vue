@@ -42,7 +42,12 @@ async function copyMoreInfo(moreInfo: string) {
 </script>
 
 <template>
-    <VAlert title="Something went wrong when loading playlists" type="error" variant="tonal" max-width="800">
+    <VAlert
+        title="Something went wrong when loading playlists"
+        type="error"
+        variant="tonal"
+        max-width="800"
+    >
         <p class="my-3">{{ errorData.explanation }}</p>
 
         <div class="d-flex ga-2 flex-wrap">
