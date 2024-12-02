@@ -53,6 +53,10 @@ export const usePlayerStore = defineStore('player', () => {
         })
     }
 
+    /**
+     * toggles next looping mode in this order:
+     * `LoopMode.Disabled` -> `LoopMode.LoopCurrentTrack` -> `LoopMode.LoopPlaylist`
+     */
     function toggleLoopMode() {
         const loopModes = getTypedObjectKeys(LoopMode)
 
