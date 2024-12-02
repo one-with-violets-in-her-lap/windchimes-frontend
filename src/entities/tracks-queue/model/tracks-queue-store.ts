@@ -2,6 +2,7 @@ import { computed, ref } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable'
 import {
+    LoopMode,
     usePlayerStore, // for jsdoc
 } from '@/features/player'
 import {
@@ -58,10 +59,10 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
 
             if (
                 currentTrackIndex >= lastIndex &&
-                loopMode.value === 'loop playlist/queue'
+                loopMode.value === LoopMode.LoopPlaylist
             ) {
                 await playTrackFromQueue(0)
-            } else if (loopMode.value === 'loop current track') {
+            } else if (loopMode.value === LoopMode.LoopCurrentTrack) {
                 await playTrackFromQueue(currentTrackIndex)
             } else {
                 await playTrackFromQueue(currentTrackIndex + tracksToSkipCount)
