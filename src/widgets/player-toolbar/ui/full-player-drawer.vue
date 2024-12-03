@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import anime from 'animejs'
-import { TrackProgressBar, VolumeMenuButton, usePlayerStore } from '@/features/player'
-import { LOOP_MODES } from '@/features/player'
+import {
+    LoopMode,
+    TrackProgressBar,
+    VolumeMenuButton,
+    usePlayerStore,
+} from '@/features/player'
 import { shuffleQueue, useTracksQueueStore } from '@/entities/tracks-queue'
 import { CurrentTrackThumbnail } from '@/entities/tracks'
 import { useNotificationsStore } from '@/shared/model/notifications'
@@ -12,7 +16,8 @@ import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'
 const opened = defineModel<boolean>('opened', { required: true })
 
 const playerStore = usePlayerStore()
-const { playNextTrack, playPreviousTrack, pause, play, audio } = playerStore
+const { playNextTrack, playPreviousTrack, pause, play, audio, toggleLoopMode } =
+    playerStore
 const { currentSecond, loopMode, paused } = storeToRefs(playerStore)
 
 const { tracksQueue, currentTrack } = storeToRefs(useTracksQueueStore())
@@ -74,7 +79,11 @@ function shuffleTracksQueue() {
                     class="skip-button"
                     color="surface-2"
                     variant="flat"
-                    @click="animateSkipButtonsUntilFinished(playNextTrack())"
+                    @click="
+                        animateSkipButtonsUntilFinished(
+                            playNextTrack({ doNotLoop: true }),
+                        )
+                    "
                 >
                     <VIcon icon="mdi-skip-forward" size="40px" />
                 </VBtn>
@@ -117,25 +126,18 @@ function shuffleTracksQueue() {
                         <VBtn
                             variant="flat"
                             :color="
-                                loopMode !== 'looping disabled'
+                                loopMode !== LoopMode.Disabled
                                     ? 'primary'
                                     : 'surface-2'
                             "
                             :icon="
-                                loopMode === 'loop current track'
+                                loopMode === LoopMode.LoopCurrentTrack
                                     ? 'mdi-repeat-once'
                                     : 'mdi-repeat'
                             "
                             class="mr-auto ml-2"
                             v-bind="tooltipActivatorProps"
-                            @click="
-                                loopMode =
-                                    LOOP_MODES[
-                                        LOOP_MODES.findIndex(
-                                            mode => mode === loopMode,
-                                        ) + 1
-                                    ] || 'looping disabled'
-                            "
+                            @click="toggleLoopMode"
                         />
                     </template>
 

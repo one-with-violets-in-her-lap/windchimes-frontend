@@ -1,30 +1,29 @@
-import { toRef } from 'vue'
+import { readonly, toRef } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 import { defineStore, storeToRefs } from 'pinia'
 import { usePlayerVolume } from '@/features/player'
 import type { PlaylistTrack } from '@/entities/tracks'
 import { useTracksQueueStore } from '@/entities/tracks-queue'
 import { useAudio } from '@/shared/model/reactive-audio'
+import { getTypedObjectKeys } from '@/shared/utils/get-typed-object-keys'
 
 export type TrackWithAudioFileUrl = Omit<
     PlaylistTrack & { trackAudioFileUrl: string },
     '__typename'
 >
 
-// TODO: remake as enum
-export const LOOP_MODES = [
-    'looping disabled',
-    'loop current track',
-    'loop playlist/queue',
-] as const
-export type LoopMode = (typeof LOOP_MODES)[number]
+export enum LoopMode {
+    Disabled = 'Looping disabled',
+    LoopCurrentTrack = 'Loop current track',
+    LoopPlaylist = 'Loop playlist/queue',
+}
 
 export const usePlayerStore = defineStore('player', () => {
     const tracksQueueStore = useTracksQueueStore()
     const { playNextTrack, playPreviousTrack, playTrackFromQueue } = tracksQueueStore
     const { currentTrack, currentTrackId } = storeToRefs(tracksQueueStore)
 
-    const loopMode = useLocalStorage<LoopMode>('loop', 'looping disabled')
+    const loopMode = useLocalStorage<LoopMode>('loop', LoopMode.Disabled)
 
     const { audio, currentSecond, pauseAudio, paused, playAudio, rewind } = useAudio(
         toRef(() => currentTrack.value?.secondsDuration),
@@ -54,6 +53,26 @@ export const usePlayerStore = defineStore('player', () => {
         })
     }
 
+    /**
+     * toggles next looping mode in this order:
+     * `LoopMode.Disabled` -> `LoopMode.LoopCurrentTrack` -> `LoopMode.LoopPlaylist`
+     */
+    function toggleLoopMode() {
+        const loopModes = getTypedObjectKeys(LoopMode)
+
+        const currentLoopModeIndex = loopModes.findIndex(
+            mode => LoopMode[mode] === loopMode.value,
+        )
+
+        const nextLoopMode = loopModes.at(currentLoopModeIndex + 1)
+
+        if (nextLoopMode) {
+            loopMode.value = LoopMode[nextLoopMode]
+        } else {
+            loopMode.value = LoopMode[loopModes[0]]
+        }
+    }
+
     return {
         currentTrack,
         currentTrackId,
@@ -63,7 +82,7 @@ export const usePlayerStore = defineStore('player', () => {
 
         paused,
         currentSecond,
-        loopMode,
+        loopMode: readonly(loopMode),
 
         audio,
 
@@ -73,5 +92,6 @@ export const usePlayerStore = defineStore('player', () => {
         playNextTrack,
         playPreviousTrack,
         playTrackFromQueue,
+        toggleLoopMode,
     }
 })

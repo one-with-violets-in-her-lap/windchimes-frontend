@@ -2,7 +2,9 @@
 import { storeToRefs } from 'pinia'
 import { usePlayerStore } from '@/features/player'
 
-const { volume } = storeToRefs(usePlayerStore())
+const playerStore = usePlayerStore()
+const { volume } = storeToRefs(playerStore)
+const { setVolume } = playerStore
 </script>
 
 <template>
@@ -25,7 +27,8 @@ const { volume } = storeToRefs(usePlayerStore())
                 :max="1"
                 class="w-75 mx-auto"
                 color="primary"
-                v-model="volume"
+                :model-value="volume"
+                @update:model-value="setVolume"
                 @click.stop
             />
         </VSheet>
