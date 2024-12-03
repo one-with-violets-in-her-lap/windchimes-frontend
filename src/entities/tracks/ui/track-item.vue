@@ -131,7 +131,7 @@ async function playTrack() {
                                         ? 'mdi-pause'
                                         : 'mdi-play'
                                 "
-                                color="background"
+                                color="white"
                             />
                         </VOverlay>
                     </div>
