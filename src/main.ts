@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 
-import '@/assets/styles/transitions.css'
+import '@/assets/styles/main.css'
 
 // Vuetify
 import 'vuetify/styles'

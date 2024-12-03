@@ -47,32 +47,3 @@ App.addListener('appUrlOpen', async event => {
         </div>
     </VApp>
 </template>
-
-<style>
-@font-face {
-    font-family: 'Geist';
-    src: url('@/assets/fonts/geist.woff2');
-}
-
-body,
-h1,
-h2,
-h3,
-h4,
-h5 {
-    font-family: 'Geist' !important;
-}
-
-.root-container {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.main-content-container {
-    flex-grow: 1;
-    padding: 15px 12px 200px 12px;
-    background-color: rgb(var(--v-theme-background));
-}
-</style>
