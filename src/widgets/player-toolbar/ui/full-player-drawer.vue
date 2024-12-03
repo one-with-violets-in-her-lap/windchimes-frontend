@@ -79,7 +79,11 @@ function shuffleTracksQueue() {
                     class="skip-button"
                     color="surface-2"
                     variant="flat"
-                    @click="animateSkipButtonsUntilFinished(playNextTrack())"
+                    @click="
+                        animateSkipButtonsUntilFinished(
+                            playNextTrack({ doNotLoop: true }),
+                        )
+                    "
                 >
                     <VIcon icon="mdi-skip-forward" size="40px" />
                 </VBtn>

@@ -44,11 +44,27 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
         return undefined
     })
 
+    interface TrackSkipOptions {
+        tracksToSkipCount?: number
+        /**
+         * ignore current loop mode, skip track anyways
+         */
+        doNotLoop?: boolean
+    }
+
     /**
      * plays next track in playlist tracks queue if the end of the
      * queue is not reached
+     *
+     * respects track/playlist loop mode.
+     *
+     * @param options.doNotLoop ignore current loop mode, skip track anyways
      */
-    async function playNextTrack(tracksToSkipCount = 1) {
+    async function playNextTrack(
+        options: TrackSkipOptions = { tracksToSkipCount: 1, doNotLoop: false },
+    ) {
+        const { tracksToSkipCount = 1, doNotLoop = false } = options
+
         const { loopMode } = storeToRefs(usePlayerStore())
 
         try {
@@ -56,6 +72,11 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
                 track => track.id === currentTrackId.value,
             )
             const lastIndex = tracksQueue.value.length - tracksToSkipCount
+
+            if (doNotLoop) {
+                await playTrackFromQueue(currentTrackIndex + tracksToSkipCount)
+                return
+            }
 
             if (
                 currentTrackIndex >= lastIndex &&
@@ -70,7 +91,7 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
         } catch (error) {
             if (!(error instanceof TracksQueueBoundsReachedError)) {
                 console.error(error)
-                await playNextTrack(tracksToSkipCount + 1)
+                await playNextTrack({ tracksToSkipCount: tracksToSkipCount + 1 })
             }
         }
     }
@@ -79,7 +100,11 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
      * plays previous track in playlist tracks queue if the beginning of
      * the queue is not reached
      */
-    async function playPreviousTrack(tracksToSkipCount = 1) {
+    async function playPreviousTrack(
+        options: TrackSkipOptions = { tracksToSkipCount: 1 },
+    ) {
+        const { tracksToSkipCount = 1 } = options
+
         try {
             const currentTrackIndex = tracksQueue.value.findIndex(
                 track => track.id === currentTrackId.value,
@@ -89,7 +114,7 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
         } catch (error) {
             if (!(error instanceof TracksQueueBoundsReachedError)) {
                 console.error(error)
-                await playPreviousTrack(tracksToSkipCount + 1)
+                await playPreviousTrack({ tracksToSkipCount: tracksToSkipCount + 1 })
             }
         }
     }
