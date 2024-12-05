@@ -8,7 +8,7 @@ const DRAGGED_OVER_ITEM_CLASS = 'bg-surface-2'
 
 const props = defineProps<{
     id: string
-    dragAndDropParent?: HTMLElement
+    dragAndDropParent: HTMLElement
 }>()
 const emit = defineEmits<{
     (event: 'move-before', itemToMoveId: string, beforeItemId: string): void
@@ -68,16 +68,9 @@ function highlightIfDraggedOver(event: PointerEvent) {
             return
         }
 
-        const itemParent = targetItem.parentElement
-
-        if (!itemParent || !itemParent?.classList.contains('drag-and-drop-list')) {
-            throw new DragAndDropError(
-                'drag and drop list cant be found as a parent of drag and drop item ' +
-                    '(items must be wrapped in `<DragAndDropList></DragAndDropList>`)',
-            )
-        }
-
-        for (const dragAndDropItem of itemParent.children) {
+        for (const dragAndDropItem of props.dragAndDropParent.querySelectorAll(
+            '.drag-and-drop-item',
+        )) {
             dragAndDropItem.classList.remove(DRAGGED_OVER_ITEM_CLASS)
         }
 

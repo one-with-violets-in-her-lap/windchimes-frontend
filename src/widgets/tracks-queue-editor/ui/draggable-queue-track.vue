@@ -7,7 +7,7 @@ import SwipableElement from '@/shared/ui/swipable-element.vue'
 import DragAndDropItem from '@/shared/ui/drag-and-drop/drag-and-drop-item.vue'
 
 defineProps<{
-    dragAndDropParent?: HTMLElement
+    dragAndDropParent: HTMLElement
     track: LoadedTrackFragment
     trackNumber: number
     currentTrack: boolean

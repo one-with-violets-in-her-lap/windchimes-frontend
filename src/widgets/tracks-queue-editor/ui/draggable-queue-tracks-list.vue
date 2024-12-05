@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RecycleScroller } from 'vue-virtual-scroller'
 import DraggableQueueTrack from '@/widgets/tracks-queue-editor/ui/draggable-queue-track.vue'
 import { moveQueueTracks, QueueTrackNotFoundError } from '@/entities/tracks-queue'
 import { QueueItem } from '@/entities/tracks-queue/model/queue-item'
@@ -39,25 +40,34 @@ function deleteTrack(id: number) {
 </script>
 
 <template>
-    <DragAndDropList class="tracks-list">
-        <template #default="{ dragAndDropListElement }">
+    <DragAndDropList class="tracks-list" v-slot="{ dragAndDropListElement }">
+        <RecycleScroller
+            :items="loadedTracks"
+            :item-size="100"
+            key-field="id"
+            page-mode
+            v-slot="{ item, index }"
+        >
             <DraggableQueueTrack
-                v-for="(track, index) in loadedTracks"
-                :key="track.id"
-                :track="track"
+                :track="item"
                 :track-number="index + 1"
-                :current-track="currentTrackId === track.id"
+                :current-track="currentTrackId === item.id"
                 :all-queue-tracks="allQueueTracks"
-                :drag-and-drop-parent="dragAndDropListElement"
-                @delete="deleteTrack(track.id)"
+                :drag-and-drop-parent="dragAndDropListElement as HTMLElement"
+                class="draggable-queue-track"
+                @delete="deleteTrack(item.id)"
                 @move-before="moveBeforeTrack"
             />
-        </template>
+        </RecycleScroller>
     </DragAndDropList>
 </template>
 
 <style scoped>
 .tracks-list {
     min-height: 200px;
+}
+
+.draggable-queue-track {
+    height: 100px;
 }
 </style>
