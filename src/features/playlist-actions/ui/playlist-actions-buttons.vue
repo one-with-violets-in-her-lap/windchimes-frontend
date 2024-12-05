@@ -10,7 +10,7 @@ import {
     TracksImportFormDialog,
 } from '@/entities/tracks-import-form-dialog'
 import { useNotificationsStore } from '@/shared/model/notifications'
-import { ExcludeGraphQLError } from '@/shared/utils/exclude-graphql-error'
+import { ExcludeGraphQLError } from '@/shared/utils/graphql'
 import { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
 import { PlaylistFormData, PlaylistFormDialog } from '@/entities/playlists'
 import { DropdownMenu } from '@/shared/ui/dropdown-menu'

@@ -3,7 +3,7 @@ import {
     CreatePlaylistMutation,
     CreatePlaylistMutationVariables,
 } from '@/shared/model/graphql-generated-types/graphql'
-import { useMutationWithErrorNotification } from '@/shared/utils/graphql-operations'
+import { useMutationWithErrorNotification } from '@/shared/utils/graphql'
 import { ERROR_FRAGMENT } from '@/shared/api/error-fragment'
 
 export function usePlaylistCreationMutation() {

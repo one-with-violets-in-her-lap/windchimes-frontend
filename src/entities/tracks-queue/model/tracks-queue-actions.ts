@@ -1,6 +1,6 @@
 import { useLazyQuery } from '@vue/apollo-composable'
 import { QueueItem, type TracksQueue } from '@/entities/tracks-queue/model/queue-item'
-import { shuffle } from '@/shared/utils/shuffle'
+import { shuffle } from '@/shared/utils/arrays'
 import {
     GetPlaylistWithTracksQuery,
     GetPlaylistWithTracksQueryVariables,
