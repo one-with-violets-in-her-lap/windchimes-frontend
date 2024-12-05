@@ -5,7 +5,7 @@ import { usePlayerVolume } from '@/features/player'
 import type { PlaylistTrack } from '@/entities/tracks'
 import { useTracksQueueStore } from '@/entities/tracks-queue'
 import { useAudio } from '@/shared/model/reactive-audio'
-import { getTypedObjectKeys } from '@/shared/utils/get-typed-object-keys'
+import { getTypedObjectKeys } from '@/shared/utils/objects'
 
 export type TrackWithAudioFileUrl = Omit<
     PlaylistTrack & { trackAudioFileUrl: string },

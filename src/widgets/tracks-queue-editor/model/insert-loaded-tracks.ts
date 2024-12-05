@@ -1,6 +1,6 @@
 import { QueueItem } from '@/entities/tracks-queue'
 import { LoadedTrackFragment } from '@/shared/model/graphql-generated-types/graphql'
-import { ArrayPartIndices } from '@/shared/utils/array-part-indices'
+import { ArrayPartIndices } from '@/shared/utils/arrays'
 
 export function insertLoadedTracks(
     tracksQueue: QueueItem[],

@@ -1,3 +1,8 @@
+export interface ArrayPartIndices {
+    startIndex: number
+    endIndex: number
+}
+
 export function shuffle<TItem>(items: TItem[]) {
     const newItems = [...items]
 

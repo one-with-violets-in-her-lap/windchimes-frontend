@@ -1,10 +1,13 @@
-import { useNotificationsStore } from '@/shared/model/notifications'
-import {
+import type {
     DocumentNode,
-    OperationVariables,
     MutationOptions,
+    OperationVariables,
 } from '@apollo/client/core'
 import { useMutation } from '@vue/apollo-composable'
+import type { ErrorGraphQl } from '@/shared/model/graphql-generated-types/graphql'
+import { useNotificationsStore } from '@/shared/model/notifications'
+
+export type ExcludeGraphQLError<TResult> = Exclude<NonNullable<TResult>, ErrorGraphQl>
 
 export function useMutationWithErrorNotification<
     TResult = any,

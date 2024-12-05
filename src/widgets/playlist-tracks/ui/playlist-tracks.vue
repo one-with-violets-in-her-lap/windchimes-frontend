@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { TRACKS_PORTION_SIZE, TrackItem } from '@/entities/tracks'
-import { ExcludeGraphQLError } from '@/shared/utils/exclude-graphql-error'
+import { ExcludeGraphQLError } from '@/shared/utils/graphql'
 import type { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
 import PaginatedContent from '@/shared/ui/paginated-content.vue'
 import { includeLoadedTracksInPlaylistTracks } from '@/entities/playlists'
