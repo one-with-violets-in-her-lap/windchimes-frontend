@@ -2,7 +2,7 @@
 import {
     getDateTimeAttributeFromSeconds,
     getFormattedTimeFromSeconds,
-} from '@/shared/model/duration-formatting'
+} from '@/shared/ui/formatting'
 
 defineProps<{
     secondsDuration: number
