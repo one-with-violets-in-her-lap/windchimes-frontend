@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useElementSize, useMouseInElement } from '@vueuse/core'
-import { DragAndDropError } from '@/shared/model/errors'
 
 const ITEM_BASE_ID = 'dragAndDropItem'
 const DRAGGED_OVER_ITEM_CLASS = 'bg-surface-2'
