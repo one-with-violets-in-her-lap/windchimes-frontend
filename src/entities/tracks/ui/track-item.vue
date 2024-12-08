@@ -122,7 +122,7 @@ async function playTrack() {
                         <VOverlay
                             contained
                             :model-value="isHovering === true || isCurrentTrack"
-                            class="d-flex justify-center align-center"
+                            class="d-flex justify-center align-center rounded"
                             style="z-index: 0"
                         >
                             <VIcon
