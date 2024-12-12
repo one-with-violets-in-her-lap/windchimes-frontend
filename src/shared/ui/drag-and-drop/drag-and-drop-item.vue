@@ -3,7 +3,7 @@ import { computed, inject } from 'vue'
 import {
     DragAndDropContext,
     dragAndDropContextProvideKey,
-    ITEM_BASE_ID
+    ITEM_BASE_ID,
 } from '@/shared/ui/drag-and-drop/drag-and-drop-context'
 
 const props = defineProps<{
