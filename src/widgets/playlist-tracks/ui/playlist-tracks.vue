@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { RecycleScroller } from 'vue-virtual-scroller'
 import { TRACKS_PORTION_SIZE, TrackItem } from '@/entities/tracks'
 import { ExcludeGraphQLError } from '@/shared/utils/graphql'
 import type { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
@@ -42,26 +43,50 @@ const allPlaylistTracks = computed(() =>
 </script>
 
 <template>
-    <PaginatedContent
-        v-if="playlist.tracksReferences.length > 0"
-        :total-items="playlist.tracksReferences.length"
-        :items-loaded="playlist.loadedTracks.length"
-        @load-more="loadMoreTracks"
-    >
-        <VList max-width="1200">
-            <TrackItem
-                v-for="(track, index) in availableTracks"
-                :key="track.id"
-                :track="track"
-                :all-playlist-tracks="allPlaylistTracks"
-                :track-number="index + 1"
-            />
-        </VList>
-    </PaginatedContent>
+    <VList v-if="playlist.tracksReferences.length > 0" max-width="1200">
+        <!-- <PaginatedContent
+            :total-items="playlist.tracksReferences.length"
+            :items-loaded="playlist.loadedTracks.length"
+            @load-more="loadMoreTracks"
+        > -->
+        <RecycleScroller
+            :items="availableTracks"
+            :item-size="100"
+            key-field="id"
+            class="tracks-virtual-list"
+            @scroll-end="loadMoreTracks"
+        >
+            <template #default="{ item, index }">
+                <TrackItem
+                    :key="item.id"
+                    :track="item"
+                    :all-playlist-tracks="allPlaylistTracks"
+                    :track-number="index + 1"
+                />
+            </template>
+
+            <template #after>
+                <VProgressCircular
+                    v-if="
+                        playlist.loadedTracks.length > 0 &&
+                        playlist.loadedTracks.length <
+                            playlist.tracksReferences.length
+                    "
+                    indeterminate
+                    class="mt-3 mb-2"
+                    size="40"
+                ></VProgressCircular>
+            </template>
+        </RecycleScroller>
+    </VList>
 
     <VCard v-else elevation="0">
         <VCardText class="text-surface-4"> No tracks were added yet </VCardText>
     </VCard>
 </template>
 
-<style scoped></style>
+<style scoped>
+.tracks-virtual-list {
+    height: 600px;
+}
+</style>

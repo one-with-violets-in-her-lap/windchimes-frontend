@@ -64,6 +64,7 @@ async function playTrack() {
                 lines="two"
                 class="px-3 py-2"
                 :class="{ 'py-1': compact }"
+                height="100"
                 v-bind="{ ...propsForHoverEffect, ...$attrs }"
                 @click="playing ? pause() : playTrack()"
             >
@@ -122,8 +123,8 @@ async function playTrack() {
                         <VOverlay
                             contained
                             :model-value="isHovering === true || isCurrentTrack"
-                            class="d-flex justify-center align-center"
-                            z-index="0"
+                            class="d-flex justify-center align-center rounded"
+                            style="z-index: 0"
                         >
                             <VIcon
                                 :icon="

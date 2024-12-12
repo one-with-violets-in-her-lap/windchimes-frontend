@@ -7,7 +7,6 @@ import SwipableElement from '@/shared/ui/swipable-element.vue'
 import DragAndDropItem from '@/shared/ui/drag-and-drop/drag-and-drop-item.vue'
 
 defineProps<{
-    dragAndDropParent?: HTMLElement
     track: LoadedTrackFragment
     trackNumber: number
     currentTrack: boolean
@@ -25,7 +24,6 @@ const dragged = ref(false)
 <template>
     <DragAndDropItem
         v-model:dragged="dragged"
-        :drag-and-drop-parent="dragAndDropParent"
         :id="`${track.id}`"
         :key="track.id"
         @move-before="
