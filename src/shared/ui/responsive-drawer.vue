@@ -24,6 +24,7 @@ const { mobile } = useDisplay()
             touchless
             :location="mobile ? 'bottom' : 'left'"
             :class="{ 'side-drawer': !mobile, 'fixed-height': fixedHeight }"
+            v-bind="$attrs"
         >
             <slot></slot>
         </VNavigationDrawer>

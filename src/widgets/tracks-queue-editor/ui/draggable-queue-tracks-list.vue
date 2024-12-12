@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RecycleScroller } from 'vue-virtual-scroller'
 import DraggableQueueTrack from '@/widgets/tracks-queue-editor/ui/draggable-queue-track.vue'
+import { TrackItem } from '@/entities/tracks'
 import { moveQueueTracks, QueueTrackNotFoundError } from '@/entities/tracks-queue'
 import { QueueItem } from '@/entities/tracks-queue/model/queue-item'
 import { DragAndDropList } from '@/shared/ui/drag-and-drop'
@@ -40,7 +41,7 @@ function deleteTrack(id: number) {
 </script>
 
 <template>
-    <DragAndDropList class="tracks-list" v-slot="{ dragAndDropListElement }">
+    <DragAndDropList class="tracks-list" @move-before="moveBeforeTrack">
         <RecycleScroller
             :items="loadedTracks"
             :item-size="100"
@@ -53,12 +54,30 @@ function deleteTrack(id: number) {
                 :track-number="index + 1"
                 :current-track="currentTrackId === item.id"
                 :all-queue-tracks="allQueueTracks"
-                :drag-and-drop-parent="dragAndDropListElement as HTMLElement"
                 class="draggable-queue-track"
                 @delete="deleteTrack(item.id)"
-                @move-before="moveBeforeTrack"
             />
         </RecycleScroller>
+
+        <template #dragged-item="{ draggedItemId }">
+            <TrackItem
+                :track="loadedTracks.find(track => draggedItemId === `${track.id}`)"
+                :track-number="1"
+                :current-track="
+                    currentTrackId ===
+                    loadedTracks.find(track => draggedItemId === `${track.id}`)?.id
+                "
+                :all-playlist-tracks="allQueueTracks"
+                class="draggable-queue-track"
+                @delete="
+                    deleteTrack(
+                        loadedTracks.find(track => draggedItemId === `${track.id}`)
+                            ?.id,
+                    )
+                "
+                @move-before="moveBeforeTrack"
+            />
+        </template>
     </DragAndDropList>
 </template>
 

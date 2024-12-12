@@ -96,6 +96,7 @@ async function loadMoreTracks() {
         <ResponsiveDrawer
             v-model:opened="opened"
             fixed-height="70%"
+            class="overflow-y-hidden"
             draggable="false"
         >
             <PaginatedContent
