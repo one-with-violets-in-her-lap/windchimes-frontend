@@ -1,5 +1,5 @@
-<script setup lang="ts">
-import { provide, ref } from 'vue'
+<script setup lang="ts" generic="TItem extends { id: string | number }">
+import { computed, provide, ref } from 'vue'
 import { useEventListener, usePointer } from '@vueuse/core'
 import {
     dragAndDropContextProvideKey,
@@ -10,8 +10,16 @@ const emit = defineEmits<{
     (event: 'move-before', itemToMoveId: string, beforeItemId: string): void
 }>()
 
+const props = defineProps<{
+    items: TItem[]
+}>()
+
 const draggedItemId = ref<string | null>(null)
 const draggedOverItemId = ref<string | null>(null)
+
+const draggedItemIndex = computed(() =>
+    props.items.findIndex(item => `${item.id}` === draggedItemId.value),
+)
 
 const { y: pointerY } = usePointer()
 
@@ -66,11 +74,15 @@ provide(dragAndDropContextProvideKey, {
 
         <Teleport to="body">
             <div
-                v-if="draggedItemId !== null"
+                v-if="draggedItemIndex !== -1"
                 :style="`top: ${pointerY - 20}px;`"
                 class="dragged-item"
             >
-                <slot name="dragged-item" :draggedItemId></slot>
+                <slot
+                    name="dragged-item"
+                    :draggedItem="items[draggedItemIndex]"
+                    :draggedItemIndex="draggedItemIndex"
+                ></slot>
             </div>
         </Teleport>
     </div>

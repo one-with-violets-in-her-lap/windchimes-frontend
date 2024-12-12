@@ -41,7 +41,11 @@ function deleteTrack(id: number) {
 </script>
 
 <template>
-    <DragAndDropList class="tracks-list" @move-before="moveBeforeTrack">
+    <DragAndDropList
+        class="tracks-list"
+        :items="loadedTracks"
+        @move-before="moveBeforeTrack"
+    >
         <RecycleScroller
             :items="loadedTracks"
             :item-size="100"
@@ -59,23 +63,12 @@ function deleteTrack(id: number) {
             />
         </RecycleScroller>
 
-        <template #dragged-item="{ draggedItemId }">
+        <template #dragged-item="{ draggedItem, draggedItemIndex }">
             <TrackItem
-                :track="loadedTracks.find(track => draggedItemId === `${track.id}`)"
-                :track-number="1"
-                :current-track="
-                    currentTrackId ===
-                    loadedTracks.find(track => draggedItemId === `${track.id}`)?.id
-                "
+                :track="draggedItem"
+                :track-number="draggedItemIndex + 1"
                 :all-playlist-tracks="allQueueTracks"
                 class="draggable-queue-track"
-                @delete="
-                    deleteTrack(
-                        loadedTracks.find(track => draggedItemId === `${track.id}`)
-                            ?.id,
-                    )
-                "
-                @move-before="moveBeforeTrack"
             />
         </template>
     </DragAndDropList>
