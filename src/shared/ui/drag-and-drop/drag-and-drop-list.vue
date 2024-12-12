@@ -15,11 +15,11 @@ const props = defineProps<{
 }>()
 
 const draggedItemId = ref<string | null>(null)
-const draggedOverItemId = ref<string | null>(null)
-
 const draggedItemIndex = computed(() =>
     props.items.findIndex(item => `${item.id}` === draggedItemId.value),
 )
+
+const draggedOverItemId = ref<string | null>(null)
 
 const { y: pointerY } = usePointer()
 
