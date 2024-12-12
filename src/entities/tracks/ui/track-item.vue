@@ -64,6 +64,7 @@ async function playTrack() {
                 lines="two"
                 class="px-3 py-2"
                 :class="{ 'py-1': compact }"
+                height="100"
                 v-bind="{ ...propsForHoverEffect, ...$attrs }"
                 @click="playing ? pause() : playTrack()"
             >

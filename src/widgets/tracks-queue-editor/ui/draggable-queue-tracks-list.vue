@@ -68,7 +68,6 @@ function deleteTrack(id: number) {
                 :track="draggedItem"
                 :track-number="draggedItemIndex + 1"
                 :all-playlist-tracks="allQueueTracks"
-                class="draggable-queue-track"
             />
         </template>
     </DragAndDropList>
@@ -77,9 +76,5 @@ function deleteTrack(id: number) {
 <style scoped>
 .tracks-list {
     min-height: 200px;
-}
-
-.draggable-queue-track {
-    height: 100px;
 }
 </style>
