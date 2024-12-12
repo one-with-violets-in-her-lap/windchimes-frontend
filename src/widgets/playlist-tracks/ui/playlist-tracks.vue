@@ -2,10 +2,9 @@
 import { computed } from 'vue'
 import { RecycleScroller } from 'vue-virtual-scroller'
 import { TRACKS_PORTION_SIZE, TrackItem } from '@/entities/tracks'
+import { includeLoadedTracksInPlaylistTracks } from '@/entities/playlists'
 import { ExcludeGraphQLError } from '@/shared/utils/graphql'
 import type { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
-import PaginatedContent from '@/shared/ui/paginated-content.vue'
-import { includeLoadedTracksInPlaylistTracks } from '@/entities/playlists'
 
 const props = defineProps<{
     playlist: ExcludeGraphQLError<GetPlaylistWithTracksQuery['playlist']>
@@ -44,11 +43,6 @@ const allPlaylistTracks = computed(() =>
 
 <template>
     <VList v-if="playlist.tracksReferences.length > 0" max-width="1200">
-        <!-- <PaginatedContent
-            :total-items="playlist.tracksReferences.length"
-            :items-loaded="playlist.loadedTracks.length"
-            @load-more="loadMoreTracks"
-        > -->
         <RecycleScroller
             :items="availableTracks"
             :item-size="100"
