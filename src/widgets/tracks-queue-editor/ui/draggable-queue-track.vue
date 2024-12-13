@@ -58,13 +58,8 @@ const dragged = ref(false)
             </TrackItem>
 
             <template #pop-up-on-swipe>
-                <VSheet
-                    color="error"
-                    class="w-100 h-100 d-flex justify-center align-center gc-2"
-                >
-                    Delete
-                    <VIcon icon="mdi-delete" />
-                </VSheet>
+                <VIcon icon="mdi-delete" />
+                Delete
             </template>
         </SwipableElement>
     </DragAndDropItem>
