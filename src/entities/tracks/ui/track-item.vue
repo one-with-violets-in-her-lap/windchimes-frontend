@@ -13,7 +13,17 @@ import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 const props = defineProps<{
     track: PlaylistTrack
     trackNumber: number
+
     compact?: boolean
+
+    /**
+     * ID of the queue item the track belongs to. Used to determine if the track is being
+     * played right now
+     *
+     * If not specified, the id of the track is used
+     */
+    queueItemId?: number
+
     /**
      * all tracks of playlist in which current track is located
      *
@@ -33,8 +43,10 @@ const tracksQueueStore = useTracksQueueStore()
 const { createQueueItem } = tracksQueueStore
 const { tracksQueue } = storeToRefs(tracksQueueStore)
 
-const isCurrentTrack = computed(
-    () => currentQueueItem.value?.track.id === props.track.id,
+const isCurrentTrack = computed(() =>
+    props.queueItemId
+        ? currentQueueItem.value?.id === props.queueItemId
+        : currentQueueItem.value?.track.id === props.track.id,
 )
 const playing = computed(() => isCurrentTrack.value && !paused.value)
 
