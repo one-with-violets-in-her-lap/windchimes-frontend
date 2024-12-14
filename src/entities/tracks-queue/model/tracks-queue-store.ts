@@ -5,14 +5,21 @@ import {
     LoopMode,
     usePlayerStore, // for jsdoc
 } from '@/features/player'
+import { LoadedQueueItem, QueueItem } from '@/entities/tracks-queue/model/queue-item'
+import { queryTrackAudioFile, queryLoadedTrack } from '@/entities/tracks'
 import {
-    type PlaylistTrack,
-    queryTrackAudioFile,
-    queryLoadedTrack,
-} from '@/entities/tracks'
-import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
+    LoadedTrackFragment,
+    TrackReferenceGraphQl,
+} from '@/shared/model/graphql-generated-types/graphql'
+
+/**
+ * Error that is thrown when playlist can't be added to the queue. The reason can be
+ * described in the error message
+ */
+export class QueuePlaylistOperationError extends Error {}
 
 export class TrackLoadError extends Error {}
+
 export class TracksQueueBoundsReachedError extends Error {
     constructor() {
         super(
@@ -25,24 +32,27 @@ export class TracksQueueBoundsReachedError extends Error {
 export const useTracksQueueStore = defineStore('tracksQueue', () => {
     const { client: apolloClient } = useApolloClient()
 
-    const tracksQueue = ref<(PlaylistTrack | TrackReferenceGraphQl)[]>([])
+    const tracksQueue = ref<QueueItem[]>([])
 
-    const currentTrackId = ref<number>()
-    const currentTrack = computed(() => {
+    let lastCreatedQueueItemId = 0
+
+    const currentQueueItemId = ref<number>()
+    const currentQueueItem = computed(() => {
         if (!tracksQueue.value) {
             return undefined
         }
 
-        const matchingTrack = tracksQueue.value.find(
-            track => track.id === currentTrackId.value,
+        const matchingQueueItem = tracksQueue.value.find(
+            track => track.id === currentQueueItemId.value,
         )
 
-        if (matchingTrack?.__typename === 'TrackGraphQL') {
-            return matchingTrack
+        if (matchingQueueItem?.track.__typename === 'TrackGraphQL') {
+            return matchingQueueItem as LoadedQueueItem
         }
 
         return undefined
     })
+    const currentTrack = computed(() => currentQueueItem.value?.track)
 
     interface TrackSkipOptions {
         tracksToSkipCount?: number
@@ -69,7 +79,7 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
 
         try {
             const currentTrackIndex = tracksQueue.value.findIndex(
-                track => track.id === currentTrackId.value,
+                track => track.id === currentQueueItemId.value,
             )
             const lastIndex = tracksQueue.value.length - tracksToSkipCount
 
@@ -107,7 +117,7 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
 
         try {
             const currentTrackIndex = tracksQueue.value.findIndex(
-                track => track.id === currentTrackId.value,
+                track => track.id === currentQueueItemId.value,
             )
 
             await playTrackFromQueue(currentTrackIndex - tracksToSkipCount)
@@ -122,11 +132,13 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
     async function playTrackFromQueue(index: number) {
         const { play } = usePlayerStore()
 
-        let track = tracksQueue.value[index]
+        const queueItem = tracksQueue.value[index]
 
-        if (!track) {
+        if (!queueItem) {
             throw new TracksQueueBoundsReachedError()
         }
+
+        let track = queueItem.track
 
         try {
             if (track.__typename !== 'TrackGraphQL') {
@@ -141,7 +153,7 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
                 }
 
                 track = loadedTrackResponse.data.track
-                tracksQueue.value[index] = track
+                tracksQueue.value[index] = { ...queueItem, track }
             }
 
             const audioFileUrlQuery = await queryTrackAudioFile(apolloClient, track)
@@ -155,8 +167,9 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
             }
 
             play({
-                ...track,
-                trackAudioFileUrl: audioFileUrlQuery.data.trackAudioFile.url,
+                id: queueItem.id,
+                track: track,
+                audioFileUrl: audioFileUrlQuery.data.trackAudioFile.url,
             })
         } catch (error) {
             throw new TrackLoadError(
@@ -165,13 +178,45 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
         }
     }
 
+    function addPlaylistToQueue(playlistTracks: TrackReferenceGraphQl[]) {
+        if (playlistTracks.length === 0) {
+            throw new QueuePlaylistOperationError('This playlist does not have any tracks')
+        }
+
+        tracksQueue.value = tracksQueue.value.concat(
+            playlistTracks.map(track => createQueueItem(track)),
+        )
+    }
+
+    function replaceQueueWithPlaylist(playlistTracks: TrackReferenceGraphQl[]) {
+        if (playlistTracks.length === 0) {
+            throw new QueuePlaylistOperationError('This playlist does not have any tracks')
+        }
+
+        tracksQueue.value = playlistTracks.map(track => createQueueItem(track))
+    }
+
+    function createQueueItem<
+        TQueueTrack extends TrackReferenceGraphQl | LoadedTrackFragment,
+    >(track: TQueueTrack): { id: number; track: TQueueTrack } {
+        return {
+            id: ++lastCreatedQueueItemId,
+            track,
+        }
+    }
+
     return {
         tracksQueue,
-        currentTrackId,
+        currentQueueItemId,
+        currentQueueItem,
         currentTrack,
 
         playNextTrack,
         playPreviousTrack,
         playTrackFromQueue,
+        addPlaylistToQueue,
+        replaceQueueWithPlaylist,
+
+        createQueueItem,
     }
 })

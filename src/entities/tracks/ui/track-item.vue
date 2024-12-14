@@ -26,12 +26,16 @@ const props = defineProps<{
 const { client: apolloClient } = useApolloClient()
 
 const playerStore = usePlayerStore()
-const { currentTrack, paused } = storeToRefs(playerStore)
+const { currentQueueItem, paused } = storeToRefs(playerStore)
 const { play, pause } = playerStore
 
-const { tracksQueue } = storeToRefs(useTracksQueueStore())
+const tracksQueueStore = useTracksQueueStore()
+const { createQueueItem } = tracksQueueStore
+const { tracksQueue } = storeToRefs(tracksQueueStore)
 
-const isCurrentTrack = computed(() => currentTrack.value?.id === props.track.id)
+const isCurrentTrack = computed(
+    () => currentQueueItem.value?.track.id === props.track.id,
+)
 const playing = computed(() => isCurrentTrack.value && !paused.value)
 
 async function playTrack() {
@@ -43,11 +47,21 @@ async function playTrack() {
     const response = await queryTrackAudioFile(apolloClient, props.track)
 
     if (response.data.trackAudioFile?.__typename === 'TrackAudioFileGraphQL') {
-        tracksQueue.value = props.allPlaylistTracks
+        const queueItemToPlay = createQueueItem(props.track)
+        const allQueueItemsFromPlaylist = props.allPlaylistTracks.map(track =>
+            createQueueItem(track),
+        )
+
+        const queueItemToPlayIndex = allQueueItemsFromPlaylist.findIndex(
+            item => item.track.id === props.track.id,
+        )
+        allQueueItemsFromPlaylist[queueItemToPlayIndex] = queueItemToPlay
+
+        tracksQueue.value = allQueueItemsFromPlaylist
 
         play({
-            ...props.track,
-            trackAudioFileUrl: response.data.trackAudioFile.url,
+            ...queueItemToPlay,
+            audioFileUrl: response.data.trackAudioFile.url,
         })
     } else if (response.data.trackAudioFile?.__typename === 'ErrorGraphQL') {
         console.error(response.data.trackAudioFile.explanation)

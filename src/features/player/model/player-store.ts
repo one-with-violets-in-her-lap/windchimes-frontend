@@ -2,15 +2,15 @@ import { readonly, toRef } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 import { defineStore, storeToRefs } from 'pinia'
 import { usePlayerVolume } from '@/features/player'
-import type { PlaylistTrack } from '@/entities/tracks'
-import { useTracksQueueStore } from '@/entities/tracks-queue'
+import {
+    LoadedQueueItem,
+    QueueItem,
+    useTracksQueueStore,
+} from '@/entities/tracks-queue'
 import { useAudio } from '@/shared/model/reactive-audio'
 import { getTypedObjectKeys } from '@/shared/utils/objects'
 
-export type TrackWithAudioFileUrl = Omit<
-    PlaylistTrack & { trackAudioFileUrl: string },
-    '__typename'
->
+export type QueueItemWithAudioFileUrl = LoadedQueueItem & { audioFileUrl: string }
 
 export enum LoopMode {
     Disabled = 'Looping disabled',
@@ -21,12 +21,13 @@ export enum LoopMode {
 export const usePlayerStore = defineStore('player', () => {
     const tracksQueueStore = useTracksQueueStore()
     const { playNextTrack, playPreviousTrack, playTrackFromQueue } = tracksQueueStore
-    const { currentTrack, currentTrackId } = storeToRefs(tracksQueueStore)
+    const { currentQueueItem, currentQueueItemId, currentTrack } =
+        storeToRefs(tracksQueueStore)
 
     const loopMode = useLocalStorage<LoopMode>('loop', LoopMode.Disabled)
 
     const { audio, currentSecond, pauseAudio, paused, playAudio, rewind } = useAudio(
-        toRef(() => currentTrack.value?.secondsDuration),
+        toRef(() => currentQueueItem.value?.track.secondsDuration),
         {
             playNext: playNextTrack,
             playPrevious: playPreviousTrack,
@@ -36,20 +37,20 @@ export const usePlayerStore = defineStore('player', () => {
     const { volume, setVolume } = usePlayerVolume(audio)
 
     /**
-     * resumes the current track or plays a new one if `track` param is specified
+     * resumes the current track or plays a new one if `queueItemToPlay` param is specified
      */
-    function play(track?: TrackWithAudioFileUrl) {
-        if (!track) {
+    function play(queueItemToPlay?: QueueItemWithAudioFileUrl) {
+        if (!queueItemToPlay) {
             playAudio()
             return
         }
 
-        currentTrackId.value = track.id
+        currentQueueItemId.value = queueItemToPlay.id
 
-        playAudio(track.trackAudioFileUrl, {
-            title: currentTrack.value?.name,
-            artist: currentTrack.value?.owner.name,
-            artwork: [{ src: currentTrack.value?.pictureUrl || '' }],
+        playAudio(queueItemToPlay.audioFileUrl, {
+            title: currentQueueItem.value?.track.name,
+            artist: currentQueueItem.value?.track.owner.name,
+            artwork: [{ src: currentQueueItem.value?.track.pictureUrl || '' }],
         })
     }
 
@@ -74,8 +75,9 @@ export const usePlayerStore = defineStore('player', () => {
     }
 
     return {
+        currentQueueItem,
+        currentQueueItemId,
         currentTrack,
-        currentTrackId,
 
         volume,
         setVolume,

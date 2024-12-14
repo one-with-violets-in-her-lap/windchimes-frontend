@@ -4,7 +4,7 @@ import { usePlayerStore } from '@/features/player'
 
 const playerStore = usePlayerStore()
 const { rewind } = playerStore
-const { currentTrack, currentSecond } = storeToRefs(playerStore)
+const { currentQueueItem, currentSecond } = storeToRefs(playerStore)
 </script>
 
 <template>
@@ -15,7 +15,7 @@ const { currentTrack, currentSecond } = storeToRefs(playerStore)
         track-size="2"
         center-affix
         :min="0"
-        :max="currentTrack?.secondsDuration"
+        :max="currentQueueItem?.track.secondsDuration"
         :model-value="currentSecond"
         @update:model-value="newSecondsValue => rewind(newSecondsValue)"
     />

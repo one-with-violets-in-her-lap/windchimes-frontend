@@ -20,7 +20,7 @@ const { playNextTrack, playPreviousTrack, pause, play, audio, toggleLoopMode } =
     playerStore
 const { currentSecond, loopMode, paused } = storeToRefs(playerStore)
 
-const { tracksQueue, currentTrack } = storeToRefs(useTracksQueueStore())
+const { tracksQueue, currentQueueItem, currentTrack} = storeToRefs(useTracksQueueStore())
 
 const { showNotification } = useNotificationsStore()
 
@@ -48,7 +48,8 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
 }
 
 function shuffleTracksQueue() {
-    tracksQueue.value = shuffleQueue(tracksQueue.value, currentTrack.value?.id)
+    // TODO: rewrite shuffling with new queue items identifiers
+    tracksQueue.value = shuffleQueue(tracksQueue.value, currentQueueItem.value?.id)
     showNotification('success', 'next tracks will appear in random order')
 }
 </script>

@@ -38,7 +38,7 @@ const dragged = ref(false)
             <TrackItem
                 :track-number="trackNumber"
                 :track="track"
-                :all-playlist-tracks="allQueueTracks"
+                :all-playlist-tracks="[]"
                 compact
                 class="pr-0"
             >
