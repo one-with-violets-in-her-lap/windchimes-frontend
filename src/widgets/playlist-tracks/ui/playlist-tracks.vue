@@ -54,7 +54,9 @@ const allPlaylistTracks = computed(() =>
                 <TrackItem
                     :key="item.id"
                     :track="item"
-                    :all-playlist-tracks="allPlaylistTracks"
+                    :playing-options="{
+                        tracksToCreateNewQueueFrom: allPlaylistTracks,
+                    }"
                     :track-number="index + 1"
                 />
             </template>

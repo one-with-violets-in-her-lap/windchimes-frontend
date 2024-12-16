@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { TrackItem } from '@/entities/tracks'
-import { QueueItem } from '@/entities/tracks-queue/model/queue-item'
-import { LoadedTrackFragment } from '@/shared/model/graphql-generated-types/graphql'
+import { LoadedQueueItem, QueueItem } from '@/entities/tracks-queue/model/queue-item'
 import SwipableElement from '@/shared/ui/swipable-element.vue'
 import DragAndDropItem from '@/shared/ui/drag-and-drop/drag-and-drop-item.vue'
 
 defineProps<{
-    track: LoadedTrackFragment
+    queueItem: LoadedQueueItem
     trackNumber: number
     currentTrack: boolean
-    allQueueTracks: QueueItem[]
+    allQueueItems: QueueItem[]
 }>()
 
 const emit = defineEmits<{
@@ -24,8 +23,8 @@ const dragged = ref(false)
 <template>
     <DragAndDropItem
         v-model:dragged="dragged"
-        :id="`${track.id}`"
-        :key="track.id"
+        :id="`${queueItem.id}`"
+        :key="queueItem.id"
         @move-before="
             (itemToMoveId: string, beforeItemId: string) =>
                 emit('move-before', itemToMoveId, beforeItemId)
@@ -37,8 +36,9 @@ const dragged = ref(false)
         >
             <TrackItem
                 :track-number="trackNumber"
-                :track="track"
-                :all-playlist-tracks="[]"
+                :track="queueItem.track"
+                :queue-item-id="queueItem.id"
+                :playing-options="{ queueItemToPlay: queueItem }"
                 compact
                 class="pr-0"
             >

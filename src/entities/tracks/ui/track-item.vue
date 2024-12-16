@@ -3,12 +3,26 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable'
 import { usePlayerStore } from '@/features/player'
+import { LoadedQueueItem, useTracksQueueStore } from '@/entities/tracks-queue'
 import { queryTrackAudioFile } from '@/entities/tracks/api/audio-file-query'
 import { type PlaylistTrack } from '@/entities/tracks/model/track'
 import TrackOptionsDropdown from '@/entities/tracks/ui/track-options-dropdown.vue'
-import { useTracksQueueStore } from '@/entities/tracks-queue'
-import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
+import {
+    LoadedTrackFragment,
+    TrackReferenceGraphQl,
+} from '@/shared/model/graphql-generated-types/graphql'
+
+class AudioFileObtainingError extends Error {}
+
+class TrackPlayingNotConfiguredError extends Error {
+    constructor() {
+        super(
+            "Can't play the track because playing is not configured in track " +
+                "item component's `playingOptions` prop",
+        )
+    }
+}
 
 const props = defineProps<{
     track: PlaylistTrack
@@ -25,12 +39,24 @@ const props = defineProps<{
     queueItemId?: number
 
     /**
-     * all tracks of playlist in which current track is located
+     * Options that define how to play the track: play it a new queue or in an existing
+     * queue item
      *
-     * this prop is needed to construct a next tracks queue when the
-     * track is played
+     * **If this prop is empty or not defined, error is thrown on play attempt**
      */
-    allPlaylistTracks: (TrackReferenceGraphQl | PlaylistTrack)[]
+    playingOptions?: {
+        /**
+         * List of tracks that contains current track. If specified, the track is played in
+         * the new queue constructed from this list
+         */
+        tracksToCreateNewQueueFrom?: (LoadedTrackFragment | TrackReferenceGraphQl)[]
+
+        /**
+         * Existing queue item which the track belongs to. If specified, the existing
+         * queue item is played
+         */
+        queueItemToPlay?: LoadedQueueItem
+    }
 }>()
 
 const { client: apolloClient } = useApolloClient()
@@ -50,35 +76,65 @@ const isCurrentTrack = computed(() =>
 )
 const playing = computed(() => isCurrentTrack.value && !paused.value)
 
-async function playTrack() {
+async function getAudioFileUrl() {
+    const response = await queryTrackAudioFile(apolloClient, props.track)
+
+    if (response.data.trackAudioFile?.__typename === 'TrackAudioFileGraphQL') {
+        return response.data.trackAudioFile.url
+    } else if (response.data.trackAudioFile?.__typename === 'ErrorGraphQL') {
+        throw new AudioFileObtainingError(response.data.trackAudioFile.explanation)
+    } else {
+        throw new AudioFileObtainingError(response.error?.message)
+    }
+}
+
+// TODO: move to separate module (probably in the `/module` folder)
+function playTrackInNewQueue(
+    tracksToCreateNewQueueFrom: (LoadedTrackFragment | TrackReferenceGraphQl)[],
+    audioFileUrl: string,
+) {
+    const queueItemToPlay = createQueueItem(props.track)
+    const allQueueItemsFromPlaylist = tracksToCreateNewQueueFrom.map(track =>
+        createQueueItem(track),
+    )
+
+    const queueItemToPlayIndex = allQueueItemsFromPlaylist.findIndex(
+        item => item.track.id === props.track.id,
+    )
+    allQueueItemsFromPlaylist[queueItemToPlayIndex] = queueItemToPlay
+
+    tracksQueue.value = allQueueItemsFromPlaylist
+
+    play({
+        ...queueItemToPlay,
+        audioFileUrl: audioFileUrl,
+    })
+}
+
+function playQueueItem(queueItem: LoadedQueueItem, audioFileUrl: string) {
+    play({
+        ...queueItem,
+        audioFileUrl: audioFileUrl,
+    })
+}
+
+async function handleTrackPlaying() {
     if (isCurrentTrack.value) {
         play()
         return
     }
 
-    const response = await queryTrackAudioFile(apolloClient, props.track)
+    const audioFileUrl = await getAudioFileUrl()
 
-    if (response.data.trackAudioFile?.__typename === 'TrackAudioFileGraphQL') {
-        const queueItemToPlay = createQueueItem(props.track)
-        const allQueueItemsFromPlaylist = props.allPlaylistTracks.map(track =>
-            createQueueItem(track),
+    if (props.playingOptions?.tracksToCreateNewQueueFrom) {
+        playTrackInNewQueue(
+            props.playingOptions.tracksToCreateNewQueueFrom,
+            audioFileUrl,
         )
-
-        const queueItemToPlayIndex = allQueueItemsFromPlaylist.findIndex(
-            item => item.track.id === props.track.id,
-        )
-        allQueueItemsFromPlaylist[queueItemToPlayIndex] = queueItemToPlay
-
-        tracksQueue.value = allQueueItemsFromPlaylist
-
-        play({
-            ...queueItemToPlay,
-            audioFileUrl: response.data.trackAudioFile.url,
-        })
-    } else if (response.data.trackAudioFile?.__typename === 'ErrorGraphQL') {
-        console.error(response.data.trackAudioFile.explanation)
+    } else if (props.playingOptions?.queueItemToPlay) {
+        playQueueItem(props.playingOptions.queueItemToPlay, audioFileUrl)
     } else {
-        console.error(response.error)
+        throw new TrackPlayingNotConfiguredError()
     }
 }
 </script>
@@ -92,7 +148,7 @@ async function playTrack() {
                 :class="{ 'py-1': compact }"
                 height="100"
                 v-bind="{ ...propsForHoverEffect, ...$attrs }"
-                @click="playing ? pause() : playTrack()"
+                @click="playing ? pause() : handleTrackPlaying()"
             >
                 <template #title>
                     <div class="d-flex gc-1 align-center">

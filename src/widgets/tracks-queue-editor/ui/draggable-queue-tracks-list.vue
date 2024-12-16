@@ -52,10 +52,10 @@ function deleteQueueItem(id: number) {
             v-slot="{ item, index }"
         >
             <DraggableQueueTrack
-                :track="item.track"
+                :queue-item="item"
                 :track-number="index + 1"
                 :current-track="currentTrackId === item.track.id"
-                :all-queue-tracks="allQueueItems"
+                :all-queue-items="allQueueItems"
                 class="draggable-queue-track"
                 @delete="deleteQueueItem(item.id)"
             />
