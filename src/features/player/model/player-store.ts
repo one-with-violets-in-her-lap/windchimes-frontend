@@ -2,11 +2,7 @@ import { readonly, toRef } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 import { defineStore, storeToRefs } from 'pinia'
 import { usePlayerVolume } from '@/features/player'
-import {
-    LoadedQueueItem,
-    QueueItem,
-    useTracksQueueStore,
-} from '@/entities/tracks-queue'
+import { LoadedQueueItem, useTracksQueueStore } from '@/entities/tracks-queue'
 import { useAudio } from '@/shared/model/reactive-audio'
 import { getTypedObjectKeys } from '@/shared/utils/objects'
 

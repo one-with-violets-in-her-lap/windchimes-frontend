@@ -10,7 +10,7 @@ import {
     shuffleQueue,
     useTracksQueueStore,
 } from '@/entities/tracks-queue'
-import { PlaylistTrack, TRACKS_PORTION_SIZE } from '@/entities/tracks'
+import { TRACKS_PORTION_SIZE } from '@/entities/tracks'
 import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'
 import PaginatedContent from '@/shared/ui/paginated-content.vue'
 
