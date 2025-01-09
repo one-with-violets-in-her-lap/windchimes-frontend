@@ -11,17 +11,9 @@ export function useLazyPlaylistsBasicInfoQuery(currentUserId: string) {
         ${ERROR_FRAGMENT}
 
         query GetPlaylistsBasicInfo($currentUserId: String!) {
-            playlists(ownerUserId: $currentUserId) {
-                ... on ErrorGraphQL {
-                    ...Error
-                }
-
-                ... on PlaylistGraphQLListResponseWrapperGraphQL {
-                    items {
-                        id
-                        name
-                    }
-                }
+            playlists(filters: { ownerUserId: $currentUserId }) {
+                id
+                name
             }
         }
     `

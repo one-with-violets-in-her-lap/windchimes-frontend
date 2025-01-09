@@ -7,12 +7,12 @@ import {
 import { ERROR_FRAGMENT } from '@/shared/api/error-fragment'
 
 export const PLAYLISTS_LIST_ITEM_FRAGMENT = gql`
-    fragment PlaylistsListItem on PlaylistGraphQL {
+    fragment PlaylistsListItem on PlaylistToReadGraphQL {
         id
         createdAt
         name
         pictureUrl
-        tracksCount
+        trackCount
     }
 `
 
@@ -26,30 +26,16 @@ export function usePlaylistsFeedQuery(currentUserId?: string) {
                 $currentUserId: String
                 $excludeOwnedPlaylists: Boolean
             ) {
-                personalPlaylists: playlists(ownerUserId: $currentUserId) {
-                    ... on ErrorGraphQL {
-                        ...Error
-                    }
-
-                    ... on PlaylistGraphQLListResponseWrapperGraphQL {
-                        items {
-                            ...PlaylistsListItem
-                        }
-                    }
+                personalPlaylists: playlists(
+                    filters: { ownerUserId: $currentUserId }
+                ) {
+                    ...PlaylistsListItem
                 }
 
                 otherPublicPlaylists: playlists(
-                    excludeOwnedPlaylists: $excludeOwnedPlaylists
+                    filters: { excludeOwnerUserId: $currentUserId }
                 ) {
-                    ... on ErrorGraphQL {
-                        ...Error
-                    }
-
-                    ... on PlaylistGraphQLListResponseWrapperGraphQL {
-                        items {
-                            ...PlaylistsListItem
-                        }
-                    }
+                    ...PlaylistsListItem
                 }
             }
         `,

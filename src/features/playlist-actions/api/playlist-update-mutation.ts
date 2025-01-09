@@ -12,9 +12,9 @@ export function usePlaylistUpdateMutation() {
 
         mutation UpdatePlaylist(
             $playlistId: Int!
-            $newData: UpdatePlaylistInputGraphQL!
+            $newData: PlaylistUpdateGraphQL!
         ) {
-            updatePlaylist(playlistId: $playlistId, newData: $newData) {
+            updatePlaylist(playlistToUpdateId: $playlistId, playlistDataToUpdate: $newData) {
                 ...Error
             }
         }

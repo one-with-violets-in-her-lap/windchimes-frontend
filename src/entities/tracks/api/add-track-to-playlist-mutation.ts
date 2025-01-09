@@ -7,9 +7,11 @@ import gql from 'graphql-tag'
 
 export function useAddTrackToPlaylistMutation() {
     const mutation = gql`
-        mutation AddTrackToPlaylist($playlistsIds: [Int!]!, $trackId: Int!) {
-            addTrackToPlaylists(playlistsIds: $playlistsIds, trackId: $trackId) {
-                ... on ErrorGraphQL {
+        mutation AddTrackToPlaylist($playlistsIds: [Int!]!, $trackId: String!) {
+            addTracksToPlaylists(
+                tracks: [{ id: $trackId, playlistsIdsToAddTo: $playlistsIds }]
+            ) {
+                ... on GraphQLApiError {
                     name
                     technicalExplanation
                     explanation

@@ -15,21 +15,12 @@ export function useTracksImportMutation() {
             $toPlaylistId: Int!
             $replaceExistingTracks: Boolean!
         ) {
-            importTracks(
-                fromPlaylist: $fromPlaylist
-                toPlaylistId: $toPlaylistId
+            importExternalPlaylistTracks(
+                playlistToImportFrom: $fromPlaylist
+                playlistToImportToId: $toPlaylistId
                 replaceExistingTracks: $replaceExistingTracks
             ) {
-                ... on PlaylistGraphQL {
-                    id
-                    tracksReferences {
-                        id
-                        platformId
-                        platform
-                    }
-                }
-
-                ... on ErrorGraphQL {
+                ... on GraphQLApiError {
                     ...Error
                 }
             }

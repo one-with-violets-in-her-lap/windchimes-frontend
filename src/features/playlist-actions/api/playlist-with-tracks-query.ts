@@ -13,7 +13,7 @@ const playlistWithTracksQuery = gql`
 
     query GetPlaylistWithTracks(
         $playlistId: Int!
-        $tracksToLoadIds: [Int!]
+        $tracksToLoadIds: [String!]
         $loadFirstTracks: Boolean
     ) {
         playlist(
@@ -21,7 +21,7 @@ const playlistWithTracksQuery = gql`
             tracksToLoadIds: $tracksToLoadIds
             loadFirstTracks: $loadFirstTracks
         ) {
-            ... on PlaylistWithTracksGraphQL {
+            ... on PlaylistWithLoadedTracksGraphQL {
                 id
                 createdAt
                 name
@@ -29,7 +29,7 @@ const playlistWithTracksQuery = gql`
                 description
                 ownerUserId
 
-                tracksReferences {
+                trackReferences {
                     id
                     platform
                     platformId
@@ -40,7 +40,7 @@ const playlistWithTracksQuery = gql`
                 }
             }
 
-            ... on ErrorGraphQL {
+            ... on GraphQLApiError {
                 ...Error
             }
         }

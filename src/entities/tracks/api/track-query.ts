@@ -14,8 +14,8 @@ export async function queryLoadedTrack(
     const query = gql`
         ${LOADED_TRACK_FRAGMENT}
 
-        query GetTrackByReference($trackReference: TrackQueryInput!) {
-            track(trackReference: $trackReference) {
+        query GetTrackByReference($trackReference: TrackReferenceToLoadGraphQL!) {
+            loadedTrack(trackReference: $trackReference) {
                 ...LoadedTrack
             }
         }

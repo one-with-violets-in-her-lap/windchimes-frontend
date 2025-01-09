@@ -10,13 +10,13 @@ export function usePlaylistCreationMutation() {
     const mutation = gql`
         ${ERROR_FRAGMENT}
 
-        mutation CreatePlaylist($playlistData: CreatePlaylistInputGraphQL!) {
-            createPlaylist(playlistData: $playlistData) {
-                ... on PlaylistGraphQL {
+        mutation CreatePlaylist($playlistData: PlaylistToCreateGraphQL!) {
+            createPlaylist(playlist: $playlistData) {
+                ... on PlaylistToReadWithTracksGraphQL {
                     id
                 }
 
-                ... on ErrorGraphQL {
+                ... on GraphQLApiError {
                     ...Error
                 }
             }

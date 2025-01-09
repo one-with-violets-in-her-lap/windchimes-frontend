@@ -12,13 +12,8 @@ export function usePlaylistDeletionMutation() {
         ${ERROR_FRAGMENT}
 
         mutation DeletePlaylist($playlistId: Int!) {
-            deletePlaylist(playlistId: $playlistId) {
-                ... on PlaylistGraphQL {
-                    id
-                    name
-                }
-
-                ... on ErrorGraphQL {
+            deletePlaylist(playlistToDeleteId: $playlistId) {
+                ... on GraphQLApiError {
                     ...Error
                 }
             }
