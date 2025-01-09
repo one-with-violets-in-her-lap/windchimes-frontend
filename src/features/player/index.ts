@@ -1,5 +1,5 @@
 import {
-    type TrackWithAudioFileUrl,
+    type QueueItemWithAudioFileUrl,
     usePlayerStore,
     LoopMode,
 } from '@/features/player/model/player-store'
@@ -14,6 +14,6 @@ export {
     usePlayerStore,
     usePlayerShortcuts,
     usePlayerVolume,
-    TrackWithAudioFileUrl,
+    QueueItemWithAudioFileUrl as TrackWithAudioFileUrl,
     LoopMode,
 }

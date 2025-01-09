@@ -3,25 +3,24 @@ import { RecycleScroller } from 'vue-virtual-scroller'
 import DraggableQueueTrack from '@/widgets/tracks-queue-editor/ui/draggable-queue-track.vue'
 import { TrackItem } from '@/entities/tracks'
 import { moveQueueTracks, QueueTrackNotFoundError } from '@/entities/tracks-queue'
-import { QueueItem } from '@/entities/tracks-queue/model/queue-item'
+import { LoadedQueueItem, QueueItem } from '@/entities/tracks-queue/model/queue-item'
 import { DragAndDropList } from '@/shared/ui/drag-and-drop'
-import { LoadedTrackFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { DragAndDropError } from '@/shared/model/errors'
 
 defineProps<{
     /**
      * actual tracks' data loaded with pagination (infinite scroll)
      */
-    loadedTracks: LoadedTrackFragment[]
+    loadedQueueItems: LoadedQueueItem[]
     currentTrackId: number | undefined
 }>()
 
-const allQueueTracks = defineModel<QueueItem[]>('allQueueTracks', { required: true })
+const allQueueItems = defineModel<QueueItem[]>('allQueueItems', { required: true })
 
 function moveBeforeTrack(trackToMoveId: string, beforeTrackId: string) {
     try {
-        allQueueTracks.value = moveQueueTracks(
-            allQueueTracks.value,
+        allQueueItems.value = moveQueueTracks(
+            allQueueItems.value,
             +trackToMoveId,
             +beforeTrackId,
         )
@@ -34,40 +33,39 @@ function moveBeforeTrack(trackToMoveId: string, beforeTrackId: string) {
     }
 }
 
-function deleteTrack(id: number) {
-    const trackIndex = allQueueTracks.value.findIndex(track => id === track.id)
-    allQueueTracks.value.splice(trackIndex, 1)
+function deleteQueueItem(id: number) {
+    allQueueItems.value = allQueueItems.value.filter(item => item.id !== id)
 }
 </script>
 
 <template>
     <DragAndDropList
         class="tracks-list"
-        :items="loadedTracks"
+        :items="loadedQueueItems"
         @move-before="moveBeforeTrack"
     >
         <RecycleScroller
-            :items="loadedTracks"
+            :items="loadedQueueItems"
             :item-size="100"
             key-field="id"
             page-mode
             v-slot="{ item, index }"
         >
             <DraggableQueueTrack
-                :track="item"
+                :queue-item="item"
                 :track-number="index + 1"
-                :current-track="currentTrackId === item.id"
-                :all-queue-tracks="allQueueTracks"
+                :current-track="currentTrackId === item.track.id"
+                :all-queue-items="allQueueItems"
                 class="draggable-queue-track"
-                @delete="deleteTrack(item.id)"
+                @delete="deleteQueueItem(item.id)"
             />
         </RecycleScroller>
 
         <template #dragged-item="{ draggedItem, draggedItemIndex }">
             <TrackItem
-                :track="draggedItem"
+                :track="draggedItem.track"
                 :track-number="draggedItemIndex + 1"
-                :all-playlist-tracks="allQueueTracks"
+                :all-playlist-tracks="allQueueItems.map(item => item.track)"
             />
         </template>
     </DragAndDropList>

@@ -6,10 +6,11 @@ import { insertLoadedTracks } from '@/widgets/tracks-queue-editor/model/insert-l
 import DraggableQueueTracksList from '@/widgets/tracks-queue-editor/ui/draggable-queue-tracks-list.vue'
 import {
     clearQueue,
+    LoadedQueueItem,
     shuffleQueue,
     useTracksQueueStore,
 } from '@/entities/tracks-queue'
-import { PlaylistTrack, TRACKS_PORTION_SIZE } from '@/entities/tracks'
+import { TRACKS_PORTION_SIZE } from '@/entities/tracks'
 import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'
 import PaginatedContent from '@/shared/ui/paginated-content.vue'
 
@@ -23,13 +24,13 @@ const { tracksQueue, currentTrack } = storeToRefs(useTracksQueueStore())
 
 const loadedTracks = computed(() => {
     const firstNotLoadedTrackIndex = tracksQueue.value.findIndex(
-        track => track.__typename === 'TrackReferenceGraphQL',
+        item => item.track.__typename === 'TrackReferenceGraphQL',
     )
 
     return tracksQueue.value.slice(
         0,
         firstNotLoadedTrackIndex === -1 ? undefined : firstNotLoadedTrackIndex,
-    ) as PlaylistTrack[]
+    ) as LoadedQueueItem[]
 })
 
 const tracksQuery = useLazyTracksQuery()
@@ -42,10 +43,10 @@ async function loadMoreTracks() {
 
     const trackReferencesToLoad = tracksQueue.value
         .slice(queuePartToLoad.startIndex, queuePartToLoad.endIndex)
-        .map(trackReference => ({
-            id: trackReference.id,
-            platform: trackReference.platform,
-            platformId: trackReference.platformId,
+        .map(queueItem => ({
+            id: queueItem.track.id,
+            platform: queueItem.track.platform,
+            platformId: queueItem.track.platformId,
         }))
 
     if (!tracksQuery.result.value && !tracksQuery.error.value) {
@@ -134,7 +135,8 @@ async function loadMoreTracks() {
                 <DraggableQueueTracksList
                     v-model:all-queue-tracks="tracksQueue"
                     :current-track-id="currentTrack?.id"
-                    :loaded-tracks="loadedTracks"
+                    :loaded-queue-items="loadedTracks"
+                    v-model:all-queue-items="tracksQueue"
                 />
             </PaginatedContent>
         </ResponsiveDrawer>

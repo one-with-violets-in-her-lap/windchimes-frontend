@@ -15,18 +15,21 @@ const props = defineProps<{
 const { user } = useAuth0()
 
 const { showNotification } = useNotificationsStore()
-const { tracksQueue, currentTrackId } = storeToRefs(useTracksQueueStore())
+
+const tracksQueueStore = useTracksQueueStore()
+const { createQueueItem } = tracksQueueStore
+const { tracksQueue, currentQueueItemId } = storeToRefs(tracksQueueStore)
 
 const addToPlaylistWindowOpened = ref(false)
 
 async function playNext() {
-    const currentTrackIndex = tracksQueue.value.findIndex(
-        track => track.id === currentTrackId.value,
+    const currentQueueItem = tracksQueue.value.findIndex(
+        track => track.id === currentQueueItemId.value,
     )
 
-    if (currentTrackIndex !== -1) {
+    if (currentQueueItem !== -1) {
         const newTracksQueue = [...tracksQueue.value]
-        newTracksQueue.splice(currentTrackIndex + 1, 0, props.track)
+        newTracksQueue.splice(currentQueueItem + 1, 0, createQueueItem(props.track))
 
         tracksQueue.value = newTracksQueue
 
@@ -35,7 +38,7 @@ async function playNext() {
 }
 
 async function addToQueue() {
-    tracksQueue.value = [...tracksQueue.value, props.track]
+    tracksQueue.value = [...tracksQueue.value, createQueueItem(props.track)]
     showNotification('success', 'Track will be played next')
 }
 </script>

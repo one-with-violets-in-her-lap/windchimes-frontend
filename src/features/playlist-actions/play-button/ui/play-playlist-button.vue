@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import {
-    getQueueWithPlaylistAdded,
-    PlaylistPlayError,
-    playPlaylistInNewQueue,
-} from '@/entities/tracks-queue/model/tracks-queue-actions'
 import { usePlayerStore } from '@/features/player'
 import { usePlaylistWithTracksLazyQuery } from '@/features/playlist-actions/api/playlist-with-tracks-query'
-import { useTracksQueueStore } from '@/entities/tracks-queue'
+import {
+    useTracksQueueStore,
+    QueuePlaylistOperationError,
+} from '@/entities/tracks-queue'
 import { DropdownMenu, DropdownButton } from '@/shared/ui/dropdown-menu'
 import { useNotificationsStore } from '@/shared/model/notifications'
 import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
+
+const PLAYLIST_QUERY_ERROR_MESSAGE =
+    "Couldn't request playlist tracks from the server"
 
 const props = defineProps<{
     playlistId: number
@@ -24,7 +25,9 @@ const props = defineProps<{
 const playerStore = usePlayerStore()
 const { playTrackFromQueue } = playerStore
 
-const { tracksQueue } = storeToRefs(useTracksQueueStore())
+const tracksQueueStore = useTracksQueueStore()
+const { addPlaylistToQueue, replaceQueueWithPlaylist } = tracksQueueStore
+const { tracksQueue } = storeToRefs(tracksQueueStore)
 
 const { showNotification } = useNotificationsStore()
 
@@ -41,19 +44,47 @@ async function handlePlayButtonClick() {
     }
 }
 
+async function handlePlaylistTracksLoading() {
+    let playlistTracksReferences = props.tracksReferences
+
+    if (!playlistTracksReferences) {
+        const playlistWithTracks =
+            playlistWithTracksLazyQuery.result.value === undefined
+                ? await playlistWithTracksLazyQuery.load()
+                : playlistWithTracksLazyQuery.result.value
+
+        if (!playlistWithTracks) {
+            throw new QueuePlaylistOperationError(PLAYLIST_QUERY_ERROR_MESSAGE)
+        }
+
+        if (playlistWithTracks.playlist?.__typename !== 'PlaylistWithTracksGraphQL') {
+            throw new QueuePlaylistOperationError(
+                playlistWithTracks.playlist?.__typename === 'ErrorGraphQL'
+                    ? playlistWithTracks.playlist.explanation
+                    : PLAYLIST_QUERY_ERROR_MESSAGE,
+            )
+        }
+
+        playlistTracksReferences = playlistWithTracks.playlist.tracksReferences
+    }
+
+    return playlistTracksReferences
+}
+
 async function playRightAway() {
     loading.value = true
 
     try {
-        tracksQueue.value = await playPlaylistInNewQueue(
-            playlistWithTracksLazyQuery,
-            props.tracksReferences,
-        )
+        const playlistTracksReferences = await handlePlaylistTracksLoading()
+        replaceQueueWithPlaylist(playlistTracksReferences)
 
         await playTrackFromQueue(0)
     } catch (error) {
-        if (error instanceof PlaylistPlayError) {
-            showNotification('error', error.message)
+        if (error instanceof QueuePlaylistOperationError) {
+            showNotification(
+                'error',
+                error.message || 'Error occurred when playing the playlist',
+            )
         } else {
             console.error(error)
             showNotification('error', 'Error occurred when playing the playlist')
@@ -67,16 +98,14 @@ async function addToQueue() {
     loading.value = true
 
     try {
-        tracksQueue.value = await getQueueWithPlaylistAdded(
-            tracksQueue.value,
-            playlistWithTracksLazyQuery,
-            props.tracksReferences,
-        )
-
+        addPlaylistToQueue(await handlePlaylistTracksLoading())
         showNotification('success', 'Added to the end of the queue')
     } catch (error) {
-        if (error instanceof PlaylistPlayError) {
-            showNotification('error', error.message)
+        if (error instanceof QueuePlaylistOperationError) {
+            showNotification(
+                'error',
+                error.message || 'Error occurred when playing the playlist',
+            )
         } else {
             console.error(error)
             showNotification('error', 'Error occurred when playing the playlist')
