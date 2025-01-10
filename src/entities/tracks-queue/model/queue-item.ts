@@ -1,8 +1,8 @@
-import { LoadedTrackFragment, TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
+import { LoadedTrackFragment, TrackReferenceToReadGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 
 export interface QueueItem {
     id: number
-    track: LoadedTrackFragment | TrackReferenceGraphQl
+    track: LoadedTrackFragment | TrackReferenceToReadGraphQl
 }
 
 export interface LoadedQueueItem {

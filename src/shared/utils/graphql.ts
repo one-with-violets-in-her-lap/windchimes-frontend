@@ -4,10 +4,10 @@ import type {
     OperationVariables,
 } from '@apollo/client/core'
 import { useMutation } from '@vue/apollo-composable'
-import type { ErrorGraphQl } from '@/shared/model/graphql-generated-types/graphql'
+import type { GraphQlApiError } from '@/shared/model/graphql-generated-types/graphql'
 import { useNotificationsStore } from '@/shared/model/notifications'
 
-export type ExcludeGraphQLError<TResult> = Exclude<NonNullable<TResult>, ErrorGraphQl>
+export type ExcludeGraphQLError<TResult> = Exclude<NonNullable<TResult>, GraphQlApiError>
 
 export function useMutationWithErrorNotification<
     TResult = any,

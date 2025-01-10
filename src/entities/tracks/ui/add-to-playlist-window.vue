@@ -26,21 +26,14 @@ watch(opened, () => {
 })
 
 const playlistsQueryError = computed(() => {
-    if (playlistsQuery.result.value?.playlists.__typename === 'ErrorGraphQL') {
-        return playlistsQuery.result.value.playlists
-    } else if (playlistsQuery.error.value) {
+    if (playlistsQuery.error.value) {
         return playlistsQuery.error.value
     } else {
         return undefined
     }
 })
 
-const playlists = computed(() =>
-    playlistsQuery.result.value?.playlists.__typename ===
-    'PlaylistGraphQLListResponseWrapperGraphQL'
-        ? playlistsQuery.result.value.playlists.items
-        : null,
-)
+const playlists = computed(() => playlistsQuery.result.value?.playlists)
 
 const selectedPlaylistsIds = ref<number[]>([])
 function selectAllPlaylists() {
@@ -57,11 +50,11 @@ async function addToSelectedPlaylists() {
         })
 
         if (
-            mutationResult?.data?.addTrackToPlaylists?.__typename === 'ErrorGraphQL'
+            mutationResult?.data?.addTracksToPlaylists?.__typename === 'GraphQLApiError'
         ) {
             showNotification(
                 'error',
-                mutationResult.data.addTrackToPlaylists.explanation,
+                mutationResult.data.addTracksToPlaylists.explanation,
             )
             return
         }

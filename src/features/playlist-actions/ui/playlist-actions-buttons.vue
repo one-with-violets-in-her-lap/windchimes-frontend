@@ -40,12 +40,19 @@ async function importTracks(tracksImportFormData: Required<TracksImportFormData>
         replaceExistingTracks: tracksImportFormData.replaceExistingTracks,
     })
 
-    if (result?.data?.importTracks.__typename === 'ErrorGraphQL') {
-        showNotification('error', result.data.importTracks.explanation)
-    } else if (result?.data?.importTracks.__typename === 'PlaylistGraphQL') {
+    if (
+        result?.data?.importExternalPlaylistTracks?.__typename === 'GraphQLApiError'
+    ) {
+        showNotification(
+            'error',
+            result.data.importExternalPlaylistTracks.explanation,
+        )
+    } else if (result?.data?.importExternalPlaylistTracks === null) {
         emit('update')
         showNotification('success', 'Imported successfully')
         tracksImportDialogOpened.value = false
+    } else {
+        showNotification('error', 'An unknown error occurred')
     }
 }
 
@@ -55,7 +62,7 @@ async function deletePlaylist() {
         playlistId: props.playlist.id,
     })
 
-    if (result?.data?.deletePlaylist.__typename === 'ErrorGraphQL') {
+    if (result?.data?.deletePlaylist?.__typename === 'GraphQLApiError') {
         showNotification('error', result.data.deletePlaylist.explanation)
         return
     }
@@ -73,7 +80,7 @@ async function updatePlaylist(formData: PlaylistFormData) {
         newData: formData,
     })
 
-    if (result?.data?.updatePlaylist?.__typename === 'ErrorGraphQL') {
+    if (result?.data?.updatePlaylist?.__typename === 'GraphQLApiError') {
         showNotification('error', result.data.updatePlaylist.explanation)
         return
     }
@@ -90,7 +97,7 @@ async function updatePlaylist(formData: PlaylistFormData) {
     <div class="d-flex align-center ga-3 mb-7 flex-wrap">
         <PlayPlaylistButton
             :playlist-id="playlist.id"
-            :tracks-references="playlist.tracksReferences"
+            :tracks-references="playlist.trackReferences"
             variant="flat"
         />
 

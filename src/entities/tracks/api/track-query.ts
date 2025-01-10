@@ -4,12 +4,12 @@ import { LOADED_TRACK_FRAGMENT } from '@/entities/tracks'
 import {
     GetTrackByReferenceQuery,
     GetTrackByReferenceQueryVariables,
-    TrackQueryInput,
+    TrackReferenceToLoadGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
 
 export async function queryLoadedTrack(
     client: ApolloClient<any>,
-    trackReference: TrackQueryInput,
+    trackReference: TrackReferenceToLoadGraphQl,
 ) {
     const query = gql`
         ${LOADED_TRACK_FRAGMENT}

@@ -20,11 +20,9 @@ export function usePlaylistsFeedQuery(currentUserId?: string) {
     return useQuery<GetPlaylistsFeedQuery, GetPlaylistsFeedQueryVariables>(
         gql`
             ${PLAYLISTS_LIST_ITEM_FRAGMENT}
-            ${ERROR_FRAGMENT}
 
             query GetPlaylistsFeed(
                 $currentUserId: String
-                $excludeOwnedPlaylists: Boolean
             ) {
                 personalPlaylists: playlists(
                     filters: { ownerUserId: $currentUserId }
@@ -41,7 +39,6 @@ export function usePlaylistsFeedQuery(currentUserId?: string) {
         `,
         {
             currentUserId: currentUserId,
-            excludeOwnedPlaylists: currentUserId !== undefined,
         },
     )
 }

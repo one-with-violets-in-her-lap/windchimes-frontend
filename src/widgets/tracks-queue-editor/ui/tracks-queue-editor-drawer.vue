@@ -20,11 +20,12 @@ defineProps<{
 
 const opened = ref(false)
 
-const { tracksQueue, currentTrack } = storeToRefs(useTracksQueueStore())
+const { tracksQueue, currentTrack, currentQueueItemId } =
+    storeToRefs(useTracksQueueStore())
 
 const loadedTracks = computed(() => {
     const firstNotLoadedTrackIndex = tracksQueue.value.findIndex(
-        item => item.track.__typename === 'TrackReferenceGraphQL',
+        item => item.track.__typename === 'TrackReferenceToReadGraphQL',
     )
 
     return tracksQueue.value.slice(
@@ -54,11 +55,11 @@ async function loadMoreTracks() {
             trackReferences: trackReferencesToLoad,
         })
 
-        if (result && result.tracks.__typename === 'LoadedTracksResponseGraphQL') {
+        if (result && result.loadedTracks.__typename === 'LoadedTracksWrapper') {
             tracksQueue.value = insertLoadedTracks(
                 tracksQueue.value,
                 queuePartToLoad,
-                result.tracks.items,
+                result.loadedTracks.items,
             )
         }
     } else {
@@ -68,11 +69,11 @@ async function loadMoreTracks() {
             },
         })
 
-        if (result?.data.tracks.__typename === 'LoadedTracksResponseGraphQL') {
+        if (result?.data.loadedTracks.__typename === 'LoadedTracksWrapper') {
             tracksQueue.value = insertLoadedTracks(
                 tracksQueue.value,
                 queuePartToLoad,
-                result.data.tracks.items,
+                result.data.loadedTracks.items,
             )
         }
     }
@@ -115,7 +116,7 @@ async function loadMoreTracks() {
                         prepend-icon="mdi-notification-clear-all"
                         variant="flat"
                         @click="
-                            tracksQueue = clearQueue(tracksQueue, currentTrack?.id)
+                            tracksQueue = clearQueue(tracksQueue, currentQueueItemId)
                         "
                     >
                         Clear
@@ -125,7 +126,10 @@ async function loadMoreTracks() {
                         prepend-icon="mdi-shuffle"
                         variant="outlined"
                         @click="
-                            tracksQueue = shuffleQueue(tracksQueue, currentTrack?.id)
+                            tracksQueue = shuffleQueue(
+                                tracksQueue,
+                                currentQueueItemId,
+                            )
                         "
                     >
                         Shuffle
@@ -134,7 +138,7 @@ async function loadMoreTracks() {
 
                 <DraggableQueueTracksList
                     v-model:all-queue-tracks="tracksQueue"
-                    :current-track-id="currentTrack?.id"
+                    :currentQueueItemId="currentQueueItemId"
                     :loaded-queue-items="loadedTracks"
                     v-model:all-queue-items="tracksQueue"
                 />

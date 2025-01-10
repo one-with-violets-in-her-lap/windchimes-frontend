@@ -2,10 +2,10 @@
 import { computed } from 'vue'
 import { ApolloError } from '@apollo/client/core'
 import { useNotificationsStore } from '@/shared/model/notifications'
-import { ErrorGraphQl } from '@/shared/model/graphql-generated-types/graphql'
+import { GraphQlApiError } from '@/shared/model/graphql-generated-types/graphql'
 
 const props = defineProps<{
-    error: ApolloError | ErrorGraphQl
+    error: ApolloError | GraphQlApiError
 }>()
 
 const emit = defineEmits<{

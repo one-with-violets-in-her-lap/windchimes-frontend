@@ -9,7 +9,7 @@ import {
 } from '@/entities/tracks-queue'
 import { DropdownMenu, DropdownButton } from '@/shared/ui/dropdown-menu'
 import { useNotificationsStore } from '@/shared/model/notifications'
-import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
+import { TrackReferenceToReadGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 
 const PLAYLIST_QUERY_ERROR_MESSAGE =
     "Couldn't request playlist tracks from the server"
@@ -19,7 +19,7 @@ const props = defineProps<{
     /**
      * tracks references of a playlist to play. if not specified, loads from server
      */
-    tracksReferences?: TrackReferenceGraphQl[]
+    tracksReferences?: TrackReferenceToReadGraphQl[]
 }>()
 
 const playerStore = usePlayerStore()
@@ -57,15 +57,15 @@ async function handlePlaylistTracksLoading() {
             throw new QueuePlaylistOperationError(PLAYLIST_QUERY_ERROR_MESSAGE)
         }
 
-        if (playlistWithTracks.playlist?.__typename !== 'PlaylistWithTracksGraphQL') {
+        if (playlistWithTracks.playlist?.__typename !== 'PlaylistWithLoadedTracksGraphQL') {
             throw new QueuePlaylistOperationError(
-                playlistWithTracks.playlist?.__typename === 'ErrorGraphQL'
+                playlistWithTracks.playlist?.__typename === 'GraphQLApiError'
                     ? playlistWithTracks.playlist.explanation
                     : PLAYLIST_QUERY_ERROR_MESSAGE,
             )
         }
 
-        playlistTracksReferences = playlistWithTracks.playlist.tracksReferences
+        playlistTracksReferences = playlistWithTracks.playlist.trackReferences
     }
 
     return playlistTracksReferences

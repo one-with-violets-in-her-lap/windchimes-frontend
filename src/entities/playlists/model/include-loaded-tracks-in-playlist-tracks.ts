@@ -1,5 +1,5 @@
 import { PlaylistTrack } from '@/entities/tracks'
-import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/graphql'
+import { TrackReferenceToReadGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 
 /**
  * get playlist tracks with already loaded tracks references replaced
@@ -41,13 +41,13 @@ import { TrackReferenceGraphQl } from '@/shared/model/graphql-generated-types/gr
  * ]
  */
 export function includeLoadedTracksInPlaylistTracks(
-    playlistTracksReferences: TrackReferenceGraphQl[],
+    playlistTracksReferences: TrackReferenceToReadGraphQl[],
     loadedTracks: (PlaylistTrack | null)[],
 ) {
-    const tracks: (TrackReferenceGraphQl | PlaylistTrack)[] = [
+    const tracks: (TrackReferenceToReadGraphQl | PlaylistTrack)[] = [
         ...playlistTracksReferences,
     ]
-    const unavailableTracksIds: number[] = []
+    const unavailableTracksIds: string[] = []
 
     loadedTracks.forEach((loadedTrack, index) => {
         if (loadedTrack === null) {

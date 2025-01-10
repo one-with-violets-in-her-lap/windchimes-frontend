@@ -24,7 +24,7 @@ export function usePlaylistDeletionMutation() {
         DeletePlaylistMutation,
         DeletePlaylistMutationVariables
     >(mutation, {
-        update(cache, { data }) {
+        update(cache, result, { variables }) {
             cache.modify({
                 fields: {
                     playlists(cachedPlaylists, { readField }) {
@@ -32,10 +32,8 @@ export function usePlaylistDeletionMutation() {
                             ...cachedPlaylists,
                             items: cachedPlaylists.items.filter(
                                 (playlist: PlaylistsListItemFragment) =>
-                                    data?.deletePlaylist.__typename !==
-                                        'PlaylistGraphQL' ||
                                     readField('id', playlist) !==
-                                        data.deletePlaylist.id,
+                                    variables?.playlistId,
                             ),
                         }
                     },

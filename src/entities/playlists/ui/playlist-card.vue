@@ -59,7 +59,7 @@ const link = computed(() => ({ name: 'playlist', params: { id: props.playlist.id
                     </VCardTitle>
 
                     <VCardSubtitle opacity="0.4">
-                        {{ playlist.tracksCount }} tracks ·
+                        {{ playlist.trackCount }} tracks ·
                         <time
                             :datetime="playlist.createdAt"
                             :title="new Date(playlist.createdAt).toLocaleString()"

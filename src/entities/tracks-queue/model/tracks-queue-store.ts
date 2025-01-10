@@ -9,7 +9,7 @@ import { LoadedQueueItem, QueueItem } from '@/entities/tracks-queue/model/queue-
 import { queryTrackAudioFile, queryLoadedTrack } from '@/entities/tracks'
 import {
     LoadedTrackFragment,
-    TrackReferenceGraphQl,
+    TrackReferenceToReadGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
 
 /**
@@ -38,15 +38,11 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
 
     const currentQueueItemId = ref<number>()
     const currentQueueItem = computed(() => {
-        if (!tracksQueue.value) {
-            return undefined
-        }
-
         const matchingQueueItem = tracksQueue.value.find(
-            track => track.id === currentQueueItemId.value,
+            item => item.id === currentQueueItemId.value,
         )
 
-        if (matchingQueueItem?.track.__typename === 'TrackGraphQL') {
+        if (matchingQueueItem?.track.__typename === 'LoadedTrackGraphQL') {
             return matchingQueueItem as LoadedQueueItem
         }
 
@@ -141,18 +137,18 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
         let track = queueItem.track
 
         try {
-            if (track.__typename !== 'TrackGraphQL') {
+            if (track.__typename !== 'LoadedTrackGraphQL') {
                 const loadedTrackResponse = await queryLoadedTrack(apolloClient, {
                     id: track.id,
                     platform: track.platform,
                     platformId: track.platformId,
                 })
 
-                if (!loadedTrackResponse.data.track) {
+                if (!loadedTrackResponse.data.loadedTrack) {
                     throw new TrackLoadError("couldn't obtain requested track data")
                 }
 
-                track = loadedTrackResponse.data.track
+                track = loadedTrackResponse.data.loadedTrack as LoadedTrackFragment
                 tracksQueue.value[index] = { ...queueItem, track }
             }
 
@@ -178,7 +174,7 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
         }
     }
 
-    function addPlaylistToQueue(playlistTracks: TrackReferenceGraphQl[]) {
+    function addPlaylistToQueue(playlistTracks: TrackReferenceToReadGraphQl[]) {
         if (playlistTracks.length === 0) {
             throw new QueuePlaylistOperationError('This playlist does not have any tracks')
         }
@@ -188,7 +184,7 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
         )
     }
 
-    function replaceQueueWithPlaylist(playlistTracks: TrackReferenceGraphQl[]) {
+    function replaceQueueWithPlaylist(playlistTracks: TrackReferenceToReadGraphQl[]) {
         if (playlistTracks.length === 0) {
             throw new QueuePlaylistOperationError('This playlist does not have any tracks')
         }
@@ -197,7 +193,7 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
     }
 
     function createQueueItem<
-        TQueueTrack extends TrackReferenceGraphQl | LoadedTrackFragment,
+        TQueueTrack extends TrackReferenceToReadGraphQl | LoadedTrackFragment,
     >(track: TQueueTrack): { id: number; track: TQueueTrack } {
         return {
             id: ++lastCreatedQueueItemId,

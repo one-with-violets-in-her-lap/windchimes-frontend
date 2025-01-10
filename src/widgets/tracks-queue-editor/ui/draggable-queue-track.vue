@@ -50,7 +50,7 @@ const dragged = ref(false)
                         size="32px"
                         icon
                         :class="{ 'd-none d-sm-block': !currentTrack }"
-                        @click="emit('delete')"
+                        @click.stop="emit('delete')"
                     >
                         <VIcon icon="mdi-playlist-remove" size="22px" />
                     </VBtn>
