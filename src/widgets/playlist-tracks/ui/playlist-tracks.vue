@@ -11,7 +11,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    (event: 'load-more', tracksToLoadIds: number[]): void
+    (event: 'load-more', tracksToLoadIds: string[]): void
 }>()
 
 function loadMoreTracks() {
@@ -19,7 +19,7 @@ function loadMoreTracks() {
 
     emit(
         'load-more',
-        props.playlist.tracksReferences
+        props.playlist.trackReferences
             .slice(lastLoadedIndex + 1, lastLoadedIndex + TRACKS_PORTION_SIZE + 1)
             .map(trackReference => trackReference.id),
     )
@@ -35,14 +35,14 @@ const availableTracks = computed(() => {
  */
 const allPlaylistTracks = computed(() =>
     includeLoadedTracksInPlaylistTracks(
-        props.playlist.tracksReferences,
+        props.playlist.trackReferences,
         props.playlist.loadedTracks,
     ),
 )
 </script>
 
 <template>
-    <VList v-if="playlist.tracksReferences.length > 0" max-width="1200">
+    <VList v-if="playlist.trackReferences.length > 0" max-width="1200">
         <RecycleScroller
             :items="availableTracks"
             :item-size="100"
@@ -66,7 +66,7 @@ const allPlaylistTracks = computed(() =>
                     v-if="
                         playlist.loadedTracks.length > 0 &&
                         playlist.loadedTracks.length <
-                            playlist.tracksReferences.length
+                            playlist.trackReferences.length
                     "
                     indeterminate
                     class="mt-3 mb-2"

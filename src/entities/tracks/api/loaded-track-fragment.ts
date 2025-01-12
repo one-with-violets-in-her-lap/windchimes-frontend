@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 
 export const LOADED_TRACK_FRAGMENT = gql`
-    fragment LoadedTrack on TrackGraphQL {
+    fragment LoadedTrack on LoadedTrackGraphQL {
         id
         platform
         platformId

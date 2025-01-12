@@ -64,6 +64,7 @@ async function addToQueue() {
         </DropdownButton>
 
         <DropdownButton
+            v-if="user?.sub"
             prepend-icon="mdi-plus"
             @click="addToPlaylistWindowOpened = true"
         >

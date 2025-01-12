@@ -68,6 +68,7 @@ provide(dragAndDropContextProvideKey, {
     <div
         class="drag-and-drop-list position-relative"
         ref="element"
+        draggable="false"
         @pointermove="event => handleDragOver(event.clientX, event.clientY)"
     >
         <slot></slot>

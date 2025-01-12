@@ -11,19 +11,6 @@ const { user } = useAuth0()
 
 const { loading, error, result, restart } = usePlaylistsFeedQuery(user.value?.sub)
 const { mdAndUp } = useDisplay()
-
-const playlistsFeedQueryError = computed(() => {
-    if (
-        result.value?.personalPlaylists.__typename === 'ErrorGraphQL' &&
-        result.value.personalPlaylists.name !== 'unauthorized-error'
-    ) {
-        return result.value.personalPlaylists
-    } else if (result.value?.otherPublicPlaylists.__typename === 'ErrorGraphQL') {
-        return result.value.otherPublicPlaylists
-    } else {
-        return null
-    }
-})
 </script>
 
 <template>
@@ -37,23 +24,12 @@ const playlistsFeedQueryError = computed(() => {
         <div class="position-relative pa-3" :class="{ 'pa-8': mdAndUp }">
             <h1 class="text-h3 font-weight-bold mb-6">MUSIC</h1>
 
-            <LoadingContent
-                :loading="loading"
-                :error="playlistsFeedQueryError || error"
-                @retry="restart"
-            >
-                <section
-                    v-if="
-                        user &&
-                        result?.personalPlaylists.__typename ===
-                            'PlaylistGraphQLListResponseWrapperGraphQL'
-                    "
-                    class="mb-14"
-                >
+            <LoadingContent :loading="loading" :error="error" @retry="restart">
+                <section v-if="user && result" class="mb-14">
                     <PlaylistCreationDialog />
 
                     <PlaylistsBoard
-                        :playlists="result.personalPlaylists.items"
+                        :playlists="result.personalPlaylists"
                         :no-playlists-message="'You don\'t have any playlists'"
                     />
                 </section>
@@ -75,11 +51,8 @@ const playlistsFeedQueryError = computed(() => {
                     </h2>
 
                     <PlaylistsBoard
-                        v-if="
-                            result?.otherPublicPlaylists.__typename ===
-                            'PlaylistGraphQLListResponseWrapperGraphQL'
-                        "
-                        :playlists="result.otherPublicPlaylists.items"
+                        v-if="result"
+                        :playlists="result.otherPublicPlaylists"
                         :no-playlists-message="'There aren\'t any playlists to discover currently'"
                         class="mb-6"
                     />

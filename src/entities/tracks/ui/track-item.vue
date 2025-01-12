@@ -10,7 +10,7 @@ import TrackOptionsDropdown from '@/entities/tracks/ui/track-options-dropdown.vu
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import {
     LoadedTrackFragment,
-    TrackReferenceGraphQl,
+    TrackReferenceToReadGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
 
 class AudioFileObtainingError extends Error {}
@@ -49,7 +49,7 @@ const props = defineProps<{
          * List of tracks that contains current track. If specified, the track is played in
          * the new queue constructed from this list
          */
-        tracksToCreateNewQueueFrom?: (LoadedTrackFragment | TrackReferenceGraphQl)[]
+        tracksToCreateNewQueueFrom?: (LoadedTrackFragment | TrackReferenceToReadGraphQl)[]
 
         /**
          * Existing queue item which the track belongs to. If specified, the existing
@@ -81,7 +81,7 @@ async function getAudioFileUrl() {
 
     if (response.data.trackAudioFile?.__typename === 'TrackAudioFileGraphQL') {
         return response.data.trackAudioFile.url
-    } else if (response.data.trackAudioFile?.__typename === 'ErrorGraphQL') {
+    } else if (response.data.trackAudioFile?.__typename === 'GraphQLApiError') {
         throw new AudioFileObtainingError(response.data.trackAudioFile.explanation)
     } else {
         throw new AudioFileObtainingError(response.error?.message)
@@ -90,7 +90,7 @@ async function getAudioFileUrl() {
 
 // TODO: move to separate module (probably in the `/module` folder)
 function playTrackInNewQueue(
-    tracksToCreateNewQueueFrom: (LoadedTrackFragment | TrackReferenceGraphQl)[],
+    tracksToCreateNewQueueFrom: (LoadedTrackFragment | TrackReferenceToReadGraphQl)[],
     audioFileUrl: string,
 ) {
     const queueItemToPlay = createQueueItem(props.track)

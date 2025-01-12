@@ -92,18 +92,18 @@ export function moveQueueTracks(
  * (_if `currentTrackId` is specified_)
  * @returns new queue with cleared tracks (_empty list or a list with current track_)
  */
-export function clearQueue(tracksQueue: QueueItem[], currentTrackId?: number) {
-    if (!currentTrackId) {
+export function clearQueue(tracksQueue: QueueItem[], currentQueueItemId?: number) {
+    if (!currentQueueItemId) {
         return []
     }
 
-    const currentTrackInQueue = tracksQueue.find(track => track.id === currentTrackId)
+    const currentTrackInQueue = tracksQueue.find(item => item.id === currentQueueItemId)
 
     if (currentTrackInQueue) {
         return [currentTrackInQueue]
     } else {
         throw new QueueTrackNotFoundError(
-            `can't find a current track with id ${currentTrackId} to keep ` +
+            `can't find a current queue item with id ${currentQueueItemId} to keep ` +
                 'while clearing the queue',
         )
     }

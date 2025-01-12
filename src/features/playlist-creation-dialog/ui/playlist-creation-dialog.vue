@@ -17,14 +17,9 @@ async function createPlaylist(formData: PlaylistFormData) {
         playlistData: formData,
     })
 
-    if (result?.data?.createPlaylist.__typename === 'ErrorGraphQL') {
+    if (result?.data?.createPlaylist.__typename === 'GraphQLApiError') {
         showNotification('error', result.data.createPlaylist.explanation)
-    } else if (result?.data?.createPlaylist.__typename === 'PlaylistGraphQL') {
-        // formData = {
-        //     name: '',
-        //     description: '',
-        // }
-
+    } else if (result?.data?.createPlaylist.__typename === 'PlaylistToReadWithTracksGraphQL') {
         dialogVisible.value = false
 
         router.push({

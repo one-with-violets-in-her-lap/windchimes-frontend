@@ -24,12 +24,12 @@ onResult(() => {
         return
     }
 
-    if (result.value.playlist?.__typename !== 'PlaylistWithTracksGraphQL') {
+    if (result.value.playlist?.__typename !== 'PlaylistWithLoadedTracksGraphQL') {
         handleError(new NotFoundError('Playlist not found'))
     }
 })
 
-function loadMoreTracks(ids: number[]) {
+function loadMoreTracks(ids: string[]) {
     fetchMore({
         variables: {
             tracksToLoadIds: ids,
@@ -38,8 +38,10 @@ function loadMoreTracks(ids: number[]) {
             if (
                 !previousData.playlist ||
                 !fetchMoreResult?.playlist ||
-                previousData.playlist.__typename !== 'PlaylistWithTracksGraphQL' ||
-                fetchMoreResult.playlist.__typename !== 'PlaylistWithTracksGraphQL'
+                previousData.playlist.__typename !==
+                    'PlaylistWithLoadedTracksGraphQL' ||
+                fetchMoreResult.playlist.__typename !==
+                    'PlaylistWithLoadedTracksGraphQL'
             ) {
                 return previousData
             }
@@ -69,7 +71,7 @@ function loadMoreTracks(ids: number[]) {
         <div
             v-if="
                 result?.playlist &&
-                result.playlist.__typename === 'PlaylistWithTracksGraphQL'
+                result.playlist.__typename === 'PlaylistWithLoadedTracksGraphQL'
             "
         >
             <VAvatar
@@ -105,7 +107,7 @@ function loadMoreTracks(ids: number[]) {
 
                 <VIcon icon="mdi-playlist-music" />
 
-                {{ result.playlist.tracksReferences.length }} tracks
+                {{ result.playlist.trackReferences.length }} tracks
             </div>
 
             <ExpandableParagraph

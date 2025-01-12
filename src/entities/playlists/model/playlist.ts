@@ -1,7 +1,7 @@
 import type {
-    PlaylistGraphQl,
-    PlaylistWithTracksGraphQl,
+    PlaylistToReadGraphQl,
+    PlaylistToReadWithTracksGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
 
-export type Playlist = PlaylistGraphQl
-export type PlaylistWithTracks = PlaylistWithTracksGraphQl
+export type Playlist = PlaylistToReadGraphQl
+export type PlaylistWithTracks = PlaylistToReadWithTracksGraphQl

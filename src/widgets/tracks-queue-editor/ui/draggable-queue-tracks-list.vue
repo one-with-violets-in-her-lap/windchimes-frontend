@@ -12,7 +12,7 @@ defineProps<{
      * actual tracks' data loaded with pagination (infinite scroll)
      */
     loadedQueueItems: LoadedQueueItem[]
-    currentTrackId: number | undefined
+    currentQueueItemId: number | undefined
 }>()
 
 const allQueueItems = defineModel<QueueItem[]>('allQueueItems', { required: true })
@@ -54,7 +54,7 @@ function deleteQueueItem(id: number) {
             <DraggableQueueTrack
                 :queue-item="item"
                 :track-number="index + 1"
-                :current-track="currentTrackId === item.track.id"
+                :current-track="currentQueueItemId === item.id"
                 :all-queue-items="allQueueItems"
                 class="draggable-queue-track"
                 @delete="deleteQueueItem(item.id)"
