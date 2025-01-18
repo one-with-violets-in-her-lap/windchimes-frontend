@@ -7,6 +7,7 @@ import { useDeleteTrackFromPlaylistsMutation } from '@/entities/tracks/api/playl
 import anime from 'animejs'
 import { PlaylistBasicInfoFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { IgnoreTypename } from '@/shared/utils/graphql'
+import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
 
 const props = defineProps<{
     track: PlaylistTrack
