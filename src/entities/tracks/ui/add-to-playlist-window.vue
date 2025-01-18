@@ -16,7 +16,10 @@ const opened = defineModel<boolean>('opened')
 
 const { showNotification } = useNotificationsStore()
 
-const playlistsQuery = useLazyPlaylistsBasicInfoQuery(props.currentUserId)
+const playlistsQuery = useLazyPlaylistsBasicInfoQuery({
+    ownerUserId: props.currentUserId,
+    excludeContainingTrackReferenceId: props.track.id,
+})
 
 watch(opened, () => {
     if (opened.value) {
@@ -50,7 +53,8 @@ async function addToSelectedPlaylists() {
         })
 
         if (
-            mutationResult?.data?.addTracksToPlaylists?.__typename === 'GraphQLApiError'
+            mutationResult?.data?.addTracksToPlaylists?.__typename ===
+            'GraphQLApiError'
         ) {
             showNotification(
                 'error',

@@ -4,14 +4,13 @@ import { ERROR_FRAGMENT } from '@/shared/api/error-fragment'
 import {
     GetPlaylistsBasicInfoQuery,
     GetPlaylistsBasicInfoQueryVariables,
+    PlaylistsFiltersGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
 
-export function useLazyPlaylistsBasicInfoQuery(currentUserId: string) {
+export function useLazyPlaylistsBasicInfoQuery(filters: PlaylistsFiltersGraphQl) {
     const query = gql`
-        ${ERROR_FRAGMENT}
-
-        query GetPlaylistsBasicInfo($currentUserId: String!) {
-            playlists(filters: { ownerUserId: $currentUserId }) {
+        query GetPlaylistsBasicInfo($filters: PlaylistsFiltersGraphQL!) {
+            playlists(filters: $filters) {
                 id
                 name
             }
@@ -21,5 +20,5 @@ export function useLazyPlaylistsBasicInfoQuery(currentUserId: string) {
     return useLazyQuery<
         GetPlaylistsBasicInfoQuery,
         GetPlaylistsBasicInfoQueryVariables
-    >(query, { currentUserId })
+    >(query, { filters })
 }
