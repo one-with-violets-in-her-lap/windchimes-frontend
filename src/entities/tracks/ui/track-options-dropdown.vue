@@ -3,13 +3,17 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { PlaylistTrack } from '@/entities/tracks/model/track'
+import AddToPlaylistSheet from '@/entities/tracks/ui/add-to-playlist-sheet.vue'
 import { useTracksQueueStore } from '@/entities/tracks-queue'
 import { useNotificationsStore } from '@/shared/model/notifications'
 import { DropdownButton, DropdownMenu } from '@/shared/ui/dropdown-menu'
-import AddToPlaylistDialog from '@/entities/tracks/ui/add-to-playlist-window.vue'
+import DeleteFromPlaylistSheet from '@/entities/tracks/ui/delete-from-playlist-sheet.vue'
+import { PlaylistBasicInfoFragment } from '@/shared/model/graphql-generated-types/graphql'
+import { IgnoreTypename } from '@/shared/utils/graphql'
 
 const props = defineProps<{
     track: PlaylistTrack
+    currentPlaylist?: IgnoreTypename<PlaylistBasicInfoFragment>
 }>()
 
 const { user } = useAuth0()
@@ -20,7 +24,8 @@ const tracksQueueStore = useTracksQueueStore()
 const { createQueueItem } = tracksQueueStore
 const { tracksQueue, currentQueueItemId } = storeToRefs(tracksQueueStore)
 
-const addToPlaylistWindowOpened = ref(false)
+const addToPlaylistSheetOpened = ref(false)
+const deleteFromPlaylistsSheetOpened = ref(false)
 
 async function playNext() {
     const currentQueueItem = tracksQueue.value.findIndex(
@@ -66,15 +71,31 @@ async function addToQueue() {
         <DropdownButton
             v-if="user?.sub"
             prepend-icon="mdi-plus"
-            @click="addToPlaylistWindowOpened = true"
+            @click="addToPlaylistSheetOpened = true"
         >
-            Add to the playlist
+            Add to the playlists
+        </DropdownButton>
+
+        <DropdownButton
+            v-if="user?.sub"
+            prepend-icon="mdi-delete"
+            @click="deleteFromPlaylistsSheetOpened = true"
+        >
+            Remove from playlists
         </DropdownButton>
     </DropdownMenu>
 
-    <AddToPlaylistDialog
+    <AddToPlaylistSheet
         v-if="user?.sub"
-        v-model:opened="addToPlaylistWindowOpened"
+        v-model:opened="addToPlaylistSheetOpened"
+        :track
+        :current-user-id="user.sub"
+    />
+
+    <DeleteFromPlaylistSheet
+        v-if="user?.sub"
+        v-model:opened="deleteFromPlaylistsSheetOpened"
+        :current-playlist
         :track
         :current-user-id="user.sub"
     />

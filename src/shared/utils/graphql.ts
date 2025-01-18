@@ -7,7 +7,41 @@ import { useMutation } from '@vue/apollo-composable'
 import type { GraphQlApiError } from '@/shared/model/graphql-generated-types/graphql'
 import { useNotificationsStore } from '@/shared/model/notifications'
 
-export type ExcludeGraphQLError<TResult> = Exclude<NonNullable<TResult>, GraphQlApiError>
+export type ExcludeGraphQLError<TResult> = Exclude<
+    NonNullable<TResult>,
+    GraphQlApiError
+>
+
+/**
+ * Ignores strict `__typename` match checking when casting two graphql generated types
+ *
+ * Use this **cautiously** in situations when you do not care about __typename field
+ *
+ * @example
+ * interface GraphqlType1 {
+ *     __typename: "GraphqlType1",
+ *     name: string
+ * }
+ *
+ * interface GraphqlType2 {
+ *     __typename: "GraphqlType2",
+ *     name: string
+ * }
+ *
+ * const graphqlObject: GraphqlType1 = {
+ *     __typename: "GraphqlType1",
+ *     name: "object"
+ * }
+ *
+ * console.log(graphqlObject as GraphqlType2) // error, type mismatch on __typename
+ *
+ * const graphqlObject2: IgnoreTypename<GraphqlType1> = {
+ *     name: "object"
+ * }
+ *
+ * console.log(graphqlObject as GraphqlType2) // no error
+ */
+export type IgnoreTypename<T> = Omit<T, '__typename'>
 
 export function useMutationWithErrorNotification<
     TResult = any,

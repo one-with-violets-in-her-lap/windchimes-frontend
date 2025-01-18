@@ -7,12 +7,20 @@ import {
     PlaylistsFiltersGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
 
+const PLAYLIST_BASIC_INFO_FRAGMENT = gql`
+    fragment PlaylistBasicInfo on PlaylistToReadGraphQL {
+        id
+        name
+    }
+`
+
 export function useLazyPlaylistsBasicInfoQuery(filters: PlaylistsFiltersGraphQl) {
     const query = gql`
+        ${PLAYLIST_BASIC_INFO_FRAGMENT}
+
         query GetPlaylistsBasicInfo($filters: PlaylistsFiltersGraphQL!) {
             playlists(filters: $filters) {
-                id
-                name
+                ...PlaylistBasicInfo
             }
         }
     `

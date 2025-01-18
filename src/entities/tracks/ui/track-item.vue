@@ -10,8 +10,10 @@ import TrackOptionsDropdown from '@/entities/tracks/ui/track-options-dropdown.vu
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import {
     LoadedTrackFragment,
+    PlaylistBasicInfoFragment,
     TrackReferenceToReadGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
+import { IgnoreTypename } from '@/shared/utils/graphql'
 
 class AudioFileObtainingError extends Error {}
 
@@ -27,6 +29,8 @@ class TrackPlayingNotConfiguredError extends Error {
 const props = defineProps<{
     track: PlaylistTrack
     trackNumber: number
+
+    currentPlaylist?: IgnoreTypename<PlaylistBasicInfoFragment>
 
     compact?: boolean
 
@@ -49,7 +53,10 @@ const props = defineProps<{
          * List of tracks that contains current track. If specified, the track is played in
          * the new queue constructed from this list
          */
-        tracksToCreateNewQueueFrom?: (LoadedTrackFragment | TrackReferenceToReadGraphQl)[]
+        tracksToCreateNewQueueFrom?: (
+            | LoadedTrackFragment
+            | TrackReferenceToReadGraphQl
+        )[]
 
         /**
          * Existing queue item which the track belongs to. If specified, the existing
@@ -221,7 +228,7 @@ async function handleTrackPlaying() {
                 </template>
 
                 <template #append>
-                    <TrackOptionsDropdown :track />
+                    <TrackOptionsDropdown :track :current-playlist />
 
                     <slot name="append"></slot>
                 </template>

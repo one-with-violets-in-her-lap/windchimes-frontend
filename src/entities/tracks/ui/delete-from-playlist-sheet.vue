@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import anime from 'animejs'
 import { PlaylistTrack } from '@/entities/tracks/model/track'
 import { useLazyPlaylistsBasicInfoQuery } from '@/entities/tracks/api/playlists-basic-info-query'
 import { useNotificationsStore } from '@/shared/model/notifications'
-import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
-import { useAddTrackToPlaylistMutation } from '../api/add-track-to-playlist-mutation'
+import { useDeleteTrackFromPlaylistsMutation } from '@/entities/tracks/api/playlist-tracks-mutations'
+import anime from 'animejs'
+import { PlaylistBasicInfoFragment } from '@/shared/model/graphql-generated-types/graphql'
+import { IgnoreTypename } from '@/shared/utils/graphql'
 
 const props = defineProps<{
     track: PlaylistTrack
     currentUserId: string
+    currentPlaylist?: IgnoreTypename<PlaylistBasicInfoFragment>
 }>()
 
 const opened = defineModel<boolean>('opened')
@@ -18,8 +20,22 @@ const { showNotification } = useNotificationsStore()
 
 const playlistsQuery = useLazyPlaylistsBasicInfoQuery({
     ownerUserId: props.currentUserId,
-    excludeContainingTrackReferenceId: props.track.id,
+    containingTrackReferenceId: props.track.id,
 })
+const playlistsQueryError = computed(() => {
+    if (playlistsQuery.error.value) {
+        return playlistsQuery.error.value
+    } else {
+        return undefined
+    }
+})
+const playlists = computed(() => playlistsQuery.result.value?.playlists)
+
+const otherPlaylistsWithoutCurrentPlaylist = computed(() =>
+    playlists.value?.filter(
+        playlist => !props.currentPlaylist || playlist.id !== props.currentPlaylist.id,
+    ),
+)
 
 watch(opened, () => {
     if (opened.value) {
@@ -28,43 +44,33 @@ watch(opened, () => {
     }
 })
 
-const playlistsQueryError = computed(() => {
-    if (playlistsQuery.error.value) {
-        return playlistsQuery.error.value
-    } else {
-        return undefined
-    }
-})
-
-const playlists = computed(() => playlistsQuery.result.value?.playlists)
-
 const selectedPlaylistsIds = ref<number[]>([])
 function selectAllPlaylists() {
     selectedPlaylistsIds.value = playlists.value?.map(playlist => playlist.id) || []
 }
 
-const addTrackToPlaylistMutation = useAddTrackToPlaylistMutation()
+const deleteTrackFromPlaylistsMutation = useDeleteTrackFromPlaylistsMutation()
 
-async function addToSelectedPlaylists() {
+async function deleteFromSelectedPlaylists() {
     try {
-        const mutationResult = await addTrackToPlaylistMutation.mutate({
+        const mutationResult = await deleteTrackFromPlaylistsMutation.mutate({
             playlistsIds: selectedPlaylistsIds.value,
             trackId: props.track.id,
         })
 
         if (
-            mutationResult?.data?.addTracksToPlaylists?.__typename ===
+            mutationResult?.data?.deleteTrackFromPlaylists?.__typename ===
             'GraphQLApiError'
         ) {
             showNotification(
                 'error',
-                mutationResult.data.addTracksToPlaylists.explanation,
+                mutationResult.data?.deleteTrackFromPlaylists.explanation,
             )
             return
         }
 
         await anime({
-            targets: '#playlistsToSelectContainer',
+            targets: '#playlistsToSelectForTrackDeletion',
             scale: 0.1,
             opacity: 0,
             endDelay: 80,
@@ -74,10 +80,10 @@ async function addToSelectedPlaylists() {
 
         opened.value = false
 
-        showNotification('success', 'Added to playlists')
+        showNotification('success', 'Deleted from playlists')
     } catch (error) {
         console.error(error)
-        showNotification('error', 'Failed to add the track to playlists')
+        showNotification('error', 'Failed to delete the track from playlists')
     }
 }
 </script>
@@ -90,7 +96,7 @@ async function addToSelectedPlaylists() {
 
         <template #default>
             <VCard
-                title="Add to playlists"
+                title="Delete from playlists"
                 elevation="0"
                 :subtitle="`${track.owner.name} - ${track.name}`"
                 class="h-100"
@@ -105,12 +111,25 @@ async function addToSelectedPlaylists() {
                             @submit.prevent
                         >
                             <VSheet
-                                id="playlistsToSelectContainer"
+                                id="playlistsToSelectForTrackDeletion"
                                 class="pa-0 mb-5 overflow-y-auto"
                                 height="40vh"
                             >
                                 <VCheckbox
-                                    v-for="playlist in playlists"
+                                    v-if="currentPlaylist"
+                                    v-model="selectedPlaylistsIds"
+                                    :value="currentPlaylist.id"
+                                    :key="currentPlaylist.id"
+                                    :label="currentPlaylist.name"
+                                    hide-details
+                                    density="comfortable"
+                                    class="mb-3"
+                                />
+
+                                <VDivider thickness="2" class="my-5" />
+
+                                <VCheckbox
+                                    v-for="playlist in otherPlaylistsWithoutCurrentPlaylist"
                                     v-model="selectedPlaylistsIds"
                                     :value="playlist.id"
                                     :key="playlist.id"
@@ -130,11 +149,11 @@ async function addToSelectedPlaylists() {
                                     type="submit"
                                     class="w-100 mb-3"
                                     :loading="
-                                        addTrackToPlaylistMutation.loading.value
+                                        deleteTrackFromPlaylistsMutation.loading.value
                                     "
-                                    @click="addToSelectedPlaylists"
+                                    @click="deleteFromSelectedPlaylists"
                                 >
-                                    Add to selected
+                                    Delete from selected
                                 </VBtn>
                             </Transition>
 
