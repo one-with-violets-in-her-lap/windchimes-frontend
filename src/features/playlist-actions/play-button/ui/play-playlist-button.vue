@@ -57,7 +57,10 @@ async function handlePlaylistTracksLoading() {
             throw new QueuePlaylistOperationError(PLAYLIST_QUERY_ERROR_MESSAGE)
         }
 
-        if (playlistWithTracks.playlist?.__typename !== 'PlaylistWithLoadedTracksGraphQL') {
+        if (
+            playlistWithTracks.playlist?.__typename !==
+            'PlaylistWithLoadedTracksGraphQL'
+        ) {
             throw new QueuePlaylistOperationError(
                 playlistWithTracks.playlist?.__typename === 'GraphQLApiError'
                     ? playlistWithTracks.playlist.explanation

@@ -12,7 +12,6 @@ import {
 } from '@/entities/tracks-queue'
 import { TRACKS_PORTION_SIZE } from '@/entities/tracks'
 import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'
-import PaginatedContent from '@/shared/ui/paginated-content.vue'
 
 defineProps<{
     openButtonVisible: boolean
@@ -20,8 +19,7 @@ defineProps<{
 
 const opened = ref(false)
 
-const { tracksQueue, currentTrack, currentQueueItemId } =
-    storeToRefs(useTracksQueueStore())
+const { tracksQueue, currentQueueItemId } = storeToRefs(useTracksQueueStore())
 
 const loadedTracks = computed(() => {
     const firstNotLoadedTrackIndex = tracksQueue.value.findIndex(

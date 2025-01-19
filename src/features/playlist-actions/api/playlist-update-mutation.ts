@@ -10,11 +10,11 @@ export function usePlaylistUpdateMutation() {
     const mutation = gql`
         ${ERROR_FRAGMENT}
 
-        mutation UpdatePlaylist(
-            $playlistId: Int!
-            $newData: PlaylistUpdateGraphQL!
-        ) {
-            updatePlaylist(playlistToUpdateId: $playlistId, playlistDataToUpdate: $newData) {
+        mutation UpdatePlaylist($playlistId: Int!, $newData: PlaylistUpdateGraphQL!) {
+            updatePlaylist(
+                playlistToUpdateId: $playlistId
+                playlistDataToUpdate: $newData
+            ) {
                 ...Error
             }
         }

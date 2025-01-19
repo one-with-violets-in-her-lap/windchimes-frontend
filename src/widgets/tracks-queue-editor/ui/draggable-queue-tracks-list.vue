@@ -44,7 +44,12 @@ function deleteQueueItem(id: number) {
         class="tracks-list-wrapper"
         @move-before="moveBeforeTrack"
     >
-        <RecycleScroller :items="loadedQueueItems" :item-size="100" key-field="id" class="tracks-list">
+        <RecycleScroller
+            :items="loadedQueueItems"
+            :item-size="100"
+            key-field="id"
+            class="tracks-list"
+        >
             <template #default="{ item, index }">
                 <DraggableQueueTrack
                     :queue-item="item"

@@ -1,6 +1,5 @@
 import gql from 'graphql-tag'
 import { useLazyQuery } from '@vue/apollo-composable'
-import { ERROR_FRAGMENT } from '@/shared/api/error-fragment'
 import {
     GetPlaylistsBasicInfoQuery,
     GetPlaylistsBasicInfoQueryVariables,

@@ -66,8 +66,7 @@ const allPlaylistTracks = computed(() =>
                 <VProgressCircular
                     v-if="
                         playlist.loadedTracks.length > 0 &&
-                        playlist.loadedTracks.length <
-                            playlist.trackReferences.length
+                        playlist.loadedTracks.length < playlist.trackReferences.length
                     "
                     indeterminate
                     class="mt-3 mb-2"

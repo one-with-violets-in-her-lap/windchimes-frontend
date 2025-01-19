@@ -13,7 +13,9 @@ export function useLazyTracksQuery() {
     >(gql`
         ${LOADED_TRACK_FRAGMENT}
 
-        query GetTracksByReference($trackReferences: [TrackReferenceToLoadGraphQL!]!) {
+        query GetTracksByReference(
+            $trackReferences: [TrackReferenceToLoadGraphQL!]!
+        ) {
             loadedTracks(trackReferences: $trackReferences) {
                 ... on LoadedTracksWrapper {
                     items {

@@ -97,7 +97,9 @@ export function clearQueue(tracksQueue: QueueItem[], currentQueueItemId?: number
         return []
     }
 
-    const currentTrackInQueue = tracksQueue.find(item => item.id === currentQueueItemId)
+    const currentTrackInQueue = tracksQueue.find(
+        item => item.id === currentQueueItemId,
+    )
 
     if (currentTrackInQueue) {
         return [currentTrackInQueue]

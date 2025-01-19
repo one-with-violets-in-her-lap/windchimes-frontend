@@ -4,7 +4,7 @@ export const ITEM_BASE_ID = 'dragAndDropItem'
 
 /**
  * state of the drag and drop list
- * 
+ *
  * shared to child `<DragAndDropItem>` components to handle dragging events
  */
 export interface DragAndDropContext {

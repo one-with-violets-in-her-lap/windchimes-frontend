@@ -34,7 +34,8 @@ const playlists = computed(() => playlistsQuery.result.value?.playlists)
 
 const otherPlaylistsWithoutCurrentPlaylist = computed(() =>
     playlists.value?.filter(
-        playlist => !props.currentPlaylist || playlist.id !== props.currentPlaylist.id,
+        playlist =>
+            !props.currentPlaylist || playlist.id !== props.currentPlaylist.id,
     ),
 )
 

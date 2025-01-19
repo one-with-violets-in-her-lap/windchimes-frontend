@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useDisplay } from 'vuetify'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { usePlaylistsFeedQuery } from '@/pages/home/api/playlists-feed-query'

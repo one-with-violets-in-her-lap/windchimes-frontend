@@ -21,12 +21,10 @@ export {
     LoadedQueueItem,
     TracksQueue,
     useTracksQueueStore,
-
     QueuePlaylistOperationError,
     TrackLoadError,
     TracksQueueBoundsReachedError,
     QueueTrackNotFoundError,
-
     shuffleQueue,
     moveQueueTracks,
     clearQueue,

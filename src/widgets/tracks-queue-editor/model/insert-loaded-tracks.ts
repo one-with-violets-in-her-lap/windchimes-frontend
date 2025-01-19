@@ -11,16 +11,22 @@ export function insertLoadedTracks(
 
     const newTracksQueue = [...tracksQueue]
 
-    const loadedQueueItems: LoadedQueueItem[] = availableTracks.map((track, index) => {
-        const queueItem = newTracksQueue[index + queuePart.startIndex]
+    const loadedQueueItems: LoadedQueueItem[] = availableTracks.map(
+        (track, index) => {
+            const queueItem = newTracksQueue[index + queuePart.startIndex]
 
-        return {
-            ...queueItem,
-            track,
-        }
-    })
+            return {
+                ...queueItem,
+                track,
+            }
+        },
+    )
 
-    newTracksQueue.splice(queuePart.startIndex, availableTracks.length, ...loadedQueueItems)
+    newTracksQueue.splice(
+        queuePart.startIndex,
+        availableTracks.length,
+        ...loadedQueueItems,
+    )
 
     return newTracksQueue
 }

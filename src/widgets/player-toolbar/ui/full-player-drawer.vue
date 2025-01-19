@@ -20,7 +20,8 @@ const { playNextTrack, playPreviousTrack, pause, play, audio, toggleLoopMode } =
     playerStore
 const { currentSecond, loopMode, paused } = storeToRefs(playerStore)
 
-const { tracksQueue, currentQueueItem, currentTrack} = storeToRefs(useTracksQueueStore())
+const { tracksQueue, currentQueueItem, currentTrack } =
+    storeToRefs(useTracksQueueStore())
 
 const { showNotification } = useNotificationsStore()
 

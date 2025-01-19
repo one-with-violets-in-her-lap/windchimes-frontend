@@ -176,7 +176,9 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
 
     function addPlaylistToQueue(playlistTracks: TrackReferenceToReadGraphQl[]) {
         if (playlistTracks.length === 0) {
-            throw new QueuePlaylistOperationError('This playlist does not have any tracks')
+            throw new QueuePlaylistOperationError(
+                'This playlist does not have any tracks',
+            )
         }
 
         tracksQueue.value = tracksQueue.value.concat(
@@ -186,7 +188,9 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
 
     function replaceQueueWithPlaylist(playlistTracks: TrackReferenceToReadGraphQl[]) {
         if (playlistTracks.length === 0) {
-            throw new QueuePlaylistOperationError('This playlist does not have any tracks')
+            throw new QueuePlaylistOperationError(
+                'This playlist does not have any tracks',
+            )
         }
 
         tracksQueue.value = playlistTracks.map(track => createQueueItem(track))
