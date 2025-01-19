@@ -40,25 +40,25 @@ function deleteQueueItem(id: number) {
 
 <template>
     <DragAndDropList
-        class="tracks-list"
         :items="loadedQueueItems"
+        class="tracks-list-wrapper"
         @move-before="moveBeforeTrack"
     >
-        <RecycleScroller
-            :items="loadedQueueItems"
-            :item-size="100"
-            key-field="id"
-            page-mode
-            v-slot="{ item, index }"
-        >
-            <DraggableQueueTrack
-                :queue-item="item"
-                :track-number="index + 1"
-                :current-track="currentQueueItemId === item.id"
-                :all-queue-items="allQueueItems"
-                class="draggable-queue-track"
-                @delete="deleteQueueItem(item.id)"
-            />
+        <RecycleScroller :items="loadedQueueItems" :item-size="100" key-field="id" class="tracks-list">
+            <template #default="{ item, index }">
+                <DraggableQueueTrack
+                    :queue-item="item"
+                    :track-number="index + 1"
+                    :current-track="currentQueueItemId === item.id"
+                    :all-queue-items="allQueueItems"
+                    class="draggable-queue-track"
+                    @delete="deleteQueueItem(item.id)"
+                />
+            </template>
+
+            <template #after>
+                <slot name="list-end"></slot>
+            </template>
         </RecycleScroller>
 
         <template #dragged-item="{ draggedItem, draggedItemIndex }">
@@ -72,7 +72,12 @@ function deleteQueueItem(id: number) {
 </template>
 
 <style scoped>
+.tracks-list-wrapper {
+    /* TODO: replace calc with something more readable */
+    height: calc(100% - 56px - 12px);
+}
+
 .tracks-list {
-    min-height: 200px;
+    height: 100%;
 }
 </style>

@@ -98,14 +98,10 @@ async function loadMoreTracks() {
         <ResponsiveDrawer
             v-model:opened="opened"
             fixed-height="70%"
-            class="overflow-y-hidden"
+            class="d-flex flex-column h-100"
             draggable="false"
         >
-            <PaginatedContent
-                :items-loaded="loadedTracks.length"
-                :total-items="tracksQueue.length"
-                @load-more="loadMoreTracks"
-            >
+            <div class="h-100">
                 <VSheet
                     color="primary"
                     class="queue-action-buttons"
@@ -137,12 +133,21 @@ async function loadMoreTracks() {
                 </VSheet>
 
                 <DraggableQueueTracksList
-                    v-model:all-queue-tracks="tracksQueue"
                     :currentQueueItemId="currentQueueItemId"
                     :loaded-queue-items="loadedTracks"
                     v-model:all-queue-items="tracksQueue"
-                />
-            </PaginatedContent>
+                >
+                    <template #list-end>
+                        <VProgressCircular
+                            v-if="loadedTracks.length < tracksQueue.length"
+                            v-intersect="loadMoreTracks"
+                            indeterminate
+                            class="mt-3 mb-2"
+                            size="40"
+                        ></VProgressCircular>
+                    </template>
+                </DraggableQueueTracksList>
+            </div>
         </ResponsiveDrawer>
     </div>
 </template>
