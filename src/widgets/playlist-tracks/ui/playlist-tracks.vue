@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RecycleScroller } from 'vue-virtual-scroller'
-import { TRACKS_PORTION_SIZE, TrackItem } from '@/entities/tracks'
+
 import { includeLoadedTracksInPlaylistTracks } from '@/entities/playlists'
-import { ExcludeGraphQLError } from '@/shared/utils/graphql'
+import { TRACKS_PORTION_SIZE, TrackItem } from '@/entities/tracks'
+
 import type { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
+import { ExcludeGraphQLError } from '@/shared/utils/graphql'
 
 const props = defineProps<{
     playlist: ExcludeGraphQLError<GetPlaylistWithTracksQuery['playlist']>

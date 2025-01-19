@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
 import anime from 'animejs'
+import { storeToRefs } from 'pinia'
+
 import {
     LoopMode,
     TrackProgressBar,
     VolumeMenuButton,
     usePlayerStore,
 } from '@/features/player'
-import { shuffleQueue, useTracksQueueStore } from '@/entities/tracks-queue'
+
 import { CurrentTrackThumbnail } from '@/entities/tracks'
+import { shuffleQueue, useTracksQueueStore } from '@/entities/tracks-queue'
+
 import { useNotificationsStore } from '@/shared/model/notifications'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'

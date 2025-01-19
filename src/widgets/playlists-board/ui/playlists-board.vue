@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useDisplay } from 'vuetify'
+
 import { PlayPlaylistButton } from '@/features/playlist-actions'
+
 import { PlaylistCard } from '@/entities/playlists'
+
 import { PlaylistsListItemFragment } from '@/shared/model/graphql-generated-types/graphql'
 
 withDefaults(

@@ -1,6 +1,8 @@
-import gql from 'graphql-tag'
 import { useLazyQuery } from '@vue/apollo-composable'
+import gql from 'graphql-tag'
+
 import { LOADED_TRACK_FRAGMENT } from '@/entities/tracks'
+
 import {
     GetTracksByReferenceQuery,
     GetTracksByReferenceQueryVariables,

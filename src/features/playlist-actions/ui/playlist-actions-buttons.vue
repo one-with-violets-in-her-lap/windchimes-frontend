@@ -1,19 +1,22 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+
+import { usePlaylistDeletionMutation } from '@/features/playlist-actions/api/playlist-deletion-mutation'
 import { usePlaylistUpdateMutation } from '@/features/playlist-actions/api/playlist-update-mutation'
 import { useTracksImportMutation } from '@/features/playlist-actions/api/tracks-import-mutation'
-import { usePlaylistDeletionMutation } from '@/features/playlist-actions/api/playlist-deletion-mutation'
 import PlayPlaylistButton from '@/features/playlist-actions/play-button/ui/play-playlist-button.vue'
+
+import { PlaylistFormData, PlaylistFormDialog } from '@/entities/playlists'
 import {
     TracksImportFormData,
     TracksImportFormDialog,
 } from '@/entities/tracks-import-form-dialog'
-import { useNotificationsStore } from '@/shared/model/notifications'
-import { ExcludeGraphQLError } from '@/shared/utils/graphql'
+
 import { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
-import { PlaylistFormData, PlaylistFormDialog } from '@/entities/playlists'
+import { useNotificationsStore } from '@/shared/model/notifications'
 import { DropdownMenu } from '@/shared/ui/dropdown-menu'
+import { ExcludeGraphQLError } from '@/shared/utils/graphql'
 
 const props = defineProps<{
     playlist: ExcludeGraphQLError<GetPlaylistWithTracksQuery['playlist']>

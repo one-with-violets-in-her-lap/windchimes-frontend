@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ApolloError } from '@apollo/client/core'
+
 import { GraphQlApiError } from '@/shared/model/graphql-generated-types/graphql'
-import ErrorAlert from '@/shared/ui/feedback/error-alert.vue'
 import { VuetifySkeleton } from '@/shared/model/vuetify-skeleton'
+import ErrorAlert from '@/shared/ui/feedback/error-alert.vue'
 
 defineProps<{
     loading: boolean

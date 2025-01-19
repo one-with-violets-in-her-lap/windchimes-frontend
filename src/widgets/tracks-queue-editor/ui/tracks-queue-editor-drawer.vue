@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
+import { computed, ref } from 'vue'
+
 import { useLazyTracksQuery } from '@/widgets/tracks-queue-editor/api/tracks-query'
 import { insertLoadedTracks } from '@/widgets/tracks-queue-editor/model/insert-loaded-tracks'
 import DraggableQueueTracksList from '@/widgets/tracks-queue-editor/ui/draggable-queue-tracks-list.vue'
+
+import { TRACKS_PORTION_SIZE } from '@/entities/tracks'
 import {
-    clearQueue,
     LoadedQueueItem,
+    clearQueue,
     shuffleQueue,
     useTracksQueueStore,
 } from '@/entities/tracks-queue'
-import { TRACKS_PORTION_SIZE } from '@/entities/tracks'
+
 import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'
 
 defineProps<{

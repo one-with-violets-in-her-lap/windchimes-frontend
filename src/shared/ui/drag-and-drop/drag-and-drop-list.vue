@@ -1,9 +1,10 @@
 <script setup lang="ts" generic="TItem extends { id: string | number }">
-import { computed, provide, ref } from 'vue'
 import { useEventListener, usePointer } from '@vueuse/core'
+import { computed, provide, ref } from 'vue'
+
 import {
-    dragAndDropContextProvideKey,
     ITEM_BASE_ID,
+    dragAndDropContextProvideKey,
 } from '@/shared/ui/drag-and-drop/drag-and-drop-context'
 
 const emit = defineEmits<{

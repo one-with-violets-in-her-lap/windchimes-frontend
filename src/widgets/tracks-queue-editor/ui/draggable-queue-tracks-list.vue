@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { RecycleScroller } from 'vue-virtual-scroller'
+
 import DraggableQueueTrack from '@/widgets/tracks-queue-editor/ui/draggable-queue-track.vue'
+
 import { TrackItem } from '@/entities/tracks'
-import { moveQueueTracks, QueueTrackNotFoundError } from '@/entities/tracks-queue'
+import { QueueTrackNotFoundError, moveQueueTracks } from '@/entities/tracks-queue'
 import { LoadedQueueItem, QueueItem } from '@/entities/tracks-queue/model/queue-item'
-import { DragAndDropList } from '@/shared/ui/drag-and-drop'
+
 import { DragAndDropError } from '@/shared/model/errors'
+import { DragAndDropList } from '@/shared/ui/drag-and-drop'
 
 defineProps<{
     /**

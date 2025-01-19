@@ -1,7 +1,7 @@
 // useless module
 // TODO: move everything to tracks queue store's actions (tracks-queue-store.ts)
-
 import { QueueItem } from '@/entities/tracks-queue/model/queue-item'
+
 import { shuffle } from '@/shared/utils/arrays'
 
 export class QueueTrackNotFoundError extends Error {

@@ -1,11 +1,13 @@
-import gql from 'graphql-tag'
 import { useLazyQuery, useQuery } from '@vue/apollo-composable'
+import gql from 'graphql-tag'
+
 import { LOADED_TRACK_FRAGMENT } from '@/entities/tracks'
+
+import { ERROR_FRAGMENT } from '@/shared/api/error-fragment'
 import {
     GetPlaylistWithTracksQuery,
     GetPlaylistWithTracksQueryVariables,
 } from '@/shared/model/graphql-generated-types/graphql'
-import { ERROR_FRAGMENT } from '@/shared/api/error-fragment'
 
 const playlistWithTracksQuery = gql`
     ${LOADED_TRACK_FRAGMENT}

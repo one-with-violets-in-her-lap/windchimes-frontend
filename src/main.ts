@@ -1,23 +1,19 @@
-import { createApp } from 'vue'
-
-import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
-
 import '@/assets/styles/main.css'
-
+import '@mdi/font/css/materialdesignicons.css'
+import { DefaultApolloClient } from '@vue/apollo-composable'
+import { createPinia } from 'pinia'
+import { createApp } from 'vue'
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
+import { createVuetify } from 'vuetify'
 // Vuetify
 import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
-import '@mdi/font/css/materialdesignicons.css'
-import { vuetifyConfig } from '@/app/config/vuetify'
 
-import { createPinia } from 'pinia'
-import { DefaultApolloClient } from '@vue/apollo-composable'
-
-import App from '@/app/ui/App.vue'
-import router from '@/app/config/router'
-import auth0 from '@/app/config/auth0'
 import apolloClient from '@/app/config/apollo-client'
+import auth0 from '@/app/config/auth0'
+import router from '@/app/config/router'
+import { vuetifyConfig } from '@/app/config/vuetify'
 import { useFatalErrorStore } from '@/app/model/fatal-error-store'
+import App from '@/app/ui/App.vue'
 
 const app = createApp(App)
 

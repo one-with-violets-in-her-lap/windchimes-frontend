@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import SiriWave from 'siriwave'
 import { onMounted, ref, watch } from 'vue'
 import { useTheme } from 'vuetify'
-import SiriWave from 'siriwave'
 
 const props = defineProps<{
     audio?: HTMLAudioElement

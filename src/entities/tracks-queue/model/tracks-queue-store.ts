@@ -1,12 +1,15 @@
-import { computed, ref } from 'vue'
-import { defineStore, storeToRefs } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable'
+import { defineStore, storeToRefs } from 'pinia'
+import { computed, ref } from 'vue'
+
 import {
     LoopMode,
     usePlayerStore, // for jsdoc
 } from '@/features/player'
+
+import { queryLoadedTrack, queryTrackAudioFile } from '@/entities/tracks'
 import { LoadedQueueItem, QueueItem } from '@/entities/tracks-queue/model/queue-item'
-import { queryTrackAudioFile, queryLoadedTrack } from '@/entities/tracks'
+
 import {
     LoadedTrackFragment,
     TrackReferenceToReadGraphQl,

@@ -1,5 +1,6 @@
 import { createAuth0 } from '@auth0/auth0-vue'
 import { Capacitor } from '@capacitor/core'
+
 import { auth0AuthCallbackUri } from '@/shared/config/auth0-redirect-uri'
 
 export default createAuth0(

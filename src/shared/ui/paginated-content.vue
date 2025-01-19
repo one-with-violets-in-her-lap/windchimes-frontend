@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
+import { ref } from 'vue'
 
 withDefaults(
     defineProps<{

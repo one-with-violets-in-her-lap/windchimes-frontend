@@ -1,5 +1,6 @@
-import gql from 'graphql-tag'
 import { type ApolloClient } from '@apollo/client/core'
+import gql from 'graphql-tag'
+
 import { ERROR_FRAGMENT } from '@/shared/api/error-fragment'
 import type {
     GetTrackAudioFileUrlQuery,

@@ -1,5 +1,5 @@
-import { readonly, ref } from 'vue'
 import { defineStore } from 'pinia'
+import { readonly, ref } from 'vue'
 
 export type NotificationType = 'error' | 'success' | 'info'
 

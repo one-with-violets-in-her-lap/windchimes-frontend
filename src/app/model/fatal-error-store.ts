@@ -1,5 +1,6 @@
-import { readonly, ref } from 'vue'
 import { defineStore } from 'pinia'
+import { readonly, ref } from 'vue'
+
 import { FatalError } from '@/shared/model/errors'
 
 export const useFatalErrorStore = defineStore('authDialogOpened', () => {

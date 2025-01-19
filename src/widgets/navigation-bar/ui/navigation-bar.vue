@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
+
 import AccountMenu from '@/features/account-menu/ui/account-menu.vue'
 
 const router = useRouter()

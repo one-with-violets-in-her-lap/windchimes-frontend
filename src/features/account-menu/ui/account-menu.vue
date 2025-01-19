@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue'
+
 import { useCurrentAccountActions } from '@/features/account-menu/api/current-account-actions'
 import ThemeToggleButtons from '@/features/theme-toggle-buttons/ui/theme-toggle-buttons.vue'
+
 import { DropdownButton, DropdownMenu } from '@/shared/ui/dropdown-menu'
 
 const { user } = useAuth0()

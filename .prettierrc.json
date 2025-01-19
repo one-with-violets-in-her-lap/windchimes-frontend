@@ -3,5 +3,18 @@
     "tabWidth": 4,
     "semi": false,
     "arrowParens": "avoid",
-    "printWidth": 86
+    "printWidth": 86,
+    "importOrder": [
+        "^@/app/(.*)$",
+        "^@/pages/(.*)$",
+        "^@/widgets/(.*)$",
+        "^@/features/(.*)$",
+        "^@/entities/(.*)$",
+        "^@/shared/(.*)$",
+        "^[./]"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true,
+
+    "plugins": ["@trivago/prettier-plugin-sort-imports"]
 }

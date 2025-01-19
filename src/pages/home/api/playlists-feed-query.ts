@@ -1,8 +1,9 @@
-import gql from 'graphql-tag'
 import { useQuery } from '@vue/apollo-composable'
+import gql from 'graphql-tag'
+
 import {
-    GetPlaylistsFeedQueryVariables,
     GetPlaylistsFeedQuery,
+    GetPlaylistsFeedQueryVariables,
 } from '@/shared/model/graphql-generated-types/graphql'
 
 export const PLAYLISTS_LIST_ITEM_FRAGMENT = gql`

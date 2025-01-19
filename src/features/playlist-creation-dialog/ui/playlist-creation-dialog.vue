@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+
 import { usePlaylistCreationMutation } from '@/features/playlist-creation-dialog/api/playlist-creation-mutation'
+
 import { PlaylistFormData, PlaylistFormDialog } from '@/entities/playlists'
+
 import { useNotificationsStore } from '@/shared/model/notifications'
 
 const router = useRouter()

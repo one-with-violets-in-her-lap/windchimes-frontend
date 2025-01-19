@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
-import zod from 'zod'
-import { PlaylistFormData } from '@/entities/playlists/playlist-form-dialog/model/playlist-form-data'
 import { useForm } from 'vee-validate'
+import zod from 'zod'
+
+import { PlaylistFormData } from '@/entities/playlists/playlist-form-dialog/model/playlist-form-data'
 
 const props = withDefaults(
     defineProps<{

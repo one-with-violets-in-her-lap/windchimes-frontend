@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
+
 import { usePlayerStore } from '@/features/player'
 import { usePlaylistWithTracksLazyQuery } from '@/features/playlist-actions/api/playlist-with-tracks-query'
+
 import {
-    useTracksQueueStore,
     QueuePlaylistOperationError,
+    useTracksQueueStore,
 } from '@/entities/tracks-queue'
-import { DropdownMenu, DropdownButton } from '@/shared/ui/dropdown-menu'
-import { useNotificationsStore } from '@/shared/model/notifications'
+
 import { TrackReferenceToReadGraphQl } from '@/shared/model/graphql-generated-types/graphql'
+import { useNotificationsStore } from '@/shared/model/notifications'
+import { DropdownButton, DropdownMenu } from '@/shared/ui/dropdown-menu'
 
 const PLAYLIST_QUERY_ERROR_MESSAGE =
     "Couldn't request playlist tracks from the server"

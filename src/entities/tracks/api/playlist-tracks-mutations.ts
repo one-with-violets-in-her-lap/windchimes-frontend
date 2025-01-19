@@ -1,11 +1,12 @@
+import { useMutation } from '@vue/apollo-composable'
+import gql from 'graphql-tag'
+
 import {
     AddTrackToPlaylistMutation,
     AddTrackToPlaylistMutationVariables,
     DeleteTrackFromPlaylistsMutation,
     DeleteTrackFromPlaylistsMutationVariables,
 } from '@/shared/model/graphql-generated-types/graphql'
-import { useMutation } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
 
 export function useAddTrackToPlaylistMutation() {
     const mutation = gql`

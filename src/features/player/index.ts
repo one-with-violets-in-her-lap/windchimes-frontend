@@ -1,7 +1,7 @@
 import {
+    LoopMode,
     type QueueItemWithAudioFileUrl,
     usePlayerStore,
-    LoopMode,
 } from '@/features/player/model/player-store'
 import { usePlayerShortcuts } from '@/features/player/model/shortcuts'
 import { usePlayerVolume } from '@/features/player/model/volume'

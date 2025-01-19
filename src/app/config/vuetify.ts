@@ -1,4 +1,5 @@
 import { VuetifyOptions } from 'vuetify'
+
 import { teaGreenDarkTheme, teaGreenLightTheme } from '@/app/ui/vuetify-themes'
 
 export const vuetifyConfig: VuetifyOptions = {

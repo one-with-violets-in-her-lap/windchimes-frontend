@@ -48,6 +48,7 @@
         "@graphql-codegen/typescript": "^4.0.9",
         "@mdi/font": "^7.4.47",
         "@rushstack/eslint-patch": "^1.8.0",
+        "@trivago/prettier-plugin-sort-imports": "^5.2.1",
         "@tsconfig/node20": "^20.1.4",
         "@types/animejs": "^3.1.12",
         "@vitejs/plugin-vue": "^5.0.5",

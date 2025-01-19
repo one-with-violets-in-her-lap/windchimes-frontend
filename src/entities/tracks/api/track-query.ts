@@ -1,6 +1,8 @@
-import gql from 'graphql-tag'
 import { ApolloClient } from '@apollo/client/core'
+import gql from 'graphql-tag'
+
 import { LOADED_TRACK_FRAGMENT } from '@/entities/tracks'
+
 import {
     GetTrackByReferenceQuery,
     GetTrackByReferenceQueryVariables,

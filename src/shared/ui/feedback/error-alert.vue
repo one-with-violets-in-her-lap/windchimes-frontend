@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { ApolloError } from '@apollo/client/core'
-import { useNotificationsStore } from '@/shared/model/notifications'
+import { computed } from 'vue'
+
 import { GraphQlApiError } from '@/shared/model/graphql-generated-types/graphql'
+import { useNotificationsStore } from '@/shared/model/notifications'
 
 const props = defineProps<{
     error: ApolloError | GraphQlApiError

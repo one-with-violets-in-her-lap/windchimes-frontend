@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
 import anime from 'animejs'
-import { PlaylistTrack } from '@/entities/tracks/model/track'
+import { computed, ref, watch } from 'vue'
+
 import { useLazyPlaylistsBasicInfoQuery } from '@/entities/tracks/api/playlists-basic-info-query'
+import { PlaylistTrack } from '@/entities/tracks/model/track'
+
 import { useNotificationsStore } from '@/shared/model/notifications'
 import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
+
 import { useAddTrackToPlaylistMutation } from '../api/playlist-tracks-mutations'
 
 const props = defineProps<{

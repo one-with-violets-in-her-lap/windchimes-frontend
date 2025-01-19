@@ -1,5 +1,5 @@
-import { readonly, Ref, ref } from 'vue'
 import { MediaSession, MetadataOptions } from '@jofr/capacitor-media-session'
+import { Ref, readonly, ref } from 'vue'
 
 export interface AudioActionHandlers {
     playNext: () => void

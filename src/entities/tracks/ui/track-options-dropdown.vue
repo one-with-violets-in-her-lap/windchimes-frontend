@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useAuth0 } from '@auth0/auth0-vue'
+import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
+
+import { useTracksQueueStore } from '@/entities/tracks-queue'
 import { PlaylistTrack } from '@/entities/tracks/model/track'
 import AddToPlaylistSheet from '@/entities/tracks/ui/add-to-playlist-sheet.vue'
-import { useTracksQueueStore } from '@/entities/tracks-queue'
+import DeleteFromPlaylistSheet from '@/entities/tracks/ui/delete-from-playlist-sheet.vue'
+
+import { PlaylistBasicInfoFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { useNotificationsStore } from '@/shared/model/notifications'
 import { DropdownButton, DropdownMenu } from '@/shared/ui/dropdown-menu'
-import DeleteFromPlaylistSheet from '@/entities/tracks/ui/delete-from-playlist-sheet.vue'
-import { PlaylistBasicInfoFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { IgnoreTypename } from '@/shared/utils/graphql'
 
 const props = defineProps<{

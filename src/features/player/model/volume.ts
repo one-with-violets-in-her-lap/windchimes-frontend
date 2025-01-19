@@ -1,6 +1,9 @@
-import { onMounted, readonly, watch } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
-import { usePlayerStore } from '@/features/player' // for jsdoc
+import { onMounted, readonly, watch } from 'vue'
+
+import { usePlayerStore } from '@/features/player'
+
+// for jsdoc
 
 /**
  * creates reactive volume state for html audio element.

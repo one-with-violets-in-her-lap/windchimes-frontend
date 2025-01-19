@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { toTypedSchema } from '@vee-validate/zod'
+import { useForm } from 'vee-validate'
 import { watch } from 'vue'
 import zod from 'zod'
-import { useForm } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/zod'
-import { TracksImportFormData } from '@/entities/tracks-import-form-dialog/model/tracks-import-form-data'
+
 import { Platform, platformSelectItems } from '@/entities/platform/model/platform'
+import { TracksImportFormData } from '@/entities/tracks-import-form-dialog/model/tracks-import-form-data'
 
 defineProps<{
     loading: boolean

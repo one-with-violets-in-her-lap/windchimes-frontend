@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue'
-import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
-import PlaylistTracks from '@/widgets/playlist-tracks/ui/playlist-tracks.vue'
 import { useRoute } from 'vue-router'
+
 import { useFatalErrorStore } from '@/app/model/fatal-error-store'
+
+import PlaylistTracks from '@/widgets/playlist-tracks/ui/playlist-tracks.vue'
+
 import {
     PlaylistActionsButtons,
     usePlaylistWithTracksQuery,
 } from '@/features/playlist-actions'
+
 import { NotFoundError } from '@/shared/model/errors'
 import ExpandableParagraph from '@/shared/ui/expandable-paragraph.vue'
+import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
 
 const playlistId = useRoute().params.id.toString()
 

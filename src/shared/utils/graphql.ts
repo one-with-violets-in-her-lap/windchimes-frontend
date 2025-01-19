@@ -4,6 +4,7 @@ import type {
     OperationVariables,
 } from '@apollo/client/core'
 import { useMutation } from '@vue/apollo-composable'
+
 import type { GraphQlApiError } from '@/shared/model/graphql-generated-types/graphql'
 import { useNotificationsStore } from '@/shared/model/notifications'
 

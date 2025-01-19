@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { HomePage } from '@/pages/home'
-import { PlaylistPage } from '@/pages/playlist'
+
 import AuthCallbackPage from '@/pages/auth-callback-page.vue'
+import { HomePage } from '@/pages/home'
 import NotFoundPage from '@/pages/not-found-page.vue'
+import { PlaylistPage } from '@/pages/playlist'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),

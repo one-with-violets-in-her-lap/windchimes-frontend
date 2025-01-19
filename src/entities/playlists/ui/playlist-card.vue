@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+
 import { PlaylistsListItemFragment } from '@/shared/model/graphql-generated-types/graphql'
 
 const props = defineProps<{

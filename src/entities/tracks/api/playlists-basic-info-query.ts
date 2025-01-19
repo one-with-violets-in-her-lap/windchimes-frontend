@@ -1,5 +1,6 @@
-import gql from 'graphql-tag'
 import { useLazyQuery } from '@vue/apollo-composable'
+import gql from 'graphql-tag'
+
 import {
     GetPlaylistsBasicInfoQuery,
     GetPlaylistsBasicInfoQueryVariables,

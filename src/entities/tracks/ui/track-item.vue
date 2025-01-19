@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useApolloClient } from '@vue/apollo-composable'
+import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
+
 import { usePlayerStore } from '@/features/player'
+
 import { LoadedQueueItem, useTracksQueueStore } from '@/entities/tracks-queue'
 import { queryTrackAudioFile } from '@/entities/tracks/api/audio-file-query'
 import { type PlaylistTrack } from '@/entities/tracks/model/track'
 import TrackOptionsDropdown from '@/entities/tracks/ui/track-options-dropdown.vue'
-import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
+
 import {
     LoadedTrackFragment,
     PlaylistBasicInfoFragment,
     TrackReferenceToReadGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
+import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import { IgnoreTypename } from '@/shared/utils/graphql'
 
 class AudioFileObtainingError extends Error {}
