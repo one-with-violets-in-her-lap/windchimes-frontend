@@ -25,7 +25,7 @@ const link = computed(() => ({ name: 'playlist', params: { id: props.playlist.id
                 v-bind="{ ...hoverTargetProps, ...$attrs }"
                 variant="flat"
                 max-width="320px"
-                class="playlist-card"
+                class="playlist-card d-flex flex-column"
             >
                 <RouterLink :to="link" class="text-surface-2">
                     <VImg
@@ -53,14 +53,27 @@ const link = computed(() => ({ name: 'playlist', params: { id: props.playlist.id
                 </RouterLink>
 
                 <VCardItem class="pa-4 pb-0">
-                    <VCardTitle class="mb-2">
+                    <VCardTitle class="mb-2" >
                         <h3 class="text-h6 text-truncate">
+                            <VIcon
+                                v-if="playlist.publiclyAvailable"
+                                v-tooltip="{
+                                    text: 'Publicly available',
+                                    openOnClick: true
+                                }"
+                                size="22px"
+                                color="surface-4"
+                                icon="mdi-account-multiple"
+                                class="mr-1"
+                            />
+
                             {{ playlist.name }}
                         </h3>
                     </VCardTitle>
 
-                    <VCardSubtitle opacity="0.4">
+                    <VCardSubtitle opacity="0.4" class="mb-1">
                         {{ playlist.trackCount }} tracks ·
+
                         <time
                             :datetime="playlist.createdAt"
                             :title="new Date(playlist.createdAt).toLocaleString()"
@@ -68,9 +81,15 @@ const link = computed(() => ({ name: 'playlist', params: { id: props.playlist.id
                             {{ formattedCreationDate }}
                         </time>
                     </VCardSubtitle>
+
+                    <!-- <VCardSubtitle opacity="0.4">
+                        <span v-if="playlist.publiclyAvailable">
+                            <VIcon icon="mdi-account-multiple" /> Public
+                        </span>
+                    </VCardSubtitle> -->
                 </VCardItem>
 
-                <VCardActions class="pa-4 gc-1">
+                <VCardActions class="pa-4 gc-1 mt-auto">
                     <slot name="append-playlist-action-buttons"></slot>
 
                     <VBtn

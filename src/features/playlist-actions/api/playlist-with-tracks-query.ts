@@ -29,6 +29,7 @@ const playlistWithTracksQuery = gql`
                 name
                 pictureUrl
                 description
+                publiclyAvailable
                 ownerUserId
 
                 trackReferences {

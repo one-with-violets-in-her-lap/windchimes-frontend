@@ -29,12 +29,14 @@ const { defineField, errors, meta, handleSubmit } = useForm({
         zod.object({
             name: zod.string().min(3),
             description: zod.string().optional().nullable(),
+            publiclyAvailable: zod.boolean().default(false),
         }),
     ),
     initialValues: props.initialFormData,
 })
 const [name] = defineField('name')
 const [description] = defineField('description')
+const [publiclyAvailable] = defineField('publiclyAvailable')
 
 const handleFormSubmit = handleSubmit(values => emit('submit', values))
 </script>
@@ -64,6 +66,15 @@ const handleFormSubmit = handleSubmit(values => emit('submit', values))
                         placeholder="Playlist 1"
                         :error-messages="errors.description"
                         variant="outlined"
+                    />
+
+                    <VSwitch
+                        v-model="publiclyAvailable"
+                        flat
+                        base-color="surface-3"
+                        color="primary"
+                        label="Public"
+                        class="elevation-0"
                     />
 
                     <div class="d-flex ga-3 items-center flex-wrap">

@@ -89,18 +89,18 @@ function loadMoreTracks(ids: string[]) {
                 class="mb-4"
             />
 
-            <h1 class="text-h5 font-weight-bold mb-1">
+            <h1 class="text-h5 font-weight-bold mb-3">
                 {{ result.playlist.name }}
             </h1>
 
-            <div class="text-surface-4 mb-5">
-                <VIcon icon="mdi-calendar mr-1" />
-
+            <div class="text-surface-4 mb-5 d-flex ga-3 flex-wrap">
                 <time
-                    class="mr-3"
+                    class="flex-shrink-0"
                     :datetime="result.playlist.createdAt"
                     :title="new Date(result.playlist.createdAt).toLocaleString()"
                 >
+                    <VIcon icon="mdi-calendar mr-1" />
+
                     {{
                         new Date(result.playlist.createdAt).toLocaleDateString(
                             undefined,
@@ -109,9 +109,17 @@ function loadMoreTracks(ids: string[]) {
                     }}
                 </time>
 
-                <VIcon icon="mdi-playlist-music" />
+                <span class="flex-shrink-0">
+                    <VIcon icon="mdi-playlist-music" />
 
-                {{ result.playlist.trackReferences.length }} tracks
+                    {{ result.playlist.trackReferences.length }} tracks
+                </span>
+
+                <span v-if="result.playlist.publiclyAvailable" class="flex-shrink-0">
+                    <VIcon icon="mdi-account-multiple" />
+
+                    Public
+                </span>
             </div>
 
             <ExpandableParagraph
