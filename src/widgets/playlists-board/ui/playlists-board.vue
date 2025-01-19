@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { User, useAuth0 } from '@auth0/auth0-vue'
 import { computed } from 'vue'
 import { useDisplay } from 'vuetify'
 
@@ -8,12 +9,15 @@ import { PlaylistCard } from '@/entities/playlists'
 
 import { PlaylistsListItemFragment } from '@/shared/model/graphql-generated-types/graphql'
 
-withDefaults(
+const props = withDefaults(
     defineProps<{
         playlists?: PlaylistsListItemFragment[]
         noPlaylistsMessage?: string
     }>(),
-    { noPlaylistsMessage: 'No playlists were found', playlists: undefined },
+    {
+        noPlaylistsMessage: 'No playlists were found',
+        playlists: undefined,
+    },
 )
 
 const { smAndUp, mdAndUp, lgAndUp } = useDisplay()
@@ -33,6 +37,11 @@ const columnsCount = computed(() => {
 
     return 12
 })
+
+const { user } = useAuth0()
+function checkIfUserOwnsPlaylist(playlist: PlaylistsListItemFragment) {
+    return user.value && user.value.sub === playlist.ownerUserId
+}
 </script>
 
 <template>
@@ -43,7 +52,13 @@ const columnsCount = computed(() => {
                 :key="playlist.id"
                 :cols="columnsCount"
             >
-                <PlaylistCard :playlist="playlist" class="h-100">
+                <PlaylistCard
+                    :playlist="playlist"
+                    :hide-publicly-available-playlist-note="
+                        !checkIfUserOwnsPlaylist(playlist)
+                    "
+                    class="h-100"
+                >
                     <template #append-playlist-action-buttons>
                         <PlayPlaylistButton :playlist-id="playlist.id" />
                     </template>

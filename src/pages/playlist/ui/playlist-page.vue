@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useFatalErrorStore } from '@/app/model/fatal-error-store'
@@ -17,8 +18,6 @@ import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
 
 const playlistId = useRoute().params.id.toString()
 
-const { user } = useAuth0()
-
 const { handleError } = useFatalErrorStore()
 
 const { loading, error, result, restart, fetchMore, onResult, refetch } =
@@ -32,6 +31,17 @@ onResult(() => {
         handleError(new NotFoundError('Playlist not found'))
     }
 })
+const playlist = computed(() =>
+    result.value?.playlist?.__typename === 'PlaylistWithLoadedTracksGraphQL'
+        ? result.value.playlist
+        : undefined,
+)
+
+const { user } = useAuth0()
+const userOwnsPlaylist = computed(
+    () =>
+        playlist.value && user.value && playlist.value.ownerUserId === user.value.sub,
+)
 
 function loadMoreTracks(ids: string[]) {
     fetchMore({
@@ -115,7 +125,7 @@ function loadMoreTracks(ids: string[]) {
                     {{ result.playlist.trackReferences.length }} tracks
                 </span>
 
-                <span v-if="result.playlist.publiclyAvailable" class="flex-shrink-0">
+                <span v-if="result.playlist.publiclyAvailable && userOwnsPlaylist" class="flex-shrink-0">
                     <VIcon icon="mdi-account-multiple" />
 
                     Public

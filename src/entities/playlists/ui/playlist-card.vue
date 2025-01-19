@@ -5,6 +5,7 @@ import { PlaylistsListItemFragment } from '@/shared/model/graphql-generated-type
 
 const props = defineProps<{
     playlist: PlaylistsListItemFragment
+    hidePubliclyAvailablePlaylistNote?: boolean
 }>()
 
 const formattedCreationDate = computed(() =>
@@ -56,7 +57,7 @@ const link = computed(() => ({ name: 'playlist', params: { id: props.playlist.id
                     <VCardTitle class="mb-2" >
                         <h3 class="text-h6 text-truncate">
                             <VIcon
-                                v-if="playlist.publiclyAvailable"
+                                v-if="playlist.publiclyAvailable && !hidePubliclyAvailablePlaylistNote"
                                 v-tooltip="{
                                     text: 'Publicly available',
                                     openOnClick: true

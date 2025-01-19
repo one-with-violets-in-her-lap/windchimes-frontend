@@ -13,6 +13,7 @@ export const PLAYLISTS_LIST_ITEM_FRAGMENT = gql`
         name
         pictureUrl
         publiclyAvailable
+        ownerUserId
         trackCount
     }
 `
