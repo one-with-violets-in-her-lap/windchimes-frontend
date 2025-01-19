@@ -22,17 +22,17 @@ const dragged = ref(false)
 
 <template>
     <DragAndDropItem
-        v-model:dragged="dragged"
         :id="`${queueItem.id}`"
         :key="queueItem.id"
+        v-model:dragged="dragged"
         @move-before="
             (itemToMoveId: string, beforeItemId: string) =>
                 emit('move-before', itemToMoveId, beforeItemId)
         "
     >
         <SwipableElement
-            @swipe="emit('delete')"
             :swipe-enabled="!dragged && !currentTrack"
+            @swipe="emit('delete')"
         >
             <TrackItem
                 :track-number="trackNumber"

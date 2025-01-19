@@ -37,7 +37,7 @@ const { requestLogIn, requestLogout } = useCurrentAccountActions()
                     Log in
                 </VBtn>
 
-                <button v-bind="props" title="Settings" v-tooltip="'Settings'">
+                <button v-tooltip="'Settings'" v-bind="props" title="Settings">
                     <VIcon icon="mdi-dots-horizontal-circle-outline" />
                 </button>
             </div>

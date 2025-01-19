@@ -10,7 +10,7 @@ withDefaults(
         playlists?: PlaylistsListItemFragment[]
         noPlaylistsMessage?: string
     }>(),
-    { noPlaylistsMessage: 'No playlists were found' },
+    { noPlaylistsMessage: 'No playlists were found', playlists: undefined },
 )
 
 const { smAndUp, mdAndUp, lgAndUp } = useDisplay()

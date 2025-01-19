@@ -66,8 +66,8 @@ provide(dragAndDropContextProvideKey, {
 
 <template>
     <div
-        class="drag-and-drop-list position-relative"
         ref="element"
+        class="drag-and-drop-list position-relative"
         draggable="false"
         @pointermove="event => handleDragOver(event.clientX, event.clientY)"
     >
@@ -81,8 +81,8 @@ provide(dragAndDropContextProvideKey, {
             >
                 <slot
                     name="dragged-item"
-                    :draggedItem="items[draggedItemIndex]"
-                    :draggedItemIndex="draggedItemIndex"
+                    :dragged-item="items[draggedItemIndex]"
+                    :dragged-item-index="draggedItemIndex"
                 ></slot>
             </div>
         </Teleport>

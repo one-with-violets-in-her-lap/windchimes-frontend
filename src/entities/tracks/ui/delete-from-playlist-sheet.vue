@@ -119,9 +119,9 @@ async function deleteFromSelectedPlaylists() {
                             >
                                 <VCheckbox
                                     v-if="currentPlaylist"
+                                    :key="currentPlaylist.id"
                                     v-model="selectedPlaylistsIds"
                                     :value="currentPlaylist.id"
-                                    :key="currentPlaylist.id"
                                     :label="currentPlaylist.name"
                                     hide-details
                                     density="comfortable"
@@ -132,9 +132,9 @@ async function deleteFromSelectedPlaylists() {
 
                                 <VCheckbox
                                     v-for="playlist in otherPlaylistsWithoutCurrentPlaylist"
+                                    :key="playlist.id"
                                     v-model="selectedPlaylistsIds"
                                     :value="playlist.id"
-                                    :key="playlist.id"
                                     :label="playlist.name"
                                     hide-details
                                     density="comfortable"

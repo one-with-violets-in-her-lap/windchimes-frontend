@@ -86,8 +86,8 @@ const handleFormSubmit = handleSubmit(values => {
                         />
 
                         <VSelect
-                            variant="outlined"
                             v-model="platform"
+                            variant="outlined"
                             placeholder="Platform"
                             label="Platform"
                             :items="platformSelectItems"
@@ -95,10 +95,10 @@ const handleFormSubmit = handleSubmit(values => {
                         />
 
                         <VSwitch
+                            v-model="replaceExistingTracks"
                             color="primary"
                             label="Replace existing tracks"
                             flat
-                            v-model="replaceExistingTracks"
                         />
 
                         <div class="d-flex ga-3 items-center flex-wrap">

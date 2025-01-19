@@ -19,9 +19,9 @@ const link = computed(() => ({ name: 'playlist', params: { id: props.playlist.id
 
 <template>
     <VHover>
-        <template #default="{ props }">
+        <template #default="{ props: hoverTargetProps }">
             <VCard
-                v-bind="{ ...props, ...$attrs }"
+                v-bind="{ ...hoverTargetProps, ...$attrs }"
                 variant="flat"
                 max-width="320px"
                 class="playlist-card"

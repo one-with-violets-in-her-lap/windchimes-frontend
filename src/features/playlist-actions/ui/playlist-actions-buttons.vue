@@ -109,7 +109,7 @@ async function updatePlaylist(formData: PlaylistFormData) {
         />
 
         <DropdownMenu v-if="userIsOwner">
-            <template v-slot:activator="{ props: menuActivatorProps }">
+            <template #activator="{ props: menuActivatorProps }">
                 <VBtn
                     icon="mdi-dots-horizontal"
                     variant="text"
@@ -159,11 +159,11 @@ async function updatePlaylist(formData: PlaylistFormData) {
 
             <VListItem>
                 <PlaylistFormDialog
+                    v-model:visible="updateFormDialogVisible"
                     title="Edit the playlist"
                     submit-button-text="Update"
                     :loading="updateMutation.loading.value"
                     :initial-form-data="playlist"
-                    v-model:visible="updateFormDialogVisible"
                     @submit="updatePlaylist"
                 >
                     <template #activator="{ activatorProps }">

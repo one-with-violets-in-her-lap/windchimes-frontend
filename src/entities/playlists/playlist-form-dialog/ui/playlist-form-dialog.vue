@@ -11,14 +11,14 @@ const props = withDefaults(
         title: string
         submitButtonText: string
     }>(),
-    { submitButtonText: 'Submit' },
+    { submitButtonText: 'Submit', initialFormData: undefined },
 )
 
 const emit = defineEmits<{
     (event: 'submit', formData: PlaylistFormData): void
 }>()
 
-const dialogVisible = defineModel('visible', {
+const dialogVisible = defineModel<boolean>('visible', {
     required: false,
     default: false,
 })

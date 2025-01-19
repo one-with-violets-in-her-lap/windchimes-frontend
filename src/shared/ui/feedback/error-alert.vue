@@ -62,9 +62,9 @@ async function copyMoreInfo(moreInfo: string) {
             </VBtn>
 
             <VMenu v-if="errorData.moreInfo" max-width="500px">
-                <template #activator="{ props }">
+                <template #activator="{ props: menuActivatorProps }">
                     <VBtn
-                        v-bind="props"
+                        v-bind="menuActivatorProps"
                         variant="outlined"
                         prepend-icon="mdi-dots-horizontal"
                         class="w-sm-auto w-100"

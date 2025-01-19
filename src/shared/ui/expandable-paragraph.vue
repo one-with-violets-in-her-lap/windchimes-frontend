@@ -30,8 +30,8 @@ const overflowing = computed(() => {
 <template>
     <div>
         <p
-            :class="{ 'paragraph-shrinked': shrinked }"
             ref="expandableParagraphElement"
+            :class="{ 'paragraph-shrinked': shrinked }"
         >
             <slot></slot>
         </p>

@@ -100,8 +100,8 @@ function handleTouchEnd() {
 
 <template>
     <div
-        class="position-relative"
         ref="swipableElement"
+        class="position-relative"
         @touchmove="handleTouchMove"
         @touchend="handleTouchEnd"
         @touchstart="handleTouchStart"

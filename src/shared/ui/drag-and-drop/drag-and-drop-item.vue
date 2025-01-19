@@ -20,11 +20,11 @@ const draggedOver = computed(() => draggedOverItemId.value === props.id)
 
 <template>
     <VSheet
+        :id="`${ITEM_BASE_ID}${id}`"
         :class="{
             'drag-and-drop-item-dragged': dragged,
             'bg-surface-2': draggedOver,
         }"
-        :id="`${ITEM_BASE_ID}${id}`"
         class="drag-and-drop-item bg-transparent"
     >
         <slot></slot>

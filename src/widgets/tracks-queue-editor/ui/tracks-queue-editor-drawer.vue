@@ -82,12 +82,12 @@ async function loadMoreTracks() {
     <div>
         <Transition name="scale-up">
             <VBtn
+                v-show="openButtonVisible && !opened"
                 icon="mdi-playlist-play"
                 elevation="2"
                 border
                 size="46px"
                 class="open-tracks-queue-button"
-                v-show="openButtonVisible && !opened"
                 title="Tracks queue"
                 @click.stop="opened = true"
             />
@@ -131,9 +131,9 @@ async function loadMoreTracks() {
                 </VSheet>
 
                 <DraggableQueueTracksList
-                    :currentQueueItemId="currentQueueItemId"
-                    :loaded-queue-items="loadedTracks"
                     v-model:all-queue-items="tracksQueue"
+                    :current-queue-item-id="currentQueueItemId"
+                    :loaded-queue-items="loadedTracks"
                 >
                     <template #list-end>
                         <VProgressCircular

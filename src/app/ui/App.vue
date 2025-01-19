@@ -30,7 +30,7 @@ App.addListener('appUrlOpen', async event => {
 
 <template>
     <VApp>
-        <div class="root-container" v-if="!isLoading">
+        <div v-if="!isLoading" class="root-container">
             <NavigationBar />
 
             <main class="main-content-container">

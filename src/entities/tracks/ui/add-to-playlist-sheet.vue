@@ -111,9 +111,9 @@ async function addToSelectedPlaylists() {
                             >
                                 <VCheckbox
                                     v-for="playlist in playlists"
+                                    :key="playlist.id"
                                     v-model="selectedPlaylistsIds"
                                     :value="playlist.id"
-                                    :key="playlist.id"
                                     :label="playlist.name"
                                     hide-details
                                     density="comfortable"
