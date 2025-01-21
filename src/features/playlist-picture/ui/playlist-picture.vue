@@ -24,6 +24,17 @@ const { showNotification } = useNotificationsStore()
 
 const hoverAvailable = useHoverAvailable()
 
+// Unix timestamp to append as a query param to picture url to refresh the cache
+const pictureCacheRefreshTimestamp = ref(new Date().getTime())
+function refreshPictureCache() {
+    pictureCacheRefreshTimestamp.value = new Date().getTime()
+}
+const pictureUrl = computed(() =>
+    props.playlist.pictureUrl
+        ? `${props.playlist.pictureUrl}?cache_refresh_timestamp=${pictureCacheRefreshTimestamp.value}`
+        : undefined,
+)
+
 const fileInput = ref<HTMLInputElement>()
 function showFileBrowser() {
     fileInput.value?.click()
@@ -81,7 +92,10 @@ async function handleNewPictureUpload() {
                 'error',
                 pictureUploadResult?.data?.updatePlaylistPicture.explanation,
             )
+            return
         }
+
+        refreshPictureCache()
     } catch (error) {
         showNotification('error', 'Something went wrong while uploading your picture')
     }
@@ -121,9 +135,9 @@ async function handlePictureDeletion() {
                 @click="handlePictureClick"
             >
                 <VImg
-                    v-if="playlist.pictureUrl"
-                    :key="playlist.pictureUrl"
-                    :src="playlist.pictureUrl"
+                    v-if="pictureUrl"
+                    :key="pictureUrl"
+                    :src="pictureUrl"
                     tile
                     height="100%"
                     width="100%"
@@ -175,10 +189,10 @@ async function handlePictureDeletion() {
             min-width="320px"
         >
             <VCard title="Playlist picture" variant="flat">
-                <VCardItem v-if="playlist.pictureUrl">
+                <VCardItem v-if="pictureUrl">
                     <div class="d-flex justify-center">
                         <VImg
-                            :src="playlist.pictureUrl"
+                            :src="pictureUrl"
                             :aspect-ratio="1 / 1"
                             max-width="560px"
                             min-width="300px"
