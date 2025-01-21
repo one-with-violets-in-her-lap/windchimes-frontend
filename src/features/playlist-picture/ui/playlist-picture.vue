@@ -57,6 +57,14 @@ function handlePictureClick() {
     }
 }
 
+/*
+    Pic must be clickable for file upload by owner and for picture full
+    view dialog opening by other users
+*/
+const playlistPictureClickable = computed(
+    () => props.currentUserOwnsThePlaylist || pictureUrl.value !== undefined,
+)
+
 async function handleNewPictureUpload() {
     playlistPictureActionsOpened.value = false
 
@@ -123,7 +131,8 @@ async function handlePictureDeletion() {
 <template>
     <div>
         <VHover v-slot="{ isHovering, props: hoverTargetProps }">
-            <button
+            <Component
+                :is="playlistPictureClickable ? 'button' : 'div'"
                 :disabled="loading"
                 v-bind="hoverTargetProps"
                 class="playlist-picture-container"
@@ -151,7 +160,11 @@ async function handlePictureDeletion() {
                 </VSheet>
 
                 <VOverlay
-                    :model-value="isHovering === true && hoverAvailable"
+                    :model-value="
+                        isHovering === true &&
+                        hoverAvailable &&
+                        playlistPictureClickable
+                    "
                     contained
                     opacity="0.2"
                     class="rounded-xl"
@@ -172,7 +185,7 @@ async function handlePictureDeletion() {
                 >
                     <VProgressCircular indeterminate color="white" size="large" />
                 </VOverlay>
-            </button>
+            </Component>
         </VHover>
 
         <VDialog
