@@ -9,8 +9,32 @@ import {
     GetPlaylistWithTracksQueryVariables,
 } from '@/shared/model/graphql-generated-types/graphql'
 
-const playlistWithTracksQuery = gql`
+const PLAYLIST_PAGE_DATA_WITH_TRACKS = gql`
     ${LOADED_TRACK_FRAGMENT}
+
+    fragment PlaylistPageDataWithTracks on PlaylistWithLoadedTracksGraphQL {
+        id
+        createdAt
+        name
+        pictureUrl
+        description
+        publiclyAvailable
+        ownerUserId
+
+        trackReferences {
+            id
+            platform
+            platformId
+        }
+
+        loadedTracks {
+            ...LoadedTrack
+        }
+    }
+`
+
+const playlistWithTracksQuery = gql`
+    ${PLAYLIST_PAGE_DATA_WITH_TRACKS}
     ${ERROR_FRAGMENT}
 
     query GetPlaylistWithTracks(
@@ -24,23 +48,7 @@ const playlistWithTracksQuery = gql`
             loadFirstTracks: $loadFirstTracks
         ) {
             ... on PlaylistWithLoadedTracksGraphQL {
-                id
-                createdAt
-                name
-                pictureUrl
-                description
-                publiclyAvailable
-                ownerUserId
-
-                trackReferences {
-                    id
-                    platform
-                    platformId
-                }
-
-                loadedTracks {
-                    ...LoadedTrack
-                }
+                ...PlaylistPageDataWithTracks
             }
 
             ... on GraphQLApiError {
