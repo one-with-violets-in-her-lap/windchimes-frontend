@@ -50,13 +50,9 @@ const loading = computed(
 
 const playlistPictureActionsOpened = ref(false)
 function handlePictureClick() {
-    if (!props.currentUserOwnsThePlaylist) {
-        return
-    }
-
     if (props.playlist.pictureUrl !== null) {
         playlistPictureActionsOpened.value = true
-    } else {
+    } else if (props.currentUserOwnsThePlaylist) {
         showFileBrowser()
     }
 }
@@ -127,8 +123,7 @@ async function handlePictureDeletion() {
 <template>
     <div>
         <VHover v-slot="{ isHovering, props: hoverTargetProps }">
-            <component
-                :is="currentUserOwnsThePlaylist ? 'button' : 'div'"
+            <button
                 :disabled="loading"
                 v-bind="hoverTargetProps"
                 class="playlist-picture-container"
@@ -156,18 +151,15 @@ async function handlePictureDeletion() {
                 </VSheet>
 
                 <VOverlay
-                    :model-value="
-                        isHovering === true &&
-                        currentUserOwnsThePlaylist &&
-                        hoverAvailable
-                    "
+                    :model-value="isHovering === true && hoverAvailable"
                     contained
                     opacity="0.2"
                     class="rounded-xl"
                     content-class="w-100 h-100 pa-3 d-flex flex-column align-center justify-end"
                 >
                     <VSheet class="px-2 py-1 rounded text-body-2" color="white">
-                        Click to view or change
+                        Click to view
+                        <span v-if="currentUserOwnsThePlaylist">or change</span>
                     </VSheet>
                 </VOverlay>
 
@@ -180,7 +172,7 @@ async function handlePictureDeletion() {
                 >
                     <VProgressCircular indeterminate color="white" size="large" />
                 </VOverlay>
-            </component>
+            </button>
         </VHover>
 
         <VDialog
@@ -197,11 +189,12 @@ async function handlePictureDeletion() {
                             max-width="560px"
                             min-width="300px"
                             cover
+                            class="rounded-lg"
                         />
                     </div>
                 </VCardItem>
 
-                <VCardActions class="pa-5 pt-0">
+                <VCardActions v-if="currentUserOwnsThePlaylist" class="pa-5 pt-0">
                     <VBtn color="primary" variant="flat" @click="showFileBrowser">
                         Upload new
                     </VBtn>
