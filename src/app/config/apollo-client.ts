@@ -1,12 +1,7 @@
-import {
-    ApolloClient,
-    ApolloLink,
-    InMemoryCache,
-    concat,
-    createHttpLink,
-} from '@apollo/client/core'
+import { ApolloClient, ApolloLink, InMemoryCache, concat } from '@apollo/client/core'
+import createUploadLink from 'apollo-upload-client/createUploadLink.mjs'
 
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
     uri: import.meta.env.VITE_GRAPHQL_API_URL,
 })
 
