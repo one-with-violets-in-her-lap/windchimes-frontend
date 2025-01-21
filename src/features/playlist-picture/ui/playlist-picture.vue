@@ -1,10 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ApolloError } from '@apollo/client'
+import { computed, ref } from 'vue'
 import { VHover } from 'vuetify/components'
 
-import { PlaylistPageDataWithTracksFragment } from '@/shared/model/graphql-generated-types/graphql'
+import {
+    GraphQlApiError,
+    PlaylistPageDataWithTracksFragment,
+} from '@/shared/model/graphql-generated-types/graphql'
 import { useNotificationsStore } from '@/shared/model/notifications'
 import { useHoverAvailable } from '@/shared/utils/responsiveness'
+
+import {
+    useDeletePlaylistPictureMutation,
+    useUpdatePlaylistPictureMutation,
+} from '../api/playlist-picture-mutations'
 
 const props = defineProps<{
     playlist: PlaylistPageDataWithTracksFragment
@@ -20,6 +29,14 @@ function showFileBrowser() {
     fileInput.value?.click()
 }
 
+const updatePlaylistPictureMutation = useUpdatePlaylistPictureMutation()
+const deletePlaylistPictureMutation = useDeletePlaylistPictureMutation()
+const loading = computed(
+    () =>
+        updatePlaylistPictureMutation.loading.value ||
+        deletePlaylistPictureMutation.loading.value,
+)
+
 const playlistPictureActionsOpened = ref(false)
 function handlePictureClick() {
     if (!props.currentUserOwnsThePlaylist) {
@@ -33,7 +50,9 @@ function handlePictureClick() {
     }
 }
 
-function handleNewPictureUpload() {
+async function handleNewPictureUpload() {
+    playlistPictureActionsOpened.value = false
+
     if (!fileInput.value) {
         return
     }
@@ -47,7 +66,47 @@ function handleNewPictureUpload() {
     }
 
     const file = fileInput.value.files[0]
-    showNotification('success', file.name)
+
+    try {
+        const pictureUploadResult = await updatePlaylistPictureMutation.mutate({
+            picture: file,
+            playlistId: props.playlist.id,
+        })
+
+        if (
+            pictureUploadResult?.data?.updatePlaylistPicture.__typename ===
+            'GraphQLApiError'
+        ) {
+            showNotification(
+                'error',
+                pictureUploadResult?.data?.updatePlaylistPicture.explanation,
+            )
+        }
+    } catch (error) {
+        showNotification('error', 'Something went wrong while uploading your picture')
+    }
+}
+
+async function handlePictureDeletion() {
+    playlistPictureActionsOpened.value = false
+
+    try {
+        const pictureDeletionResult = await deletePlaylistPictureMutation.mutate({
+            playlistId: props.playlist.id,
+        })
+
+        if (
+            pictureDeletionResult?.data?.deletePlaylistPicture?.__typename ===
+            'GraphQLApiError'
+        ) {
+            showNotification(
+                'error',
+                pictureDeletionResult?.data?.deletePlaylistPicture.explanation,
+            )
+        }
+    } catch (error) {
+        showNotification('error', 'Something went wrong while deleting the picture')
+    }
 }
 </script>
 
@@ -56,12 +115,14 @@ function handleNewPictureUpload() {
         <VHover v-slot="{ isHovering, props: hoverTargetProps }">
             <component
                 :is="currentUserOwnsThePlaylist ? 'button' : 'div'"
+                :disabled="loading"
                 v-bind="hoverTargetProps"
                 class="playlist-picture-container"
                 @click="handlePictureClick"
             >
                 <VImg
                     v-if="playlist.pictureUrl"
+                    :key="playlist.pictureUrl"
                     :src="playlist.pictureUrl"
                     tile
                     height="100%"
@@ -91,21 +152,49 @@ function handleNewPictureUpload() {
                     class="rounded-xl"
                     content-class="w-100 h-100 pa-3 d-flex flex-column align-center justify-end"
                 >
-                    <VSheet class="px-2 py-1 rounded" color="white">
-                        Click to change
+                    <VSheet class="px-2 py-1 rounded text-body-2" color="white">
+                        Click to view or change
                     </VSheet>
+                </VOverlay>
+
+                <VOverlay
+                    :model-value="loading"
+                    contained
+                    opacity="0.2"
+                    class="rounded-xl"
+                    content-class="w-100 h-100 pa-3 d-flex flex-column align-center justify-center"
+                >
+                    <VProgressCircular indeterminate color="white" size="large" />
                 </VOverlay>
             </component>
         </VHover>
 
-        <VDialog v-model="playlistPictureActionsOpened" max-width="700px">
+        <VDialog
+            v-model="playlistPictureActionsOpened"
+            max-width="700px"
+            min-width="320px"
+        >
             <VCard title="Playlist picture" variant="flat">
+                <VCardItem v-if="playlist.pictureUrl">
+                    <div class="d-flex justify-center">
+                        <VImg
+                            :src="playlist.pictureUrl"
+                            :aspect-ratio="1 / 1"
+                            max-width="560px"
+                            min-width="300px"
+                            cover
+                        />
+                    </div>
+                </VCardItem>
+
                 <VCardActions class="pa-5 pt-0">
                     <VBtn color="primary" variant="flat" @click="showFileBrowser">
                         Upload new
                     </VBtn>
 
-                    <VBtn color="primary"> Set to default </VBtn>
+                    <VBtn color="primary" @click="handlePictureDeletion">
+                        Set to default
+                    </VBtn>
                 </VCardActions>
             </VCard>
         </VDialog>
