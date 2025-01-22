@@ -11,6 +11,7 @@ import {
     PlaylistActionsButtons,
     usePlaylistWithTracksQuery,
 } from '@/features/playlist-actions'
+import { PlaylistPicture } from '@/features/playlist-picture'
 
 import { NotFoundError } from '@/shared/model/errors'
 import ExpandableParagraph from '@/shared/ui/expandable-paragraph.vue'
@@ -82,50 +83,41 @@ function loadMoreTracks(ids: string[]) {
         :error="error"
         @retry="restart"
     >
-        <div
-            v-if="
-                result?.playlist &&
-                result.playlist.__typename === 'PlaylistWithLoadedTracksGraphQL'
-            "
-        >
-            <VAvatar
-                v-if="result.playlist.pictureUrl"
-                :image="result.playlist.pictureUrl"
-                size="140px"
-                tile
-                rounded
-                variant="outlined"
-                color="surface-3"
-                class="mb-4"
+        <div v-if="playlist">
+            <PlaylistPicture
+                :playlist="playlist"
+                :current-user-owns-the-playlist="userOwnsPlaylist === true"
             />
 
             <h1 class="text-h5 font-weight-bold mb-3">
-                {{ result.playlist.name }}
+                {{ playlist.name }}
             </h1>
 
             <div class="text-surface-4 mb-5 d-flex ga-3 flex-wrap">
                 <time
                     class="flex-shrink-0"
-                    :datetime="result.playlist.createdAt"
-                    :title="new Date(result.playlist.createdAt).toLocaleString()"
+                    :datetime="playlist.createdAt"
+                    :title="new Date(playlist.createdAt).toLocaleString()"
                 >
                     <VIcon icon="mdi-calendar mr-1" />
 
                     {{
-                        new Date(result.playlist.createdAt).toLocaleDateString(
-                            undefined,
-                            { dateStyle: 'medium' },
-                        )
+                        new Date(playlist.createdAt).toLocaleDateString(undefined, {
+                            dateStyle: 'medium',
+                        })
                     }}
                 </time>
 
                 <span class="flex-shrink-0">
                     <VIcon icon="mdi-playlist-music" />
 
-                    {{ result.playlist.trackReferences.length }} tracks
+                    {{ playlist.trackReferences.length }} tracks
                 </span>
 
-                <span v-if="result.playlist.publiclyAvailable && userOwnsPlaylist" class="flex-shrink-0">
+                <span
+                    v-if="playlist.publiclyAvailable && userOwnsPlaylist"
+                    class="flex-shrink-0"
+                >
                     <VIcon icon="mdi-account-multiple" />
 
                     Public
@@ -133,23 +125,20 @@ function loadMoreTracks(ids: string[]) {
             </div>
 
             <ExpandableParagraph
-                v-if="result.playlist.description"
+                v-if="playlist.description"
                 class="playlist-description text-subtitle-1 mb-5"
             >
-                {{ result.playlist.description }}
+                {{ playlist.description }}
             </ExpandableParagraph>
 
             <PlaylistActionsButtons
-                :playlist="result.playlist"
-                :user-is-owner="result.playlist.ownerUserId === user?.sub"
+                :playlist="playlist"
+                :user-is-owner="playlist.ownerUserId === user?.sub"
                 @update="refetch()"
             />
 
             <Transition name="scale-up" appear>
-                <PlaylistTracks
-                    :playlist="result.playlist"
-                    @load-more="loadMoreTracks"
-                />
+                <PlaylistTracks :playlist="playlist" @load-more="loadMoreTracks" />
             </Transition>
         </div>
     </LoadingContent>
