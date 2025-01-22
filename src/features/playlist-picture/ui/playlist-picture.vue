@@ -169,6 +169,7 @@ async function handlePictureDeletion() {
                     opacity="0.2"
                     class="rounded-xl"
                     content-class="w-100 h-100 pa-3 d-flex flex-column align-center justify-end"
+                    style="z-index: 0"
                 >
                     <VSheet class="px-2 py-1 rounded text-body-2" color="white">
                         Click to view
@@ -182,6 +183,7 @@ async function handlePictureDeletion() {
                     opacity="0.2"
                     class="rounded-xl"
                     content-class="w-100 h-100 pa-3 d-flex flex-column align-center justify-center"
+                    style="z-index: 0"
                 >
                     <VProgressCircular indeterminate color="white" size="large" />
                 </VOverlay>
