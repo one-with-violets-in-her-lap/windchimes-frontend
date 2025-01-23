@@ -6,7 +6,12 @@ defineOptions({
 
 <template>
     <VListItem class="p-0">
-        <VBtn variant="text" class="text-capitalize" v-bind="$attrs">
+        <VBtn
+            variant="text"
+            class="text-capitalize justify-start"
+            width="100%"
+            v-bind="$attrs"
+        >
             <slot></slot>
         </VBtn>
     </VListItem>
