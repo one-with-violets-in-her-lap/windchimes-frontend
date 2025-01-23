@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { ApolloError } from '@apollo/client'
 import { computed, ref } from 'vue'
 import { VHover } from 'vuetify/components'
 
-import {
-    GraphQlApiError,
-    PlaylistPageDataWithTracksFragment,
-} from '@/shared/model/graphql-generated-types/graphql'
+import { PlaylistPageDataWithTracksFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { useNotificationsStore } from '@/shared/model/notifications'
 import { useHoverAvailable } from '@/shared/utils/responsiveness'
 
@@ -221,7 +217,7 @@ async function handlePictureDeletion() {
             </VCard>
         </VDialog>
 
-        <input type="file" ref="fileInput" hidden @input="handleNewPictureUpload" />
+        <input ref="fileInput" type="file" hidden @input="handleNewPictureUpload" />
     </div>
 </template>
 

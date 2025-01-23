@@ -54,13 +54,16 @@ const link = computed(() => ({ name: 'playlist', params: { id: props.playlist.id
                 </RouterLink>
 
                 <VCardItem class="pa-4 pb-0">
-                    <VCardTitle class="mb-2" >
+                    <VCardTitle class="mb-2">
                         <h3 class="text-h6 text-truncate">
                             <VIcon
-                                v-if="playlist.publiclyAvailable && !hidePubliclyAvailablePlaylistNote"
+                                v-if="
+                                    playlist.publiclyAvailable &&
+                                    !hidePubliclyAvailablePlaylistNote
+                                "
                                 v-tooltip="{
                                     text: 'Publicly available',
-                                    openOnClick: true
+                                    openOnClick: true,
                                 }"
                                 size="22px"
                                 color="surface-4"

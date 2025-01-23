@@ -53,7 +53,7 @@ async function addToQueue() {
 <template>
     <DropdownMenu close-on-content-click>
         <template #activator="{ props: menuActivatorProps }">
-            <slot name="activator" :menuActivatorProps> </slot>
+            <slot name="activator" :menu-activator-props> </slot>
         </template>
 
         <DropdownButton

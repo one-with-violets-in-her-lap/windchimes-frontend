@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { User, useAuth0 } from '@auth0/auth0-vue'
+import { useAuth0 } from '@auth0/auth0-vue'
 import { computed } from 'vue'
 import { useDisplay } from 'vuetify'
 
@@ -9,7 +9,7 @@ import { PlaylistCard } from '@/entities/playlists'
 
 import { PlaylistsListItemFragment } from '@/shared/model/graphql-generated-types/graphql'
 
-const props = withDefaults(
+withDefaults(
     defineProps<{
         playlists?: PlaylistsListItemFragment[]
         noPlaylistsMessage?: string

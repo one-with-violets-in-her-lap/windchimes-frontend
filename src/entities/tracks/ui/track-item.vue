@@ -231,18 +231,16 @@ async function handleTrackPlaying() {
                 </template>
 
                 <template #append>
-                    <TrackOptionsDropdown
-                        :track
-                        :current-playlist
-                        v-slot:activator="{ menuActivatorProps }"
-                    >
-                        <VBtn
-                            v-bind="menuActivatorProps"
-                            icon="mdi-dots-horizontal"
-                            variant="text"
-                            density="comfortable"
-                            @click.stop
-                        ></VBtn>
+                    <TrackOptionsDropdown :track :current-playlist>
+                        <template #activator="{ menuActivatorProps }">
+                            <VBtn
+                                v-bind="menuActivatorProps"
+                                icon="mdi-dots-horizontal"
+                                variant="text"
+                                density="comfortable"
+                                @click.stop
+                            ></VBtn>
+                        </template>
                     </TrackOptionsDropdown>
 
                     <slot name="append"></slot>

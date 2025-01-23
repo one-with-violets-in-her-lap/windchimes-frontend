@@ -150,16 +150,15 @@ function shuffleTracksQueue() {
                     {{ loopMode }}
                 </VTooltip>
 
-                <TrackOptionsDropdown
-                    :track="currentTrack"
-                    v-slot:activator="{ menuActivatorProps }"
-                >
-                    <VBtn
-                        variant="flat"
-                        color="background-contrast"
-                        icon="mdi-dots-horizontal"
-                        v-bind="menuActivatorProps"
-                    />
+                <TrackOptionsDropdown :track="currentTrack">
+                    <template #activator="{ menuActivatorProps }">
+                        <VBtn
+                            variant="flat"
+                            color="background-contrast"
+                            icon="mdi-dots-horizontal"
+                            v-bind="menuActivatorProps"
+                        />
+                    </template>
                 </TrackOptionsDropdown>
             </div>
         </div>
