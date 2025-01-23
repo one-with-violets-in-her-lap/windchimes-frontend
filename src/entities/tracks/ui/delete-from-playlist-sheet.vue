@@ -130,7 +130,11 @@ async function deleteFromSelectedPlaylists() {
                                     class="mb-3"
                                 />
 
-                                <VDivider thickness="2" class="my-5" />
+                                <VDivider
+                                    v-if="currentPlaylist"
+                                    thickness="2"
+                                    class="my-5"
+                                />
 
                                 <VCheckbox
                                     v-for="playlist in otherPlaylistsWithoutCurrentPlaylist"
