@@ -4,6 +4,7 @@ import { queryLoadedTrack } from '@/entities/tracks/api/track-query'
 import type { PlaylistTrack } from '@/entities/tracks/model/track'
 import CurrentTrackThumbnail from '@/entities/tracks/ui/current-track-thumbnail.vue'
 import TrackItem from '@/entities/tracks/ui/track-item.vue'
+import TrackOptionsDropdown from '@/entities/tracks/ui/track-options-dropdown.vue'
 import { TRACKS_PORTION_SIZE } from '@/entities/tracks/utils/tracks-portion-size'
 
 export {
@@ -14,4 +15,5 @@ export {
     PlaylistTrack,
     TRACKS_PORTION_SIZE,
     TrackItem,
+    TrackOptionsDropdown,
 }

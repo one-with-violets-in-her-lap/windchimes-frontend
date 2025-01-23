@@ -11,6 +11,7 @@ import {
 
 import { CurrentTrackThumbnail } from '@/entities/tracks'
 import { shuffleQueue, useTracksQueueStore } from '@/entities/tracks-queue'
+import TrackOptionsDropdown from '@/entities/tracks/ui/track-options-dropdown.vue'
 
 import { useNotificationsStore } from '@/shared/model/notifications'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
@@ -148,6 +149,18 @@ function shuffleTracksQueue() {
 
                     {{ loopMode }}
                 </VTooltip>
+
+                <TrackOptionsDropdown
+                    :track="currentTrack"
+                    v-slot:activator="{ menuActivatorProps }"
+                >
+                    <VBtn
+                        variant="flat"
+                        color="background-contrast"
+                        icon="mdi-dots-horizontal"
+                        v-bind="menuActivatorProps"
+                    />
+                </TrackOptionsDropdown>
             </div>
         </div>
     </ResponsiveDrawer>

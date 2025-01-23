@@ -53,13 +53,7 @@ async function addToQueue() {
 <template>
     <DropdownMenu close-on-content-click>
         <template #activator="{ props: menuActivatorProps }">
-            <VBtn
-                v-bind="menuActivatorProps"
-                icon="mdi-dots-horizontal"
-                variant="text"
-                density="comfortable"
-                @click.stop
-            ></VBtn>
+            <slot name="activator" :menuActivatorProps> </slot>
         </template>
 
         <DropdownButton
