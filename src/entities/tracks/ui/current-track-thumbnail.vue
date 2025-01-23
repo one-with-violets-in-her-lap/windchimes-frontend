@@ -15,10 +15,11 @@ defineProps<{
             rounded
             variant="outlined"
             color="surface-3"
+            size="100%"
             class="current-track-picture"
         >
             <VImg v-if="currentTrack?.pictureUrl" :src="currentTrack.pictureUrl" />
-            <VIcon v-else icon="mdi-music" size="100" />
+            <VIcon v-else icon="mdi-music" size="100px" />
         </VAvatar>
 
         <VOverlay
@@ -40,7 +41,6 @@ defineProps<{
 }
 
 .current-track-picture {
-    width: 100%;
     height: auto;
     aspect-ratio: 1/1;
 }
