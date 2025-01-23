@@ -62,6 +62,14 @@ async function addToQueue() {
             ></VBtn>
         </template>
 
+        <DropdownButton
+            prepend-icon="mdi-open-in-new"
+            :href="track.originalPageUrl"
+            target="_blank"
+        >
+            Open original
+        </DropdownButton>
+
         <DropdownButton prepend-icon="mdi-play-box-multiple" @click="playNext">
             Play next
         </DropdownButton>

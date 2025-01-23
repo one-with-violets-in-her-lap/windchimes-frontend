@@ -8,6 +8,7 @@ export const LOADED_TRACK_FRAGMENT = gql`
         name
         secondsDuration
         pictureUrl
+        originalPageUrl
         audioFileEndpointUrl
 
         owner {
