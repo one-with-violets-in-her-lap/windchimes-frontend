@@ -44,7 +44,7 @@ const allPlaylistTracks = computed(() =>
 </script>
 
 <template>
-    <VList v-if="playlist.trackReferences.length > 0" max-width="1200">
+    <VList v-if="playlist.trackReferences.length > 0" max-width="1200" class="pa-0">
         <RecycleScroller
             :items="availableTracks"
             :item-size="100"
