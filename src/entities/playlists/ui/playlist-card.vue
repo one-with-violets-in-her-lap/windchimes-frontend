@@ -27,7 +27,7 @@ const link = computed(() => ({ name: 'playlist', params: { id: props.playlist.id
                 variant="flat"
                 :color="isHovering ? 'surface-2' : 'surface'"
                 max-width="320px"
-                class="playlist-card d-flex flex-column"
+                class="playlist-card d-flex flex-column rounded-lg"
             >
                 <RouterLink :to="link" class="text-surface-2">
                     <VImg
