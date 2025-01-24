@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue'
 import { storeToRefs } from 'pinia'
+import { ref, watch } from 'vue'
 import { useDisplay } from 'vuetify'
 
 import { usePlaylistsFeedQuery } from '@/pages/home/api/playlists-feed-query'
@@ -16,8 +17,22 @@ import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
 const { user } = useAuth0()
 
 const { hideDiscoverSectionOnHomePage } = storeToRefs(usePreferencesStore())
+watch(hideDiscoverSectionOnHomePage, () => {
+    // Fetch public playlists data for discover section only if it's missing
+    if (result.value?.otherPublicPlaylists === undefined) {
+        refetch({
+            currentUserId: user.value?.sub,
+            authorized: user.value !== undefined,
+            skipOtherPublicPlaylists: hideDiscoverSectionOnHomePage.value,
+        })
+    }
+})
 
-const { loading, error, result, restart } = usePlaylistsFeedQuery(user.value?.sub)
+const { loading, error, result, restart, refetch } = usePlaylistsFeedQuery(
+    user.value?.sub,
+    hideDiscoverSectionOnHomePage.value,
+)
+
 const { mdAndUp } = useDisplay()
 </script>
 
@@ -69,7 +84,7 @@ const { mdAndUp } = useDisplay()
                     </h2>
 
                     <PlaylistsBoard
-                        v-if="result"
+                        v-if="result?.otherPublicPlaylists"
                         :playlists="result.otherPublicPlaylists"
                         :no-playlists-message="'There aren\'t any playlists to discover currently'"
                         class="mb-6"
