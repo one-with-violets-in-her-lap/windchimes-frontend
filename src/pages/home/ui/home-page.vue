@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue'
+import { storeToRefs } from 'pinia'
 import { useDisplay } from 'vuetify'
 
 import { usePlaylistsFeedQuery } from '@/pages/home/api/playlists-feed-query'
@@ -8,9 +9,13 @@ import { PlaylistsBoard } from '@/widgets/playlists-board'
 
 import PlaylistCreationDialog from '@/features/playlist-creation-dialog/ui/playlist-creation-dialog.vue'
 
+import { usePreferencesStore } from '@/entities/preferences'
+
 import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
 
 const { user } = useAuth0()
+
+const { hideDiscoverSectionOnHomePage } = storeToRefs(usePreferencesStore())
 
 const { loading, error, result, restart } = usePlaylistsFeedQuery(user.value?.sub)
 const { mdAndUp } = useDisplay()
@@ -45,12 +50,22 @@ const { mdAndUp } = useDisplay()
                     automatically
                 </p>
 
-                <section>
+                <section v-if="!hideDiscoverSectionOnHomePage">
                     <h2
                         class="text-h4 font-weight-bold mb-6 d-flex align-center gc-3"
                     >
-                        DISCOVER
+                        <VBtn
+                            v-tooltip="'Hide this section'"
+                            variant="flat"
+                            icon="mdi-close"
+                            density="compact"
+                            class="mr-2"
+                            @click="hideDiscoverSectionOnHomePage = true"
+                        >
+                        </VBtn>
+
                         <VIcon icon="mdi-headphones" size="32px" color="surface-3" />
+                        <span class="mr-2">DISCOVER</span>
                     </h2>
 
                     <PlaylistsBoard

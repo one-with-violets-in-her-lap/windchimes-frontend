@@ -4,7 +4,7 @@ import { Capacitor } from '@capacitor/core'
 
 import { auth0LogoutRedirectUri } from '@/shared/config/auth0-redirect-uri'
 
-export function useCurrentAccountActions() {
+export function useLoginAndLogout() {
     const { loginWithRedirect, logout } = useAuth0()
 
     async function requestLogIn() {

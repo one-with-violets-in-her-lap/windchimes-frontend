@@ -14,7 +14,7 @@ import {
     useTracksQueueStore,
 } from '@/entities/tracks-queue'
 
-import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'
+import Drawer from '@/shared/ui/drawer.vue'
 
 defineProps<{
     openButtonVisible: boolean
@@ -96,9 +96,11 @@ async function loadMoreTracks() {
             />
         </Transition>
 
-        <ResponsiveDrawer
+        <Drawer
             v-model:opened="opened"
             fixed-height="70%"
+            :width="500"
+            position-at-the-bottom-on-mobile
             class="d-flex flex-column h-100"
             draggable="false"
         >
@@ -149,7 +151,7 @@ async function loadMoreTracks() {
                     </template>
                 </DraggableQueueTracksList>
             </div>
-        </ResponsiveDrawer>
+        </Drawer>
     </div>
 </template>
 
