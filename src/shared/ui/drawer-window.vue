@@ -1,29 +1,44 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useDisplay } from 'vuetify'
 
 withDefaults(
     defineProps<{
+        /**
+         * Flag that determines if drawer must be positioned at the bottom on mobile
+         * screens. Overrides `position` prop
+         *
+         * Equals `true` by default
+         */
+        positionAtTheBottomOnMobile?: boolean
+
+        position?: 'left' | 'bottom' | 'right'
+
         fixedHeight?: string
     }>(),
-    { fixedHeight: undefined },
+    { fixedHeight: undefined, position: 'left' },
 )
 
 const opened = defineModel<boolean>('opened', { required: true })
 
 const { mobile } = useDisplay()
+const responsivePosition = computed(() => (mobile.value ? 'bottom' : 'left'))
 </script>
 
 <template>
     <div>
         <VNavigationDrawer
             v-model="opened"
-            width="500"
+            :width="500"
             temporary
             rounded
             class="responsive-drawer"
             touchless
-            :location="mobile ? 'bottom' : 'left'"
-            :class="{ 'side-drawer': !mobile, 'fixed-height': fixedHeight }"
+            :location="positionAtTheBottomOnMobile ? responsivePosition : position"
+            :class="{
+                'side-drawer': !mobile || !positionAtTheBottomOnMobile,
+                'fixed-height': fixedHeight,
+            }"
             v-bind="$attrs"
         >
             <slot></slot>

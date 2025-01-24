@@ -7,9 +7,10 @@ import { onErrorCaptured } from 'vue'
 
 import { useFatalErrorStore } from '@/app/model/fatal-error-store'
 
-import NavigationBar from '@/widgets/navigation-bar/ui/navigation-bar.vue'
 import NotificationsList from '@/widgets/notifications-list/ui/notifications-list.vue'
 import PlayerToolbar from '@/widgets/player-toolbar/ui/player-toolbar.vue'
+
+import AppBar from './app-bar.vue'
 
 const fatalErrorStore = useFatalErrorStore()
 const { handleError } = fatalErrorStore
@@ -32,7 +33,7 @@ App.addListener('appUrlOpen', async event => {
 <template>
     <VApp>
         <div v-if="!isLoading" class="root-container">
-            <NavigationBar />
+            <AppBar />
 
             <main class="main-content-container">
                 <RouterView v-if="!error" />

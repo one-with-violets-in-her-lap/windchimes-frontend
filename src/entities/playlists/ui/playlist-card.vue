@@ -21,12 +21,13 @@ const link = computed(() => ({ name: 'playlist', params: { id: props.playlist.id
 
 <template>
     <VHover>
-        <template #default="{ props: hoverTargetProps }">
+        <template #default="{ props: hoverTargetProps, isHovering }">
             <VCard
                 v-bind="{ ...hoverTargetProps, ...$attrs }"
                 variant="flat"
+                :color="isHovering ? 'surface-2' : 'surface'"
                 max-width="320px"
-                class="playlist-card d-flex flex-column"
+                class="playlist-card d-flex flex-column rounded-lg"
             >
                 <RouterLink :to="link" class="text-surface-2">
                     <VImg
@@ -55,24 +56,29 @@ const link = computed(() => ({ name: 'playlist', params: { id: props.playlist.id
 
                 <VCardItem class="pa-4 pb-0">
                     <VCardTitle class="mb-2">
-                        <h3 class="text-h6 text-truncate">
-                            <VIcon
-                                v-if="
-                                    playlist.publiclyAvailable &&
-                                    !hidePubliclyAvailablePlaylistNote
-                                "
-                                v-tooltip="{
-                                    text: 'Publicly available',
-                                    openOnClick: true,
-                                }"
-                                size="22px"
-                                color="surface-4"
-                                icon="mdi-account-multiple"
-                                class="mr-1"
-                            />
+                        <RouterLink
+                            :to="link"
+                            class="d-block text-decoration-none text-background-contrast"
+                        >
+                            <h3 class="text-h6 text-truncate">
+                                <VIcon
+                                    v-if="
+                                        playlist.publiclyAvailable &&
+                                        !hidePubliclyAvailablePlaylistNote
+                                    "
+                                    v-tooltip="{
+                                        text: 'Publicly available',
+                                        openOnClick: true,
+                                    }"
+                                    size="22px"
+                                    color="surface-4"
+                                    icon="mdi-account-multiple"
+                                    class="mr-1"
+                                />
 
-                            {{ playlist.name }}
-                        </h3>
+                                {{ playlist.name }}
+                            </h3>
+                        </RouterLink>
                     </VCardTitle>
 
                     <VCardSubtitle opacity="0.4" class="mb-1">

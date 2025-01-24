@@ -14,8 +14,8 @@ import { shuffleQueue, useTracksQueueStore } from '@/entities/tracks-queue'
 import TrackOptionsDropdown from '@/entities/tracks/ui/track-options-dropdown.vue'
 
 import { useNotificationsStore } from '@/shared/model/notifications'
+import DrawerWindow from '@/shared/ui/drawer-window.vue'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
-import ResponsiveDrawer from '@/shared/ui/responsive-drawer.vue'
 
 const opened = defineModel<boolean>('opened', { required: true })
 
@@ -60,7 +60,7 @@ function shuffleTracksQueue() {
 </script>
 
 <template>
-    <ResponsiveDrawer v-model:opened="opened">
+    <DrawerWindow v-model:opened="opened" position-at-the-bottom-on-mobile>
         <div v-if="currentTrack" class="drawer-content-wrapper">
             <div class="d-flex align-center gc-3 w-100 justify-center mb-2">
                 <VBtn
@@ -162,7 +162,7 @@ function shuffleTracksQueue() {
                 </TrackOptionsDropdown>
             </div>
         </div>
-    </ResponsiveDrawer>
+    </DrawerWindow>
 </template>
 
 <style scoped>

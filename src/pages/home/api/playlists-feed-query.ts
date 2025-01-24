@@ -18,27 +18,36 @@ export const PLAYLISTS_LIST_ITEM_FRAGMENT = gql`
     }
 `
 
-export function usePlaylistsFeedQuery(currentUserId?: string) {
+export function usePlaylistsFeedQuery(
+    currentUserId?: string,
+    skipOtherPublicPlaylists = false,
+) {
     return useQuery<GetPlaylistsFeedQuery, GetPlaylistsFeedQueryVariables>(
         gql`
             ${PLAYLISTS_LIST_ITEM_FRAGMENT}
 
-            query GetPlaylistsFeed($currentUserId: String) {
+            query GetPlaylistsFeed(
+                $authorized: Boolean!
+                $currentUserId: String
+                $skipOtherPublicPlaylists: Boolean!
+            ) {
                 personalPlaylists: playlists(
                     filters: { ownerUserId: $currentUserId }
-                ) {
+                ) @include(if: $authorized) {
                     ...PlaylistsListItem
                 }
 
                 otherPublicPlaylists: playlists(
                     filters: { excludeOwnerUserId: $currentUserId }
-                ) {
+                ) @skip(if: $skipOtherPublicPlaylists) {
                     ...PlaylistsListItem
                 }
             }
         `,
         {
-            currentUserId: currentUserId,
+            authorized: currentUserId !== undefined,
+            currentUserId,
+            skipOtherPublicPlaylists,
         },
     )
 }
