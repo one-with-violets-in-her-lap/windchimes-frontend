@@ -99,7 +99,6 @@ async function loadMoreTracks() {
         <DrawerWindow
             v-model:opened="opened"
             fixed-height="70%"
-            :width="500"
             position-at-the-bottom-on-mobile
             class="d-flex flex-column h-100"
             draggable="false"

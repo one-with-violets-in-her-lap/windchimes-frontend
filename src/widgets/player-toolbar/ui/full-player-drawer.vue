@@ -60,7 +60,7 @@ function shuffleTracksQueue() {
 </script>
 
 <template>
-    <DrawerWindow v-model:opened="opened" :width="500" position-at-the-bottom-on-mobile>
+    <DrawerWindow v-model:opened="opened" position-at-the-bottom-on-mobile>
         <div v-if="currentTrack" class="drawer-content-wrapper">
             <div class="d-flex align-center gc-3 w-100 justify-center mb-2">
                 <VBtn
