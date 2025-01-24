@@ -3,7 +3,7 @@ import { useAuth0 } from '@auth0/auth0-vue'
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import PreferencesDrawer from '@/widgets/preferences-drawer/ui/preferences-drawer.vue'
+import { PreferencesDrawer } from '@/widgets/preferences-drawer'
 
 import ThemeToggleButtons from '@/features/theme-toggle-buttons/ui/theme-toggle-buttons.vue'
 
@@ -87,7 +87,11 @@ const preferencesDrawerOpened = ref(false)
                             Preferences
                         </DropdownButton>
 
-                        <DropdownButton v-if="user" prepend-icon="mdi-logout" @click="requestLogout">
+                        <DropdownButton
+                            v-if="user"
+                            prepend-icon="mdi-logout"
+                            @click="requestLogout"
+                        >
                             Logout
                         </DropdownButton>
                     </template>
