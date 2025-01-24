@@ -14,7 +14,7 @@ import {
     useTracksQueueStore,
 } from '@/entities/tracks-queue'
 
-import Drawer from '@/shared/ui/drawer.vue'
+import DrawerWindow from '@/shared/ui/drawer-window.vue'
 
 defineProps<{
     openButtonVisible: boolean
@@ -96,7 +96,7 @@ async function loadMoreTracks() {
             />
         </Transition>
 
-        <Drawer
+        <DrawerWindow
             v-model:opened="opened"
             fixed-height="70%"
             :width="500"
@@ -151,7 +151,7 @@ async function loadMoreTracks() {
                     </template>
                 </DraggableQueueTracksList>
             </div>
-        </Drawer>
+        </DrawerWindow>
     </div>
 </template>
 

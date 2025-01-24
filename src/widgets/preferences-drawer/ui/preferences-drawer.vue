@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia'
 
 import { usePreferencesStore } from '@/entities/preferences'
 
-import Drawer from '@/shared/ui/drawer.vue'
+import DrawerWindow from '@/shared/ui/drawer-window.vue'
 
 const opened = defineModel<boolean>('opened', { required: true })
 
@@ -11,7 +11,7 @@ const { hideDiscoverSectionOnHomePage } = storeToRefs(usePreferencesStore())
 </script>
 
 <template>
-    <Drawer
+    <DrawerWindow
         v-model:opened="opened"
         position="right"
         class="drawer preferences-drawer"
@@ -30,7 +30,7 @@ const { hideDiscoverSectionOnHomePage } = storeToRefs(usePreferencesStore())
                 class="elevation-0"
             />
         </VForm>
-    </Drawer>
+    </DrawerWindow>
 </template>
 
 <style>
