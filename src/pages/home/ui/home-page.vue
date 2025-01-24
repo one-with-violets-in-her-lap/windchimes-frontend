@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue'
 import { storeToRefs } from 'pinia'
-import { ref, watch } from 'vue'
+import { watch } from 'vue'
 import { useDisplay } from 'vuetify'
 
 import { usePlaylistsFeedQuery } from '@/pages/home/api/playlists-feed-query'
