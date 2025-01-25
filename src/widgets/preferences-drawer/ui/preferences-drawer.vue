@@ -14,7 +14,6 @@ const { hideDiscoverSectionOnHomePage } = storeToRefs(usePreferencesStore())
     <DrawerWindow
         v-model:opened="opened"
         position="right"
-        class="drawer preferences-drawer"
     >
         <div class="d-flex justify-end">
             <VBtn icon="mdi-close" variant="text" @click="opened = false" />
@@ -32,10 +31,3 @@ const { hideDiscoverSectionOnHomePage } = storeToRefs(usePreferencesStore())
         </VForm>
     </DrawerWindow>
 </template>
-
-<style>
-.preferences-drawer.preferences-drawer {
-    width: 90%;
-    max-width: 500px;
-}
-</style>
