@@ -1,7 +1,8 @@
 import { defineStore, storeToRefs } from 'pinia'
-import { readonly, toRef } from 'vue'
+import { onMounted, readonly, toRef } from 'vue'
 
 import { usePlayerVolume } from '@/features/player'
+import { loadInitialTrackAudioFile } from '@/features/player/utils/load-initial-track'
 
 import { LoadedQueueItem, useTracksQueueStore } from '@/entities/tracks-queue'
 
@@ -34,6 +35,10 @@ export const usePlayerStore = defineStore('player', () => {
     )
 
     const { volume, setVolume } = usePlayerVolume(audio)
+
+    onMounted(() => {
+        loadInitialTrackAudioFile()
+    })
 
     /**
      * resumes the current track or plays a new one if `queueItemToPlay` param is specified
