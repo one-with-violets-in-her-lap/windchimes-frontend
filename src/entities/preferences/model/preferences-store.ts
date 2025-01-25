@@ -1,11 +1,10 @@
-import { useLocalStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
 
-const LOCAL_STORAGE_KEYS_PREFIX = 'windchimes'
+import { useLocalStorageItem } from '@/shared/utils/local-storage'
 
 export const usePreferencesStore = defineStore('preferences', () => {
-    const hideDiscoverSectionOnHomePage = useLocalStorage(
-        `${LOCAL_STORAGE_KEYS_PREFIX}-hide-discover-section-on-home-page`,
+    const hideDiscoverSectionOnHomePage = useLocalStorageItem(
+        'hide-discover-section-on-home-page',
         false,
     )
 
