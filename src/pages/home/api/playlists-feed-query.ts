@@ -39,6 +39,7 @@ export function usePlaylistsFeedQuery(
 
                 otherPublicPlaylists: playlists(
                     filters: { excludeOwnerUserId: $currentUserId }
+                    limit: 7
                 ) @skip(if: $skipOtherPublicPlaylists) {
                     ...PlaylistsListItem
                 }
