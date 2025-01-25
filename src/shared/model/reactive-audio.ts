@@ -22,7 +22,7 @@ export function useAudio(
     secondsDuration: Ref<number | undefined>,
     actionHandlers: AudioActionHandlers,
 ) {
-    const paused = ref(false)
+    const paused = ref(true)
     const currentSecond = ref(0)
 
     const audio = new Audio()
