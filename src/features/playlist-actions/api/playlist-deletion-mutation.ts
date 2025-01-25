@@ -25,21 +25,8 @@ export function usePlaylistDeletionMutation() {
         DeletePlaylistMutation,
         DeletePlaylistMutationVariables
     >(mutation, {
-        update(cache, result, { variables }) {
-            cache.modify({
-                fields: {
-                    playlists(cachedPlaylists, { readField }) {
-                        return {
-                            ...cachedPlaylists,
-                            items: cachedPlaylists.items.filter(
-                                (playlist: PlaylistsListItemFragment) =>
-                                    readField('id', playlist) !==
-                                    variables?.playlistId,
-                            ),
-                        }
-                    },
-                },
-            })
+        update(cache) {
+            cache.evict({ fieldName: 'playlists' })
         },
     })
 }
