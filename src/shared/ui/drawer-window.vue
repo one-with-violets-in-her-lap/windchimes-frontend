@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useDisplay } from 'vuetify'
 
-withDefaults(
+const props = withDefaults(
     defineProps<{
         /**
          * Flag that determines if drawer must be positioned at the bottom on mobile
@@ -22,7 +22,7 @@ withDefaults(
 const opened = defineModel<boolean>('opened', { required: true })
 
 const { mobile } = useDisplay()
-const responsivePosition = computed(() => (mobile.value ? 'bottom' : 'left'))
+const responsivePosition = computed(() => (mobile.value ? 'bottom' : props.position))
 </script>
 
 <template>
@@ -58,6 +58,9 @@ const responsivePosition = computed(() => (mobile.value ? 'bottom' : 'left'))
     height: 100% !important;
     top: 0px !important;
     max-height: 100%;
+    max-width: 500px;
+    width: 90% !important;
+    min-width: 300px;
 }
 
 .fixed-height {
