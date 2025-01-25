@@ -216,6 +216,7 @@ async function handleTrackPlaying() {
                             contained
                             :model-value="isHovering === true || isCurrentTrack"
                             class="d-flex justify-center align-center rounded"
+                            theme="light"
                             style="z-index: 0"
                         >
                             <VIcon
