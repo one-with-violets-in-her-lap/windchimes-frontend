@@ -1,12 +1,13 @@
-import { useLocalStorage } from '@vueuse/core'
 import { defineStore, storeToRefs } from 'pinia'
-import { readonly, toRef } from 'vue'
+import { onMounted, readonly, toRef } from 'vue'
 
 import { usePlayerVolume } from '@/features/player'
+import { loadInitialTrackAudioFile } from '@/features/player/utils/load-initial-track'
 
 import { LoadedQueueItem, useTracksQueueStore } from '@/entities/tracks-queue'
 
 import { useAudio } from '@/shared/model/reactive-audio'
+import { useLocalStorageItem } from '@/shared/utils/local-storage'
 import { getTypedObjectKeys } from '@/shared/utils/objects'
 
 export type QueueItemWithAudioFileUrl = LoadedQueueItem & { audioFileUrl: string }
@@ -23,7 +24,7 @@ export const usePlayerStore = defineStore('player', () => {
     const { currentQueueItem, currentQueueItemId, currentTrack } =
         storeToRefs(tracksQueueStore)
 
-    const loopMode = useLocalStorage<LoopMode>('loop', LoopMode.Disabled)
+    const loopMode = useLocalStorageItem<LoopMode>('loop', LoopMode.Disabled)
 
     const { audio, currentSecond, pauseAudio, paused, playAudio, rewind } = useAudio(
         toRef(() => currentQueueItem.value?.track.secondsDuration),
@@ -34,6 +35,10 @@ export const usePlayerStore = defineStore('player', () => {
     )
 
     const { volume, setVolume } = usePlayerVolume(audio)
+
+    onMounted(() => {
+        loadInitialTrackAudioFile()
+    })
 
     /**
      * resumes the current track or plays a new one if `queueItemToPlay` param is specified

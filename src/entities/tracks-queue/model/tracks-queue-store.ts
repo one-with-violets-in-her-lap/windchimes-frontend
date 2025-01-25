@@ -1,6 +1,7 @@
 import { useApolloClient } from '@vue/apollo-composable'
+import { StorageSerializers } from '@vueuse/core'
 import { defineStore, storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 import {
     LoopMode,
@@ -14,6 +15,7 @@ import {
     LoadedTrackFragment,
     TrackReferenceToReadGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
+import { useLocalStorageItem } from '@/shared/utils/local-storage'
 
 /**
  * Error that is thrown when playlist can't be added to the queue. The reason can be
@@ -35,11 +37,17 @@ export class TracksQueueBoundsReachedError extends Error {
 export const useTracksQueueStore = defineStore('tracksQueue', () => {
     const { client: apolloClient } = useApolloClient()
 
-    const tracksQueue = ref<QueueItem[]>([])
+    const tracksQueue = useLocalStorageItem<QueueItem[]>('tracks-queue', [])
 
     let lastCreatedQueueItemId = 0
 
-    const currentQueueItemId = ref<number>()
+    const currentQueueItemId = useLocalStorageItem<number | undefined>(
+        'current-queue-item-id',
+        undefined,
+        {
+            serializer: StorageSerializers.number,
+        },
+    )
     const currentQueueItem = computed(() => {
         const matchingQueueItem = tracksQueue.value.find(
             item => item.id === currentQueueItemId.value,
