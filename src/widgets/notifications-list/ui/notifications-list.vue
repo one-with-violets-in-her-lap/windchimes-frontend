@@ -19,8 +19,12 @@ const icons: Record<NotificationType, string> = {
         <VSnackbar
             v-for="notification in notifications"
             :key="notification.id"
-            color="surface"
             :model-value="notification.visible"
+            color="background"
+            min-width="300px"
+            max-width="460px"
+            variant="elevated"
+            content-class="border-sm elevation-5"
             @update:model-value="closeNotification(notification.id)"
         >
             <div class="d-flex align-center gc-1">
