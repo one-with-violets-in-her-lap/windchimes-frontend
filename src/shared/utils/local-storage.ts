@@ -1,4 +1,4 @@
-import { useLocalStorage } from '@vueuse/core'
+import { UseStorageOptions, useLocalStorage } from '@vueuse/core'
 
 const LOCAL_STORAGE_KEYS_PREFIX = 'windchimes-'
 
@@ -9,6 +9,10 @@ const LOCAL_STORAGE_KEYS_PREFIX = 'windchimes-'
  *
  * Uses {@link useLocalStorage} from vueuse under the hood
  */
-export function useLocalStorageItem<TValue>(key: string, initialValue: TValue) {
-    return useLocalStorage(LOCAL_STORAGE_KEYS_PREFIX + key, initialValue)
+export function useLocalStorageItem<TValue>(
+    key: string,
+    initialValue: TValue,
+    options?: UseStorageOptions<TValue>,
+) {
+    return useLocalStorage(LOCAL_STORAGE_KEYS_PREFIX + key, initialValue, options)
 }
