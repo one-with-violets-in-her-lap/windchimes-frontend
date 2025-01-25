@@ -11,10 +11,7 @@ const { hideDiscoverSectionOnHomePage } = storeToRefs(usePreferencesStore())
 </script>
 
 <template>
-    <DrawerWindow
-        v-model:opened="opened"
-        position="right"
-    >
+    <DrawerWindow v-model:opened="opened" position="right">
         <div class="d-flex justify-end">
             <VBtn icon="mdi-close" variant="text" @click="opened = false" />
         </div>
