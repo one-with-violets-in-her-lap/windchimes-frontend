@@ -15,6 +15,7 @@ import {
     PlaylistBasicInfoFragment,
     TrackReferenceToReadGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
+import { useNotificationsStore } from '@/shared/model/notifications'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import { IgnoreTypename } from '@/shared/utils/graphql'
 
@@ -133,23 +134,29 @@ function playQueueItem(queueItem: LoadedQueueItem, audioFileUrl: string) {
     })
 }
 
+const { showNotification } = useNotificationsStore()
+
 async function handleTrackPlaying() {
     if (isCurrentTrack.value) {
         play()
         return
     }
 
-    const audioFileUrl = await getAudioFileUrl()
-
-    if (props.playingOptions?.tracksToCreateNewQueueFrom) {
-        playTrackInNewQueue(
-            props.playingOptions.tracksToCreateNewQueueFrom,
-            audioFileUrl,
-        )
-    } else if (props.playingOptions?.queueItemToPlay) {
-        playQueueItem(props.playingOptions.queueItemToPlay, audioFileUrl)
-    } else {
-        throw new TrackPlayingNotConfiguredError()
+    try {
+        const audioFileUrl = await getAudioFileUrl()
+        if (props.playingOptions?.tracksToCreateNewQueueFrom) {
+            playTrackInNewQueue(
+                props.playingOptions.tracksToCreateNewQueueFrom,
+                audioFileUrl,
+            )
+        } else if (props.playingOptions?.queueItemToPlay) {
+            playQueueItem(props.playingOptions.queueItemToPlay, audioFileUrl)
+        } else {
+            throw new TrackPlayingNotConfiguredError()
+        }
+    } catch (error) {
+        console.error(error)
+        showNotification('error', 'Failed to load track data')
     }
 }
 </script>
