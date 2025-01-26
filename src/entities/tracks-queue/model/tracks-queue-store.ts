@@ -76,6 +76,9 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
      * respects track/playlist loop mode.
      *
      * @param options.doNotLoop ignore current loop mode, skip track anyways
+     *
+     * @throws {TrackLoadError} when track data failed to load because of internal
+     * error
      */
     async function playNextTrack(
         options: TrackSkipOptions = { tracksToSkipCount: 1, doNotLoop: false },
@@ -108,14 +111,18 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
         } catch (error) {
             if (!(error instanceof TracksQueueBoundsReachedError)) {
                 console.error(error)
-                await playNextTrack({ tracksToSkipCount: tracksToSkipCount + 1 })
+                playNextTrack({ tracksToSkipCount: tracksToSkipCount + 1 })
+                throw error
             }
         }
     }
 
     /**
-     * plays previous track in playlist tracks queue if the beginning of
+     * Plays previous track in playlist tracks queue if the beginning of
      * the queue is not reached
+     *
+     * @throws {TrackLoadError} when track data failed to load because of internal
+     * error
      */
     async function playPreviousTrack(
         options: TrackSkipOptions = { tracksToSkipCount: 1 },
@@ -131,7 +138,8 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
         } catch (error) {
             if (!(error instanceof TracksQueueBoundsReachedError)) {
                 console.error(error)
-                await playPreviousTrack({ tracksToSkipCount: tracksToSkipCount + 1 })
+                playPreviousTrack({ tracksToSkipCount: tracksToSkipCount + 1 })
+                throw error
             }
         }
     }

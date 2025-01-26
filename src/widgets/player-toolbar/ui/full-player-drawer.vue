@@ -46,7 +46,12 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
 
     pulseAnimation.play()
 
-    await promise
+    try {
+        await promise
+    } catch (error) {
+        console.log(error)
+        showNotification('error', 'Something went wrong while loading the track')
+    }
 
     pulseAnimation.seek(0)
     pulseAnimation.pause()
