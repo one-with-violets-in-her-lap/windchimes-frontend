@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useApolloClient } from '@vue/apollo-composable'
 import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 import { usePlayerStore } from '@/features/player'
 
@@ -86,8 +86,14 @@ const isCurrentTrack = computed(() =>
 )
 const playing = computed(() => isCurrentTrack.value && !paused.value)
 
+const audioFileLoading = ref(false)
+
 async function getAudioFileUrl() {
+    audioFileLoading.value = true
+
     const response = await queryTrackAudioFile(apolloClient, props.track)
+
+    audioFileLoading.value = false
 
     if (response.data.trackAudioFile?.__typename === 'TrackAudioFileGraphQL') {
         return response.data.trackAudioFile.url
@@ -98,7 +104,6 @@ async function getAudioFileUrl() {
     }
 }
 
-// TODO: move to separate module (probably in the `/module` folder)
 function playTrackInNewQueue(
     tracksToCreateNewQueueFrom: (LoadedTrackFragment | TrackReferenceToReadGraphQl)[],
     audioFileUrl: string,
@@ -226,6 +231,20 @@ async function handleTrackPlaying() {
                                         : 'mdi-play'
                                 "
                                 color="white"
+                            />
+                        </VOverlay>
+
+                        <VOverlay
+                            contained
+                            :model-value="audioFileLoading"
+                            class="d-flex justify-center align-center rounded"
+                            theme="light"
+                            style="z-index: 0"
+                        >
+                            <VProgressCircular
+                                color="white"
+                                size="small"
+                                indeterminate
                             />
                         </VOverlay>
                     </div>
