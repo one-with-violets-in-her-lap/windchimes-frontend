@@ -144,6 +144,7 @@ async function handleTrackPlaying() {
 
     try {
         const audioFileUrl = await getAudioFileUrl()
+
         if (props.playingOptions?.tracksToCreateNewQueueFrom) {
             playTrackInNewQueue(
                 props.playingOptions.tracksToCreateNewQueueFrom,
