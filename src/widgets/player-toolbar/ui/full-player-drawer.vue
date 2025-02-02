@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { useTransition } from '@vueuse/core'
 import anime from 'animejs'
 import { storeToRefs } from 'pinia'
+import { onMounted, watch } from 'vue'
 
 import {
     LoopMode,
@@ -22,7 +24,7 @@ const opened = defineModel<boolean>('opened', { required: true })
 const playerStore = usePlayerStore()
 const { playNextTrack, playPreviousTrack, pause, play, audio, toggleLoopMode } =
     playerStore
-const { currentSecond, loopMode, paused } = storeToRefs(playerStore)
+const { currentSecond, loopMode, paused, newTrackLoading } = storeToRefs(playerStore)
 
 const { tracksQueue, currentQueueItem, currentTrack } =
     storeToRefs(useTracksQueueStore())
@@ -30,7 +32,7 @@ const { tracksQueue, currentQueueItem, currentTrack } =
 const { showNotification } = useNotificationsStore()
 
 let pulseAnimation: anime.AnimeInstance | undefined = undefined
-async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
+watch(newTrackLoading, () => {
     if (!pulseAnimation) {
         pulseAnimation = anime({
             targets: '.skip-button',
@@ -44,17 +46,29 @@ async function animateSkipButtonsUntilFinished(promise: Promise<void>) {
         })
     }
 
-    pulseAnimation.play()
+    if (newTrackLoading.value) {
+        pulseAnimation.play()
+    } else {
+        pulseAnimation.seek(0)
+        pulseAnimation.pause()
+    }
+})
 
+async function handleNextTrackPlaying() {
     try {
-        await promise
+        await playNextTrack({ doNotLoop: true })
     } catch (error) {
         console.log(error)
         showNotification('error', 'Something went wrong while loading the track')
     }
-
-    pulseAnimation.seek(0)
-    pulseAnimation.pause()
+}
+async function handlePreviousTrackPlaying() {
+    try {
+        await playPreviousTrack()
+    } catch (error) {
+        console.log(error)
+        showNotification('error', 'Something went wrong while loading the track')
+    }
 }
 
 function shuffleTracksQueue() {
@@ -73,7 +87,7 @@ function shuffleTracksQueue() {
                     class="skip-button"
                     color="surface-2"
                     variant="flat"
-                    @click="animateSkipButtonsUntilFinished(playPreviousTrack())"
+                    @click="handlePreviousTrackPlaying"
                 >
                     <VIcon icon="mdi-skip-backward" size="40px" />
                 </VBtn>
@@ -90,11 +104,7 @@ function shuffleTracksQueue() {
                     class="skip-button"
                     color="surface-2"
                     variant="flat"
-                    @click="
-                        animateSkipButtonsUntilFinished(
-                            playNextTrack({ doNotLoop: true }),
-                        )
-                    "
+                    @click="handleNextTrackPlaying"
                 >
                     <VIcon icon="mdi-skip-forward" size="40px" />
                 </VBtn>

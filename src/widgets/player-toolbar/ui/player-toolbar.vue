@@ -14,7 +14,8 @@ import {
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 
 const playerStore = usePlayerStore()
-const { currentTrack, paused, currentSecond } = storeToRefs(playerStore)
+const { currentTrack, paused, currentSecond, newTrackLoading } =
+    storeToRefs(playerStore)
 const { play, pause } = playerStore
 
 usePlayerShortcuts()
@@ -30,14 +31,26 @@ const fullPlayerOpened = ref(false)
                 class="elevation-6 player-controls-bar"
                 @click="fullPlayerOpened = true"
             >
-                <VBtn
-                    :icon="paused ? 'mdi-play' : 'mdi-pause'"
-                    variant="flat"
-                    color="primary"
-                    size="38px"
-                    class="mr-3"
-                    @click.stop="() => (paused ? play() : pause())"
-                />
+                <div>
+                    <Transition name="scale-up" mode="out-in">
+                        <VBtn
+                            v-if="!newTrackLoading"
+                            :icon="paused ? 'mdi-play' : 'mdi-pause'"
+                            variant="flat"
+                            color="primary"
+                            size="38px"
+                            class="mr-3"
+                            @click.stop="() => (paused ? play() : pause())"
+                        />
+
+                        <VProgressCircular
+                            v-else
+                            color="background-contrast"
+                            indeterminate
+                            class="mr-3"
+                        />
+                    </Transition>
+                </div>
 
                 <div class="w-100">
                     <div class="playing-track-line">

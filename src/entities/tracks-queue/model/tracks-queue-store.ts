@@ -70,10 +70,12 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
     }
 
     /**
-     * plays next track in playlist tracks queue if the end of the
+     * Plays next track in playlist tracks queue if the end of the
      * queue is not reached
      *
-     * respects track/playlist loop mode.
+     * Respects track/playlist loop mode
+     *
+     * Handles track loading errors by **skipping to the next track on the background**
      *
      * @param options.doNotLoop ignore current loop mode, skip track anyways
      *
@@ -94,7 +96,7 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
             const lastIndex = tracksQueue.value.length - tracksToSkipCount
 
             if (doNotLoop) {
-                await playTrackFromQueue(currentTrackIndex + tracksToSkipCount)
+                await playItemFromQueue(currentTrackIndex + tracksToSkipCount)
                 return
             }
 
@@ -102,15 +104,16 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
                 currentTrackIndex >= lastIndex &&
                 loopMode.value === LoopMode.LoopPlaylist
             ) {
-                await playTrackFromQueue(0)
+                await playItemFromQueue(0)
             } else if (loopMode.value === LoopMode.LoopCurrentTrack) {
-                await playTrackFromQueue(currentTrackIndex)
+                await playItemFromQueue(currentTrackIndex)
             } else {
-                await playTrackFromQueue(currentTrackIndex + tracksToSkipCount)
+                await playItemFromQueue(currentTrackIndex + tracksToSkipCount)
             }
         } catch (error) {
             if (!(error instanceof TracksQueueBoundsReachedError)) {
                 console.error(error)
+                // If track failed to load, skip to next track
                 playNextTrack({ tracksToSkipCount: tracksToSkipCount + 1 })
                 throw error
             }
@@ -134,7 +137,7 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
                 track => track.id === currentQueueItemId.value,
             )
 
-            await playTrackFromQueue(currentTrackIndex - tracksToSkipCount)
+            await playItemFromQueue(currentTrackIndex - tracksToSkipCount)
         } catch (error) {
             if (!(error instanceof TracksQueueBoundsReachedError)) {
                 console.error(error)
@@ -144,16 +147,26 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
         }
     }
 
-    async function playTrackFromQueue(index: number) {
-        const { play } = usePlayerStore()
+    /**
+     * Plays queue item with specified index
+     *
+     * @throws {TrackLoadError} if queue item's track audio file failed to load
+     *
+     * @throws {TracksQueueBoundsReachedError} if queue item couldn't be found by
+     * specified index
+     */
+    async function playItemFromQueue(queueItemIndex: number) {
+        const playerStore = usePlayerStore()
 
-        const queueItem = tracksQueue.value[index]
+        const queueItem = tracksQueue.value[queueItemIndex]
 
         if (!queueItem) {
             throw new TracksQueueBoundsReachedError()
         }
 
         let track = queueItem.track
+
+        playerStore.newTrackLoading = true
 
         try {
             if (track.__typename !== 'LoadedTrackGraphQL') {
@@ -168,7 +181,7 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
                 }
 
                 track = loadedTrackResponse.data.loadedTrack as LoadedTrackFragment
-                tracksQueue.value[index] = { ...queueItem, track }
+                tracksQueue.value[queueItemIndex] = { ...queueItem, track }
             }
 
             const audioFileUrlQuery = await queryTrackAudioFile(apolloClient, track)
@@ -181,7 +194,7 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
                 throw new TrackLoadError("couldn't obtain audio file url of a track")
             }
 
-            play({
+            playerStore.play({
                 id: queueItem.id,
                 track: track,
                 audioFileUrl: audioFileUrlQuery.data.trackAudioFile.url,
@@ -190,6 +203,8 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
             throw new TrackLoadError(
                 `failed to load track data or its audio file. more info: ${error}`,
             )
+        } finally {
+            playerStore.newTrackLoading = false
         }
     }
 
@@ -232,7 +247,7 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
 
         playNextTrack,
         playPreviousTrack,
-        playTrackFromQueue,
+        playTrackFromQueue: playItemFromQueue,
         addPlaylistToQueue,
         replaceQueueWithPlaylist,
 
