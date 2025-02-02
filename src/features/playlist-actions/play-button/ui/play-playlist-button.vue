@@ -26,7 +26,7 @@ const props = defineProps<{
 }>()
 
 const playerStore = usePlayerStore()
-const { playTrackFromQueue } = playerStore
+const { playItemFromQueue } = playerStore
 
 const tracksQueueStore = useTracksQueueStore()
 const { addPlaylistToQueue, replaceQueueWithPlaylist } = tracksQueueStore
@@ -84,7 +84,7 @@ async function playRightAway() {
         const playlistTracksReferences = await handlePlaylistTracksLoading()
         replaceQueueWithPlaylist(playlistTracksReferences)
 
-        await playTrackFromQueue(0)
+        await playItemFromQueue(0)
     } catch (error) {
         if (error instanceof QueuePlaylistOperationError) {
             showNotification(

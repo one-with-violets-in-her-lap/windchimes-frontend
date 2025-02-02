@@ -20,7 +20,7 @@ export enum LoopMode {
 
 export const usePlayerStore = defineStore('player', () => {
     const tracksQueueStore = useTracksQueueStore()
-    const { playNextTrack, playPreviousTrack, playTrackFromQueue } = tracksQueueStore
+    const { playNextTrack, playPreviousTrack, playItemFromQueue } = tracksQueueStore
     const { currentQueueItem, currentQueueItemId, currentTrack } =
         storeToRefs(tracksQueueStore)
 
@@ -99,7 +99,7 @@ export const usePlayerStore = defineStore('player', () => {
         rewind,
         playNextTrack,
         playPreviousTrack,
-        playTrackFromQueue,
+        playItemFromQueue,
         toggleLoopMode,
 
         newTrackLoading,

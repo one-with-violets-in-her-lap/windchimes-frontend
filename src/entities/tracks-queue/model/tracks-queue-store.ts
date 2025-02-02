@@ -247,7 +247,7 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
 
         playNextTrack,
         playPreviousTrack,
-        playTrackFromQueue: playItemFromQueue,
+        playItemFromQueue,
         addPlaylistToQueue,
         replaceQueueWithPlaylist,
 
