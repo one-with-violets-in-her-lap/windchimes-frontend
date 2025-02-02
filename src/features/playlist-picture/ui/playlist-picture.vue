@@ -164,6 +164,7 @@ async function handlePictureDeletion() {
                     contained
                     opacity="0.2"
                     class="rounded-xl"
+                    theme="light"
                     content-class="w-100 h-100 pa-3 d-flex flex-column align-center justify-end"
                     style="z-index: 0"
                 >

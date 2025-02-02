@@ -24,6 +24,7 @@ defineProps<{
 
         <VOverlay
             :model-value="paused"
+            theme="light"
             contained
             content-class="d-flex justify-center align-center w-100 h-100"
         >
