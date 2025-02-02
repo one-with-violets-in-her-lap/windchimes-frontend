@@ -41,7 +41,12 @@ export function usePlayerShortcuts() {
             return
         }
 
-        await playNextTrack()
+        try {
+            await playNextTrack({ doNotLoop: true })
+        } catch (error) {
+            console.log(error)
+            showNotification('error', 'Something went wrong while loading the track')
+        }
     })
 
     onKeyStroke('ArrowLeft', async event => {
@@ -50,7 +55,12 @@ export function usePlayerShortcuts() {
             return
         }
 
-        await playPreviousTrack()
+        try {
+            await playPreviousTrack()
+        } catch (error) {
+            console.log(error)
+            showNotification('error', 'Something went wrong while loading the track')
+        }
     })
 
     onKeyStroke('ArrowUp', async event => {

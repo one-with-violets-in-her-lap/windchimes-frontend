@@ -1,5 +1,5 @@
 import { defineStore, storeToRefs } from 'pinia'
-import { onMounted, readonly, toRef } from 'vue'
+import { onMounted, readonly, ref, toRef } from 'vue'
 
 import { usePlayerVolume } from '@/features/player'
 import { loadInitialTrackAudioFile } from '@/features/player/utils/load-initial-track'
@@ -20,11 +20,13 @@ export enum LoopMode {
 
 export const usePlayerStore = defineStore('player', () => {
     const tracksQueueStore = useTracksQueueStore()
-    const { playNextTrack, playPreviousTrack, playTrackFromQueue } = tracksQueueStore
+    const { playNextTrack, playPreviousTrack, playItemFromQueue } = tracksQueueStore
     const { currentQueueItem, currentQueueItemId, currentTrack } =
         storeToRefs(tracksQueueStore)
 
     const loopMode = useLocalStorageItem<LoopMode>('loop', LoopMode.Disabled)
+
+    const newTrackLoading = ref(false)
 
     const { audio, currentSecond, pauseAudio, paused, playAudio, rewind } = useAudio(
         toRef(() => currentQueueItem.value?.track.secondsDuration),
@@ -97,7 +99,9 @@ export const usePlayerStore = defineStore('player', () => {
         rewind,
         playNextTrack,
         playPreviousTrack,
-        playTrackFromQueue,
+        playItemFromQueue,
         toggleLoopMode,
+
+        newTrackLoading,
     }
 })
