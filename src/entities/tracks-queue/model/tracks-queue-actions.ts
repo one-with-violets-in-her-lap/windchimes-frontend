@@ -9,23 +9,23 @@ export class QueueTrackNotFoundError extends Error {
 }
 
 /**
- * shuffles remaining part of a tracks queue
+ * Shuffles remaining part of a tracks queue
  *
- * @param currentTrackId id of a track to determine remaining part of a queue.
+ * @param currentQueueItemId ID of queue item to determine remaining part of a queue.
  * if not set, the whole queue is shuffled
  *
- * @returns new shuffled tracks queue
+ * @returns New shuffled tracks queue
  */
-export function shuffleQueue(tracksQueue: QueueItem[], currentTrackId?: number) {
-    let currentTrackIndex = tracksQueue.findIndex(
-        track => track.id === currentTrackId,
+export function shuffleQueue(tracksQueue: QueueItem[], currentQueueItemId?: number) {
+    let currentQueueItemIndex = tracksQueue.findIndex(
+        queueItem => queueItem.id === currentQueueItemId,
     )
 
-    if (currentTrackIndex === -1) {
-        currentTrackIndex = 0
+    if (currentQueueItemIndex === -1) {
+        currentQueueItemIndex = 0
     }
 
-    const partToShuffleStartIndex = currentTrackIndex + 1
+    const partToShuffleStartIndex = currentQueueItemIndex + 1
 
     const shuffledQueuePart = shuffle(tracksQueue.slice(partToShuffleStartIndex))
 
