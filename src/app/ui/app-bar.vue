@@ -9,6 +9,7 @@ import ThemeToggleButtons from '@/features/theme-toggle-buttons/ui/theme-toggle-
 
 import { DropdownButton, DropdownMenu } from '@/shared/ui/dropdown-menu'
 import { useLoginAndLogout } from '@/shared/utils/login-and-logout'
+import { truncateText } from '@/shared/utils/strings'
 
 const router = useRouter()
 const route = useRoute()
@@ -35,16 +36,19 @@ const preferencesDrawerOpened = ref(false)
             <nav class="gc-3 d-flex align-center">
                 <DropdownMenu :close-on-content-click="false">
                     <template #activator="{ props }">
-                        <button v-if="user" v-bind="props">
+                        <button
+                            v-if="user?.nickname"
+                            v-bind="props"
+                            class="d-flex align-center text-sm-body-1 text-body-2"
+                        >
                             <VAvatar
                                 :image="user.picture"
                                 color="surface-darken-1"
                                 icon="mdi-user"
-                                class="mr-1"
+                                class="mr-2"
                             />
 
-                            {{ user.nickname }}
-
+                            {{ truncateText(user.nickname, 19) }}
                             <VIcon icon="mdi-chevron-down" />
                         </button>
 
