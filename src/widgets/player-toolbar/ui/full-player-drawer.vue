@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { useTransition } from '@vueuse/core'
 import anime from 'animejs'
 import { storeToRefs } from 'pinia'
-import { onMounted, watch } from 'vue'
+import { watch } from 'vue'
 
 import {
     LoopMode,
