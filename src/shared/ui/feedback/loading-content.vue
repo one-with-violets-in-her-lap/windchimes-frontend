@@ -8,6 +8,7 @@ import ErrorAlert from '@/shared/ui/feedback/error-alert.vue'
 defineProps<{
     loading: boolean
     skeleton?: VuetifySkeleton
+    errorAlertTitle?: string
     error: GraphQlApiError | ApolloError | null | undefined
 }>()
 
@@ -20,7 +21,12 @@ const emit = defineEmits<{
     <VSkeletonLoader v-if="loading && skeleton" :type="skeleton" />
     <VProgressCircular v-else-if="loading" indeterminate :size="50" />
 
-    <ErrorAlert v-else-if="error" :error @retry="emit('retry')" />
+    <ErrorAlert
+        v-else-if="error"
+        :title="errorAlertTitle"
+        :error
+        @retry="emit('retry')"
+    />
 
     <slot v-else></slot>
 </template>
