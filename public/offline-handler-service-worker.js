@@ -25,7 +25,7 @@ self.addEventListener('activate', event => {
 })
 
 self.addEventListener('fetch', event => {
-    if (event.request.method !== 'GET' || !event.request.url.includes('localhost')) {
+    if (event.request.method !== 'GET') {
         return
     }
 
