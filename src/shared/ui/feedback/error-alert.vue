@@ -23,7 +23,7 @@ const errorData = computed(() => {
     if (props.error instanceof ApolloError) {
         // `ApolloError` errors are internal and should not be displayed to the user
         return {
-            explanationToShow: null,
+            explanationToShow: 'Check your internet connection or try again',
             moreInfo: props.error.message,
         }
     } else {
@@ -49,14 +49,11 @@ async function copyMoreInfo(moreInfo: string) {
 
 <template>
     <VAlert :title type="error" variant="tonal" max-width="800">
-        <p v-if="errorData.explanationToShow" class="mt-3">
+        <p class="my-3">
             {{ errorData.explanationToShow }}
         </p>
 
-        <div
-            class="d-flex ga-2 flex-wrap mt-3"
-            :class="{ 'mt-6': !errorData.explanationToShow }"
-        >
+        <div class="d-flex ga-2 flex-wrap">
             <VBtn
                 variant="flat"
                 color="error"
