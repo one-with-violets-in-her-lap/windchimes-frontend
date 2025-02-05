@@ -8,10 +8,8 @@ const router = useRouter()
 
 const searchFormData = reactive<{
     query: string
-    whatToSearch: 'tracks' | 'playlists'
 }>({
     query: '',
-    whatToSearch: 'tracks',
 })
 
 function handleSearch(closeMenu: VoidFunction) {
@@ -20,9 +18,10 @@ function handleSearch(closeMenu: VoidFunction) {
             name: 'search',
             query: {
                 'search-query': searchFormData.query,
-                'what-to-search': searchFormData.whatToSearch,
             },
         })
+
+        searchFormData.query = ''
 
         closeMenu()
     }
@@ -46,32 +45,6 @@ function handleSearch(closeMenu: VoidFunction) {
                     tag="form"
                     @submit.prevent="handleSearch(() => (isActive.value = false))"
                 >
-                    <VBtnToggle
-                        v-model="searchFormData.whatToSearch"
-                        mandatory
-                        color="primary"
-                        density="comfortable"
-                        class="mb-5 rounded-lg"
-                    >
-                        <VBtn
-                            value="tracks"
-                            prepend-icon="mdi-music"
-                            size="small"
-                            type="button"
-                        >
-                            Tracks
-                        </VBtn>
-
-                        <VBtn
-                            value="playlists"
-                            prepend-icon="mdi-playlist-music"
-                            type="button"
-                            size="small"
-                        >
-                            Playlists
-                        </VBtn>
-                    </VBtnToggle>
-
                     <VTextField
                         v-model.trim="searchFormData.query"
                         variant="outlined"
