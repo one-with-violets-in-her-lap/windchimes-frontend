@@ -20,23 +20,23 @@ self.addEventListener('fetch', event => {
         return
     }
 
-    async function fetchOrGetFromCache(request) {
-        const offlineAssetsCache = await caches.open(OFFLINE_ASSETS_CACHE_NAME)
-
-        try {
-            const response = await fetch(request)
-
-            await offlineAssetsCache.put(request, response.clone())
-
-            return response
-        } catch (error) {
-            console.warn(
-                `${request.url}: Network request failed, falling back to cache if it exists`,
-            )
-
-            return offlineAssetsCache.match(request)
-        }
-    }
-
     event.respondWith(fetchOrGetFromCache(event.request))
 })
+
+async function fetchOrGetFromCache(request) {
+    const offlineAssetsCache = await caches.open(OFFLINE_ASSETS_CACHE_NAME)
+
+    try {
+        const response = await fetch(request)
+
+        await offlineAssetsCache.put(request, response.clone())
+
+        return response
+    } catch (error) {
+        console.warn(
+            `${request.url}: Network request failed, falling back to cache if it exists`,
+        )
+
+        return offlineAssetsCache.match(request)
+    }
+}
