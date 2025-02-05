@@ -4,6 +4,7 @@ import AuthCallbackPage from '@/pages/auth-callback-page.vue'
 import { HomePage } from '@/pages/home'
 import NotFoundPage from '@/pages/not-found-page.vue'
 import { PlaylistPage } from '@/pages/playlist'
+import { SearchPage } from '@/pages/search'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +24,12 @@ const router = createRouter({
             path: '/playlists/:id',
             name: 'playlist',
             component: PlaylistPage,
+        },
+
+        {
+            path: '/search',
+            name: 'search',
+            component: SearchPage,
         },
 
         {
