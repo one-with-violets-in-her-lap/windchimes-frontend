@@ -71,9 +71,8 @@ async function handlePreviousTrackPlaying() {
 }
 
 function shuffleTracksQueue() {
-    // TODO: rewrite shuffling with new queue items identifiers
     tracksQueue.value = shuffleQueue(tracksQueue.value, currentQueueItem.value?.id)
-    showNotification('success', 'next tracks will appear in random order')
+    showNotification('success', 'Next tracks will appear in random order')
 }
 </script>
 

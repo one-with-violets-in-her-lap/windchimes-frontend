@@ -80,6 +80,7 @@ function loadMoreTracks(ids: string[]) {
     <LoadingContent
         :loading="loading && !result"
         skeleton="list-item-three-line"
+        error-alert-title="Something went wrong when loading playlist"
         :error="error"
         @retry="restart"
     >

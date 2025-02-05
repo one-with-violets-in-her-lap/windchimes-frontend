@@ -5,15 +5,17 @@ import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import { createVuetify } from 'vuetify'
-// Vuetify
 import 'vuetify/styles'
 
 import apolloClient from '@/app/config/apollo-client'
 import auth0 from '@/app/config/auth0'
 import router from '@/app/config/router'
+import { setupServiceWorkers } from '@/app/config/service-workers'
 import { vuetifyConfig } from '@/app/config/vuetify'
 import { useFatalErrorStore } from '@/app/model/fatal-error-store'
 import App from '@/app/ui/App.vue'
+
+setupServiceWorkers()
 
 const app = createApp(App)
 

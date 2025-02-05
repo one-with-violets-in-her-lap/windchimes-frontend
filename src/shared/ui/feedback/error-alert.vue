@@ -5,9 +5,13 @@ import { computed } from 'vue'
 import { GraphQlApiError } from '@/shared/model/graphql-generated-types/graphql'
 import { useNotificationsStore } from '@/shared/model/notifications'
 
-const props = defineProps<{
-    error: ApolloError | GraphQlApiError
-}>()
+const props = withDefaults(
+    defineProps<{
+        title: string
+        error: ApolloError | GraphQlApiError
+    }>(),
+    { title: 'Error occurred' },
+)
 
 const emit = defineEmits<{
     (event: 'retry'): void
@@ -17,13 +21,14 @@ const { showNotification } = useNotificationsStore()
 
 const errorData = computed(() => {
     if (props.error instanceof ApolloError) {
+        // `ApolloError` errors are internal and should not be displayed to the user
         return {
-            explanation: props.error.message,
-            moreInfo: null,
+            explanationToShow: 'Check your internet connection or try again',
+            moreInfo: props.error.message,
         }
     } else {
         return {
-            explanation: props.error.explanation,
+            explanationToShow: props.error.explanation,
             moreInfo: props.error.technicalExplanation,
         }
     }
@@ -43,13 +48,10 @@ async function copyMoreInfo(moreInfo: string) {
 </script>
 
 <template>
-    <VAlert
-        title="Something went wrong when loading playlists"
-        type="error"
-        variant="tonal"
-        max-width="800"
-    >
-        <p class="my-3">{{ errorData.explanation }}</p>
+    <VAlert :title type="error" variant="tonal" max-width="800">
+        <p class="my-3">
+            {{ errorData.explanationToShow }}
+        </p>
 
         <div class="d-flex ga-2 flex-wrap">
             <VBtn
@@ -69,7 +71,6 @@ async function copyMoreInfo(moreInfo: string) {
                         variant="outlined"
                         prepend-icon="mdi-dots-horizontal"
                         class="w-sm-auto w-100"
-                        @click="emit('retry')"
                     >
                         More info
                     </VBtn>

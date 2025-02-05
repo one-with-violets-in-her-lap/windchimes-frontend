@@ -100,6 +100,7 @@ async function addToSelectedPlaylists() {
             >
                 <VCardItem class="pt-0">
                     <LoadingContent
+                        error-alert-title="Error occurred while loading your playlists"
                         :error="playlistsQueryError"
                         :loading="playlistsQuery.loading.value"
                     >

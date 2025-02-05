@@ -57,7 +57,12 @@ const { mdAndUp } = useDisplay()
         <div class="position-relative pa-3" :class="{ 'pa-8': mdAndUp }">
             <h1 class="text-h3 font-weight-bold mb-6">MUSIC</h1>
 
-            <LoadingContent :loading="loading" :error="error" @retry="restart">
+            <LoadingContent
+                error-alert-title="Something went wrong when loading playlists"
+                :loading="loading"
+                :error="error"
+                @retry="restart"
+            >
                 <section v-if="user && result" class="mb-14">
                     <PlaylistCreationDialog />
 
