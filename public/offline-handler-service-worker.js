@@ -16,6 +16,7 @@ self.addEventListener('install', event => {
 })
 
 self.addEventListener('fetch', event => {
+    // Caching only GET requests for current app assets (must be same origin)
     if (event.request.method !== 'GET' || !event.request.url.includes(self.origin)) {
         return
     }
