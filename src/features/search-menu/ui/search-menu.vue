@@ -60,7 +60,7 @@ function handleSearch(closeMenu: VoidFunction) {
                             variant="flat"
                             color="primary"
                             type="submit"
-                            :disabled="searchQueryValid"
+                            :disabled="!searchQueryValid"
                         >
                             Search
                         </VBtn>
