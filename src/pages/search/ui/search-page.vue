@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useDisplay } from 'vuetify'
 
-import { usePlaylistWithTracksQuery } from '@/features/playlist-actions'
+import { useTracksSearchQuery } from '@/pages/search/api/tracks-search'
 
 import { TrackItem } from '@/entities/tracks'
 
@@ -12,9 +12,6 @@ import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
 
 const route = useRoute()
 const searchQuery = computed(() => route.query['search-query'])
-
-const { mdAndDown } = useDisplay()
-
 if (!searchQuery.value) {
     throw new FatalError(
         'search-url-broken-error',
@@ -22,17 +19,33 @@ if (!searchQuery.value) {
     )
 }
 
-// Tracks mocked for now
-const { loading, error, result, restart } = usePlaylistWithTracksQuery(571)
+watch(searchQuery, () => {
+    if (searchQuery.value) {
+        tracksSearchQuery.refetch({ searchQuery: searchQuery.value?.toString() })
+    }
+})
 
-const playlist = computed(() =>
-    result.value?.playlist?.__typename === 'PlaylistWithLoadedTracksGraphQL'
-        ? result.value.playlist
+const { mdAndDown } = useDisplay()
+
+const tracksSearchQuery = useTracksSearchQuery(searchQuery.value.toString())
+const error = computed(() => {
+    if (
+        tracksSearchQuery.result.value?.loadedTracks.__typename === 'GraphQLApiError'
+    ) {
+        return tracksSearchQuery.result.value.loadedTracks
+    } else {
+        return tracksSearchQuery.error.value
+    }
+})
+
+const foundTracks = computed(() =>
+    tracksSearchQuery.result.value?.loadedTracks.__typename === 'LoadedTracksWrapper'
+        ? tracksSearchQuery.result.value.loadedTracks
         : undefined,
 )
 
-const tracks = computed(() =>
-    playlist.value?.loadedTracks.filter(track => track !== null),
+const availableTracks = computed(() =>
+    foundTracks.value?.items.filter(track => track !== null),
 )
 </script>
 
@@ -43,14 +56,14 @@ const tracks = computed(() =>
         <p class="text-surface-4 mb-8">"{{ searchQuery }}"</p>
 
         <LoadingContent
-            :loading
+            :loading="tracksSearchQuery.loading.value"
             :error
             skeleton="list-item-three-line"
-            @retry="restart"
+            @retry="tracksSearchQuery.restart"
         >
-            <VRow v-if="playlist?.loadedTracks">
+            <VRow v-if="foundTracks">
                 <VCol
-                    v-for="(track, index) in tracks"
+                    v-for="(track, index) in availableTracks"
                     :key="track.id"
                     :cols="mdAndDown ? 12 : 6"
                 >
@@ -58,7 +71,7 @@ const tracks = computed(() =>
                         :track
                         :track-number="index + 1"
                         :playing-options="{
-                            tracksToCreateNewQueueFrom: tracks,
+                            tracksToCreateNewQueueFrom: availableTracks,
                         }"
                     />
                 </VCol>
