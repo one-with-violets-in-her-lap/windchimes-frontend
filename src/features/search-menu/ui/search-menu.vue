@@ -1,27 +1,23 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const MIN_SEARCH_QUERY_LENGTH = 2
 
 const router = useRouter()
 
-const searchFormData = reactive<{
-    query: string
-}>({
-    query: '',
-})
+const searchQuery = ref('')
 
 function handleSearch(closeMenu: VoidFunction) {
-    if (searchFormData.query.length >= MIN_SEARCH_QUERY_LENGTH) {
+    if (searchQuery.value.length >= MIN_SEARCH_QUERY_LENGTH) {
         router.push({
             name: 'search',
             query: {
-                'search-query': searchFormData.query,
+                'search-query': searchQuery.value,
             },
         })
 
-        searchFormData.query = ''
+        searchQuery.value = ''
 
         closeMenu()
     }
@@ -46,7 +42,7 @@ function handleSearch(closeMenu: VoidFunction) {
                     @submit.prevent="handleSearch(() => (isActive.value = false))"
                 >
                     <VTextField
-                        v-model.trim="searchFormData.query"
+                        v-model.trim="searchQuery"
                         variant="outlined"
                         placeholder="Search for tracks and playlists"
                         density="comfortable"
@@ -61,7 +57,7 @@ function handleSearch(closeMenu: VoidFunction) {
                             variant="flat"
                             color="primary"
                             type="submit"
-                            :disabled="searchFormData.query.length < 3"
+                            :disabled="searchQuery.length < 3"
                         >
                             Search
                         </VBtn>
