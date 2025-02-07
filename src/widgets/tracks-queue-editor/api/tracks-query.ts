@@ -18,7 +18,7 @@ export function useLazyTracksQuery() {
         query GetTracksByReference(
             $trackReferences: [TrackReferenceToLoadGraphQL!]!
         ) {
-            loadedTracks(trackReferences: $trackReferences) {
+            loadedTracks(tracksFilter: { trackReferencesToLoad: $trackReferences }) {
                 ... on LoadedTracksWrapper {
                     items {
                         ...LoadedTrack

@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 import { PreferencesDrawer } from '@/widgets/preferences-drawer'
 
+import { SearchMenu } from '@/features/search-menu'
 import ThemeToggleButtons from '@/features/theme-toggle-buttons/ui/theme-toggle-buttons.vue'
 
 import { DropdownButton, DropdownMenu } from '@/shared/ui/dropdown-menu'
@@ -100,6 +101,8 @@ const preferencesDrawerOpened = ref(false)
                         </DropdownButton>
                     </template>
                 </DropdownMenu>
+
+                <SearchMenu />
             </nav>
         </template>
     </VAppBar>
