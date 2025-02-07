@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const MIN_SEARCH_QUERY_LENGTH = 2
@@ -7,9 +7,12 @@ const MIN_SEARCH_QUERY_LENGTH = 2
 const router = useRouter()
 
 const searchQuery = ref('')
+const searchQueryValid = computed(
+    () => searchQuery.value.length >= MIN_SEARCH_QUERY_LENGTH,
+)
 
 function handleSearch(closeMenu: VoidFunction) {
-    if (searchQuery.value.length >= MIN_SEARCH_QUERY_LENGTH) {
+    if (searchQueryValid.value) {
         router.push({
             name: 'search',
             query: {
@@ -57,7 +60,7 @@ function handleSearch(closeMenu: VoidFunction) {
                             variant="flat"
                             color="primary"
                             type="submit"
-                            :disabled="searchQuery.length < 3"
+                            :disabled="searchQueryValid"
                         >
                             Search
                         </VBtn>
