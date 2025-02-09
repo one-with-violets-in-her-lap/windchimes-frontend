@@ -2,7 +2,7 @@ import { LoadedTrackGraphQl } from '@/shared/model/graphql-generated-types/graph
 
 export interface SearchState {
     /**
-     * Flag that determines that the user is currently searching
+     * Flag that determines if the user is currently searching
      */
     enabled: boolean
 
