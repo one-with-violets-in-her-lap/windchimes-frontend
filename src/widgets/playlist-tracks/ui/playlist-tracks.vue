@@ -5,19 +5,31 @@ import { RecycleScroller } from 'vue-virtual-scroller'
 import { includeLoadedTracksInPlaylistTracks } from '@/entities/playlists'
 import { TRACKS_PORTION_SIZE, TrackItem } from '@/entities/tracks'
 
-import type { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
+import type {
+    GetPlaylistWithTracksQuery,
+    LoadedTrackGraphQl,
+} from '@/shared/model/graphql-generated-types/graphql'
 import { ExcludeGraphQLError } from '@/shared/utils/graphql'
 
-const props = defineProps<{
-    playlist: ExcludeGraphQLError<GetPlaylistWithTracksQuery['playlist']>
-}>()
+const props = withDefaults(
+    defineProps<{
+        playlist: ExcludeGraphQLError<GetPlaylistWithTracksQuery['playlist']>
+        tracks: (LoadedTrackGraphQl | null)[]
+        loadMoreOnScrollEnd: boolean
+    }>(),
+    { loadMoreOnScrollEnd: true },
+)
 
 const emit = defineEmits<{
     (event: 'load-more', tracksToLoadIds: string[]): void
 }>()
 
 function loadMoreTracks() {
-    const lastLoadedIndex = props.playlist.loadedTracks.length - 1
+    if (!props.loadMoreOnScrollEnd) {
+        return
+    }
+
+    const lastLoadedIndex = props.tracks.length - 1
 
     emit(
         'load-more',
@@ -28,7 +40,7 @@ function loadMoreTracks() {
 }
 
 const availableTracks = computed(() => {
-    return props.playlist.loadedTracks.filter(track => track !== null)
+    return props.tracks.filter(track => track !== null)
 })
 
 /**
@@ -36,51 +48,58 @@ const availableTracks = computed(() => {
  * these are tracks references that have only track's id and platform
  */
 const allPlaylistTracks = computed(() =>
-    includeLoadedTracksInPlaylistTracks(
-        props.playlist.trackReferences,
-        props.playlist.loadedTracks,
-    ),
+    includeLoadedTracksInPlaylistTracks(props.playlist.trackReferences, props.tracks),
 )
 </script>
 
 <template>
-    <VList v-if="playlist.trackReferences.length > 0" max-width="1200" class="pa-0">
-        <RecycleScroller
-            :items="availableTracks"
-            :item-size="100"
-            key-field="id"
-            class="tracks-virtual-list"
-            @scroll-end="loadMoreTracks"
+    <VContainer class="mx-0 pa-0">
+        <slot name="before-list"></slot>
+
+        <VList
+            v-if="playlist.trackReferences.length > 0"
+            max-width="1200"
+            class="pa-0"
+            bg-color="background"
         >
-            <template #default="{ item, index }">
-                <TrackItem
-                    :key="item.id"
-                    :track="item"
-                    :current-playlist="playlist"
-                    :playing-options="{
-                        tracksToCreateNewQueueFrom: allPlaylistTracks,
-                    }"
-                    :track-number="index + 1"
-                />
-            </template>
+            <RecycleScroller
+                :items="availableTracks"
+                :item-size="100"
+                key-field="id"
+                class="tracks-virtual-list"
+                @scroll-end="loadMoreTracks"
+            >
+                <template #default="{ item, index }">
+                    <TrackItem
+                        :key="item.id"
+                        :track="item"
+                        :current-playlist="playlist"
+                        :playing-options="{
+                            tracksToCreateNewQueueFrom: allPlaylistTracks,
+                        }"
+                        :track-number="index + 1"
+                    />
+                </template>
 
-            <template #after>
-                <VProgressCircular
-                    v-if="
-                        playlist.loadedTracks.length > 0 &&
-                        playlist.loadedTracks.length < playlist.trackReferences.length
-                    "
-                    indeterminate
-                    class="mt-3 mb-2"
-                    size="40"
-                ></VProgressCircular>
-            </template>
-        </RecycleScroller>
-    </VList>
+                <template #after>
+                    <VProgressCircular
+                        v-if="
+                            loadMoreOnScrollEnd &&
+                            tracks.length > 0 &&
+                            tracks.length < playlist.trackReferences.length
+                        "
+                        indeterminate
+                        class="mt-3 mb-2"
+                        size="40"
+                    ></VProgressCircular>
+                </template>
+            </RecycleScroller>
+        </VList>
 
-    <VCard v-else elevation="0">
-        <VCardText class="text-surface-4"> No tracks were added yet </VCardText>
-    </VCard>
+        <VCard v-else elevation="0">
+            <VCardText class="text-surface-4"> No tracks were added yet </VCardText>
+        </VCard>
+    </VContainer>
 </template>
 
 <style scoped>

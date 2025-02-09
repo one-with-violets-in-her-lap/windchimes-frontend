@@ -97,7 +97,7 @@ async function updatePlaylist(formData: PlaylistFormData) {
 </script>
 
 <template>
-    <div class="d-flex align-center ga-3 mb-7 flex-wrap">
+    <div class="d-flex align-center ga-3 flex-wrap">
         <PlayPlaylistButton
             :playlist-id="playlist.id"
             :tracks-references="playlist.trackReferences"

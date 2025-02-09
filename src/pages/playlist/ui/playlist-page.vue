@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useFatalErrorStore } from '@/app/model/fatal-error-store'
@@ -12,6 +12,8 @@ import {
     usePlaylistWithTracksQuery,
 } from '@/features/playlist-actions'
 import { PlaylistPicture } from '@/features/playlist-picture'
+import { PlaylistTracksSearchField } from '@/features/playlist-tracks-search'
+import type { SearchState } from '@/features/playlist-tracks-search/model/search'
 
 import { NotFoundError } from '@/shared/model/errors'
 import ExpandableParagraph from '@/shared/ui/expandable-paragraph.vue'
@@ -20,6 +22,11 @@ import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
 const playlistId = useRoute().params.id.toString()
 
 const { handleError } = useFatalErrorStore()
+
+const searchState = ref<SearchState>({
+    enabled: false,
+    filteredTracks: [],
+})
 
 const { loading, error, result, restart, fetchMore, onResult, refetch } =
     usePlaylistWithTracksQuery(+playlistId)
@@ -42,6 +49,12 @@ const { user } = useAuth0()
 const userOwnsPlaylist = computed(
     () =>
         playlist.value && user.value && playlist.value.ownerUserId === user.value.sub,
+)
+
+const tracks = computed(() =>
+    searchState.value.enabled
+        ? searchState.value.filteredTracks
+        : playlist.value?.loadedTracks,
 )
 
 function loadMoreTracks(ids: string[]) {
@@ -84,7 +97,7 @@ function loadMoreTracks(ids: string[]) {
         :error="error"
         @retry="restart"
     >
-        <div v-if="playlist">
+        <div v-if="playlist && tracks">
             <PlaylistPicture
                 :playlist="playlist"
                 :current-user-owns-the-playlist="userOwnsPlaylist === true"
@@ -135,11 +148,24 @@ function loadMoreTracks(ids: string[]) {
             <PlaylistActionsButtons
                 :playlist="playlist"
                 :user-is-owner="playlist.ownerUserId === user?.sub"
+                class="mb-13"
                 @update="refetch()"
             />
 
             <Transition name="scale-up" appear>
-                <PlaylistTracks :playlist="playlist" @load-more="loadMoreTracks" />
+                <PlaylistTracks
+                    :playlist="playlist"
+                    :tracks="tracks"
+                    :load-more-on-scroll-end="!searchState.enabled"
+                    @load-more="loadMoreTracks"
+                >
+                    <template #before-list>
+                        <PlaylistTracksSearchField
+                            v-model:search-state="searchState"
+                            :loaded-tracks="playlist.loadedTracks"
+                        />
+                    </template>
+                </PlaylistTracks>
             </Transition>
         </div>
     </LoadingContent>
