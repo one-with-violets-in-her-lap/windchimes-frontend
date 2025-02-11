@@ -32,7 +32,7 @@ const responsivePosition = computed(() => (mobile.value ? 'bottom' : props.posit
             :width="500"
             temporary
             rounded
-            class="responsive-drawer"
+            class="responsive-drawer elevation-0"
             touchless
             :location="positionAtTheBottomOnMobile ? responsivePosition : position"
             :class="{
