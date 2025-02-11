@@ -7,6 +7,8 @@ import zod from 'zod'
 import { Platform, platformSelectItems } from '@/entities/platform/model/platform'
 import { TracksImportFormData } from '@/entities/tracks-import-form-dialog/model/tracks-import-form-data'
 
+import ShineEffectWrapper from '@/shared/ui/shine-effect-wrapper.vue'
+
 defineProps<{
     loading: boolean
 }>()
@@ -56,7 +58,7 @@ const handleFormSubmit = handleSubmit(values => {
 
 <template>
     <div>
-        <VDialog v-model="opened" max-width="600px">
+        <VDialog v-model="opened" max-width="600px" min-width="310px">
             <template #activator="{ props }">
                 <VBtn
                     color="background-contrast"
@@ -79,6 +81,7 @@ const handleFormSubmit = handleSubmit(values => {
                     <VForm @submit.prevent="handleFormSubmit">
                         <VTextField
                             v-model="playlistToImportUrl"
+                            prepend-inner-icon="mdi-link-variant"
                             label="Playlist to import url"
                             placeholder="https://..."
                             :error-messages="errors.playlistToImportUrl"
@@ -89,7 +92,13 @@ const handleFormSubmit = handleSubmit(values => {
                         <VSelect
                             v-model="platform"
                             variant="outlined"
+                            :prepend-inner-icon="
+                                platform
+                                    ? `mdi-${platform.toLowerCase()}`
+                                    : 'mdi-music-box-multiple'
+                            "
                             placeholder="Platform"
+                            clearable
                             label="Platform"
                             :items="platformSelectItems"
                             :error-messages="errors.platform"
@@ -108,16 +117,34 @@ const handleFormSubmit = handleSubmit(values => {
                                 color="primary"
                                 prepend-icon="mdi-check"
                                 type="submit"
+                                class="flex-grow-1"
                                 :disabled="!meta.valid"
                                 :loading="loading"
                             >
                                 Import
                             </VBtn>
 
+                            <ShineEffectWrapper
+                                class="flex-grow-1"
+                                :shine-disabled="!meta.valid"
+                            >
+                                <VBtn
+                                    variant="flat"
+                                    color="primary"
+                                    prepend-icon="mdi-creation"
+                                    type="submit"
+                                    width="100%"
+                                    :disabled="!meta.valid"
+                                >
+                                    Setup sync
+                                </VBtn>
+                            </ShineEffectWrapper>
+
                             <VBtn
-                                variant="tonal"
+                                variant="flat"
                                 color="error"
                                 prepend-icon="mdi-close"
+                                class="flex-grow-1"
                                 @click="opened = false"
                             >
                                 Cancel
