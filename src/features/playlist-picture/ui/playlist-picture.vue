@@ -192,7 +192,7 @@ async function handlePictureDeletion() {
             max-width="700px"
             min-width="320px"
         >
-            <VCard title="Playlist picture" variant="flat">
+            <VCard title="Playlist picture" variant="flat" color="background">
                 <VCardItem v-if="pictureUrl">
                     <div class="d-flex justify-center">
                         <VImg

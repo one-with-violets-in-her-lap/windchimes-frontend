@@ -23,7 +23,7 @@ async function createPlaylist(formData: PlaylistFormData) {
     if (result?.data?.createPlaylist.__typename === 'GraphQLApiError') {
         showNotification('error', result.data.createPlaylist.explanation)
     } else if (
-        result?.data?.createPlaylist.__typename === 'PlaylistToReadWithTracksGraphQL'
+        result?.data?.createPlaylist.__typename === 'PlaylistDetailedGraphQL'
     ) {
         dialogVisible.value = false
 

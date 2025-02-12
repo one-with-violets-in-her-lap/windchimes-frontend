@@ -12,7 +12,7 @@ import {
 const PLAYLIST_PAGE_DATA_WITH_TRACKS = gql`
     ${LOADED_TRACK_FRAGMENT}
 
-    fragment PlaylistPageDataWithTracks on PlaylistWithLoadedTracksGraphQL {
+    fragment PlaylistPageDataWithTracks on PlaylistDetailedWithLoadedTracksGraphQL {
         id
         createdAt
         name
@@ -47,7 +47,7 @@ const playlistWithTracksQuery = gql`
             tracksToLoadIds: $tracksToLoadIds
             loadFirstTracks: $loadFirstTracks
         ) {
-            ... on PlaylistWithLoadedTracksGraphQL {
+            ... on PlaylistDetailedWithLoadedTracksGraphQL {
                 ...PlaylistPageDataWithTracks
             }
 

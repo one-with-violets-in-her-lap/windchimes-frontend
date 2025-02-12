@@ -35,12 +35,12 @@ onResult(() => {
         return
     }
 
-    if (result.value.playlist?.__typename !== 'PlaylistWithLoadedTracksGraphQL') {
+    if (result.value.playlist?.__typename !== 'PlaylistDetailedWithLoadedTracksGraphQL') {
         handleError(new NotFoundError('Playlist not found'))
     }
 })
 const playlist = computed(() =>
-    result.value?.playlist?.__typename === 'PlaylistWithLoadedTracksGraphQL'
+    result.value?.playlist?.__typename === 'PlaylistDetailedWithLoadedTracksGraphQL'
         ? result.value.playlist
         : undefined,
 )
@@ -67,9 +67,9 @@ function loadMoreTracks(ids: string[]) {
                 !previousData.playlist ||
                 !fetchMoreResult?.playlist ||
                 previousData.playlist.__typename !==
-                    'PlaylistWithLoadedTracksGraphQL' ||
+                    'PlaylistDetailedWithLoadedTracksGraphQL' ||
                 fetchMoreResult.playlist.__typename !==
-                    'PlaylistWithLoadedTracksGraphQL'
+                    'PlaylistDetailedWithLoadedTracksGraphQL'
             ) {
                 return previousData
             }
