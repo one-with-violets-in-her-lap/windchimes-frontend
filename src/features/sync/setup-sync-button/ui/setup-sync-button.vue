@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useSetPlaylistForTracksSyncMutation } from '@/features/setup-sync-button/api/set-playlist-for-tracks-sync-mutation'
+import { useSetPlaylistForTracksSyncMutation } from '@/features/sync/setup-sync-button/api/set-playlist-for-tracks-sync-mutation'
 
 import { TracksImportFormData } from '@/entities/tracks-import-form-dialog'
 

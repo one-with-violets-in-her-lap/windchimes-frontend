@@ -6,14 +6,14 @@ import { includeLoadedTracksInPlaylistTracks } from '@/entities/playlists'
 import { TRACKS_PORTION_SIZE, TrackItem } from '@/entities/tracks'
 
 import type {
-    GetPlaylistWithTracksQuery,
+    GetDetailedPlaylistQuery,
     LoadedTrackGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
 import { ExcludeGraphQLError } from '@/shared/utils/graphql'
 
 const props = withDefaults(
     defineProps<{
-        playlist: ExcludeGraphQLError<GetPlaylistWithTracksQuery['playlist']>
+        playlist: ExcludeGraphQLError<GetDetailedPlaylistQuery['playlist']>
         tracks: (LoadedTrackGraphQl | null)[]
         loadMoreOnScrollEnd: boolean
     }>(),

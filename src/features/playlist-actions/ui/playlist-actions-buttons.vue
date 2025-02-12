@@ -6,7 +6,7 @@ import { usePlaylistDeletionMutation } from '@/features/playlist-actions/api/pla
 import { usePlaylistUpdateMutation } from '@/features/playlist-actions/api/playlist-update-mutation'
 import { useTracksImportMutation } from '@/features/playlist-actions/api/tracks-import-mutation'
 import PlayPlaylistButton from '@/features/playlist-actions/play-button/ui/play-playlist-button.vue'
-import { SetupSyncButton } from '@/features/setup-sync-button'
+import { SetupSyncButton } from '@/features/sync/setup-sync-button'
 
 import { PlaylistFormData, PlaylistFormDialog } from '@/entities/playlists'
 import {
@@ -14,13 +14,13 @@ import {
     TracksImportFormDialog,
 } from '@/entities/tracks-import-form-dialog'
 
-import { GetPlaylistWithTracksQuery } from '@/shared/model/graphql-generated-types/graphql'
+import { GetDetailedPlaylistQuery } from '@/shared/model/graphql-generated-types/graphql'
 import { useNotificationsStore } from '@/shared/model/notifications'
 import { DropdownMenu } from '@/shared/ui/dropdown-menu'
 import { ExcludeGraphQLError } from '@/shared/utils/graphql'
 
 const props = defineProps<{
-    playlist: ExcludeGraphQLError<GetPlaylistWithTracksQuery['playlist']>
+    playlist: ExcludeGraphQLError<GetDetailedPlaylistQuery['playlist']>
     userIsOwner: boolean
 }>()
 
