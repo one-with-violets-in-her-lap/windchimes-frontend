@@ -12,8 +12,11 @@ import {
     useDetailedPlaylistQuery,
 } from '@/features/playlist-actions'
 import { PlaylistPicture } from '@/features/playlist-picture'
-import { PlaylistTracksSearchField } from '@/features/playlist-tracks-search'
-import type { SearchState } from '@/features/playlist-tracks-search/model/search'
+import {
+    PlaylistTracksSearchField,
+    SearchState,
+} from '@/features/playlist-tracks-search'
+import { SyncSettingsBadge } from '@/features/sync/sync-settings-badge'
 
 import { NotFoundError } from '@/shared/model/errors'
 import ExpandableParagraph from '@/shared/ui/expandable-paragraph.vue'
@@ -110,7 +113,7 @@ function loadMoreTracks(ids: string[]) {
                 {{ playlist.name }}
             </h1>
 
-            <div class="text-surface-4 mb-5 d-flex ga-3 flex-wrap">
+            <div class="text-surface-4 mb-4 d-flex ga-3 flex-wrap align-center">
                 <time
                     class="flex-shrink-0"
                     :datetime="playlist.createdAt"
@@ -140,6 +143,8 @@ function loadMoreTracks(ids: string[]) {
                     Public
                 </span>
             </div>
+
+            <SyncSettingsBadge :playlist class="mb-5" />
 
             <ExpandableParagraph
                 v-if="playlist.description"
