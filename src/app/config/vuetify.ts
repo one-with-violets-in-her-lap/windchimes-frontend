@@ -20,5 +20,9 @@ export const vuetifyConfig: VuetifyOptions = {
         VCard: {
             class: 'rounded-lg',
         },
+        VProgressCircular: {
+            indeterminate: true,
+            size: 40,
+        },
     },
 }

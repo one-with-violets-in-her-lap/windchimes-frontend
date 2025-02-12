@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { PlaylistPageDataFragment } from '@/shared/model/graphql-generated-types/graphql'
 
+import SyncInfoMenu from './sync-info-menu.vue'
+
 defineProps<{
     playlist: PlaylistPageDataFragment
 }>()
@@ -33,16 +35,7 @@ defineProps<{
                 <VIcon icon="mdi-sync" size="16px" />
             </VBtn>
 
-            <VBtn
-                size="20px"
-                variant="text"
-                icon
-                color="secondary"
-                title="Source playlist info"
-                class="ml-3"
-            >
-                <VIcon icon="mdi-information-outline" size="22px" />
-            </VBtn>
+            <SyncInfoMenu :playlist="playlist" />
 
             <VBtn
                 v-tooltip="'Disable sync'"
