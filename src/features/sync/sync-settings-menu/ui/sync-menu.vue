@@ -29,7 +29,7 @@ const externalPlaylist = computed(() =>
     <VMenu
         :open-delay="100"
         open-on-click
-        height="330px"
+        offset="12px"
         :close-on-content-click="false"
         @update:model-value="
             newValue =>
@@ -74,7 +74,7 @@ const externalPlaylist = computed(() =>
                 variant="flat"
                 color="background"
                 border
-                class="rounded-lg my-2"
+                class="rounded-lg"
                 elevation="3"
                 min-width="260px"
                 max-width="300px"
@@ -98,7 +98,7 @@ const externalPlaylist = computed(() =>
                     <div v-if="externalPlaylist">
                         <VImg
                             :src="externalPlaylist.pictureUrl || undefined"
-                            height="130px"
+                            height="150px"
                             cover
                         />
 
@@ -116,6 +116,40 @@ const externalPlaylist = computed(() =>
                         <VCardSubtitle>
                             {{ externalPlaylist.description }}
                         </VCardSubtitle>
+
+                        <VCardText class="d-flex align-center gc-1">
+                            <VIcon icon="mdi-clock" class="mr-1" />
+
+                            Last sync:
+
+                            <time :datetime="new Date().toString()">
+                                {{
+                                    new Date().toLocaleDateString(undefined, {
+                                        dateStyle: 'medium',
+                                    })
+                                }}
+                            </time>
+                        </VCardText>
+
+                        <VCardActions>
+                            <VBtn
+                                color="primary"
+                                variant="flat"
+                                prepend-icon="mdi-sync"
+                                class="flex-grow-1"
+                            >
+                                Sync
+                            </VBtn>
+
+                            <VBtn
+                                color="error"
+                                variant="tonal"
+                                prepend-icon="mdi-close"
+                                class="flex-grow-1"
+                            >
+                                Disable
+                            </VBtn>
+                        </VCardActions>
                     </div>
                 </Transition>
             </VCard>
