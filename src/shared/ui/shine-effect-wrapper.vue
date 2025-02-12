@@ -26,9 +26,9 @@ onMounted(async () => {
         <slot></slot>
 
         <div
+            ref="shineLightElement"
             class="shine-light"
             :class="{ 'd-none': shineDisabled }"
-            ref="shineLightElement"
         ></div>
     </div>
 </template>

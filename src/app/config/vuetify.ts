@@ -17,8 +17,8 @@ export const vuetifyConfig: VuetifyOptions = {
         },
     },
     defaults: {
-        'VCard': {
-            class: 'rounded-lg'
-        }
-    }
+        VCard: {
+            class: 'rounded-lg',
+        },
+    },
 }
