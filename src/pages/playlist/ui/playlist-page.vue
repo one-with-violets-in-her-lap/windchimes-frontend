@@ -16,7 +16,7 @@ import {
     PlaylistTracksSearchField,
     SearchState,
 } from '@/features/playlist-tracks-search'
-import { SyncSettingsBadge } from '@/features/sync/sync-settings-badge'
+import { SyncSettingsChip } from '@/features/sync/sync-settings-chip'
 
 import { NotFoundError } from '@/shared/model/errors'
 import ExpandableParagraph from '@/shared/ui/expandable-paragraph.vue'
@@ -144,7 +144,7 @@ function loadMoreTracks(ids: string[]) {
                 </span>
             </div>
 
-            <SyncSettingsBadge :playlist class="mb-5" />
+            <SyncSettingsChip :playlist class="mb-5" />
 
             <ExpandableParagraph
                 v-if="playlist.description"
