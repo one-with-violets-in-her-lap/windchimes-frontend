@@ -5,14 +5,14 @@ import { LOADED_TRACK_FRAGMENT } from '@/entities/tracks'
 
 import { ERROR_FRAGMENT } from '@/shared/api/error-fragment'
 import {
-    GetPlaylistWithTracksQuery,
-    GetPlaylistWithTracksQueryVariables,
+    GetDetailedPlaylistQuery,
+    GetDetailedPlaylistQueryVariables,
 } from '@/shared/model/graphql-generated-types/graphql'
 
-const PLAYLIST_PAGE_DATA_WITH_TRACKS = gql`
+const PLAYLIST_PAGE_DATA_FRAGMENT = gql`
     ${LOADED_TRACK_FRAGMENT}
 
-    fragment PlaylistPageDataWithTracks on PlaylistDetailedWithLoadedTracksGraphQL {
+    fragment PlaylistPageData on PlaylistDetailedWithLoadedTracksGraphQL {
         id
         createdAt
         name
@@ -30,14 +30,18 @@ const PLAYLIST_PAGE_DATA_WITH_TRACKS = gql`
         loadedTracks {
             ...LoadedTrack
         }
+
+        externalPlaylistToSyncWith {
+            platform
+        }
     }
 `
 
-const playlistWithTracksQuery = gql`
-    ${PLAYLIST_PAGE_DATA_WITH_TRACKS}
+const DETAILED_PLAYLIST_QUERY_DOCUMENT = gql`
+    ${PLAYLIST_PAGE_DATA_FRAGMENT}
     ${ERROR_FRAGMENT}
 
-    query GetPlaylistWithTracks(
+    query GetDetailedPlaylist(
         $playlistId: Int!
         $tracksToLoadIds: [String!]
         $loadFirstTracks: Boolean
@@ -48,7 +52,7 @@ const playlistWithTracksQuery = gql`
             loadFirstTracks: $loadFirstTracks
         ) {
             ... on PlaylistDetailedWithLoadedTracksGraphQL {
-                ...PlaylistPageDataWithTracks
+                ...PlaylistPageData
             }
 
             ... on GraphQLApiError {
@@ -58,13 +62,13 @@ const playlistWithTracksQuery = gql`
     }
 `
 
-export function usePlaylistWithTracksQuery(
+export function useDetailedPlaylistQuery(
     playlistId: number,
     tracksToLoadIds?: string[],
     loadFirstTracks = true,
 ) {
-    return useQuery<GetPlaylistWithTracksQuery, GetPlaylistWithTracksQueryVariables>(
-        playlistWithTracksQuery,
+    return useQuery<GetDetailedPlaylistQuery, GetDetailedPlaylistQueryVariables>(
+        DETAILED_PLAYLIST_QUERY_DOCUMENT,
         { playlistId, tracksToLoadIds, loadFirstTracks },
     )
 }
@@ -74,8 +78,8 @@ export function usePlaylistWithTracksLazyQuery(
     tracksToLoadIds?: string[],
     loadFirstTracks = true,
 ) {
-    return useLazyQuery<
-        GetPlaylistWithTracksQuery,
-        GetPlaylistWithTracksQueryVariables
-    >(playlistWithTracksQuery, { playlistId, tracksToLoadIds, loadFirstTracks })
+    return useLazyQuery<GetDetailedPlaylistQuery, GetDetailedPlaylistQueryVariables>(
+        DETAILED_PLAYLIST_QUERY_DOCUMENT,
+        { playlistId, tracksToLoadIds, loadFirstTracks },
+    )
 }

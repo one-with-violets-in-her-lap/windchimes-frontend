@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 
 import { usePlayerStore } from '@/features/player'
-import { usePlaylistWithTracksLazyQuery } from '@/features/playlist-actions/api/playlist-with-tracks-query'
+import { usePlaylistWithTracksLazyQuery } from '@/features/playlist-actions/api/detailed-playlist-query'
 
 import {
     QueuePlaylistOperationError,

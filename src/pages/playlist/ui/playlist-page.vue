@@ -9,7 +9,7 @@ import PlaylistTracks from '@/widgets/playlist-tracks/ui/playlist-tracks.vue'
 
 import {
     PlaylistActionsButtons,
-    usePlaylistWithTracksQuery,
+    useDetailedPlaylistQuery,
 } from '@/features/playlist-actions'
 import { PlaylistPicture } from '@/features/playlist-picture'
 import { PlaylistTracksSearchField } from '@/features/playlist-tracks-search'
@@ -29,13 +29,16 @@ const searchState = ref<SearchState>({
 })
 
 const { loading, error, result, restart, fetchMore, onResult, refetch } =
-    usePlaylistWithTracksQuery(+playlistId)
+    useDetailedPlaylistQuery(+playlistId)
 onResult(() => {
     if (!result.value) {
         return
     }
 
-    if (result.value.playlist?.__typename !== 'PlaylistDetailedWithLoadedTracksGraphQL') {
+    if (
+        result.value.playlist?.__typename !==
+        'PlaylistDetailedWithLoadedTracksGraphQL'
+    ) {
         handleError(new NotFoundError('Playlist not found'))
     }
 })
