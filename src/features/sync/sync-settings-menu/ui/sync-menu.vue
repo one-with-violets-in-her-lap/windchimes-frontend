@@ -37,17 +37,36 @@ const externalPlaylist = computed(() =>
         "
     >
         <template #activator="{ props: syncInfoMenuActivatorProps }">
-            <VBtn
+            <VChip
+                v-if="playlist.externalPlaylistToSyncWith"
                 v-bind="syncInfoMenuActivatorProps"
-                size="20px"
-                variant="text"
-                icon
                 color="secondary"
-                title="Source playlist info"
-                class="ml-3"
+                variant="tonal"
+                class="mb-5"
+                :prepend-icon="`mdi-${playlist.externalPlaylistToSyncWith.platform.toLowerCase()}`"
             >
-                <VIcon icon="mdi-information-outline" size="22px" />
-            </VBtn>
+                <template #default>
+                    Synced with&nbsp;
+                    <span class="text-capitalize">
+                        {{
+                            playlist.externalPlaylistToSyncWith.platform.toLowerCase()
+                        }}
+                    </span>
+                </template>
+
+                <template #append>
+                    <VBtn
+                        size="22px"
+                        variant="flat"
+                        icon
+                        color="secondary"
+                        title="Source playlist info"
+                        class="ml-3"
+                    >
+                        <VIcon icon="mdi-dots-horizontal" size="18px" />
+                    </VBtn>
+                </template>
+            </VChip>
         </template>
 
         <template #default>
