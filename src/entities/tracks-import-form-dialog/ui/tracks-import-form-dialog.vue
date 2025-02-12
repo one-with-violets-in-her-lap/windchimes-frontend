@@ -7,19 +7,21 @@ import zod from 'zod'
 import { Platform, platformSelectItems } from '@/entities/platform/model/platform'
 import { TracksImportFormData } from '@/entities/tracks-import-form-dialog/model/tracks-import-form-data'
 
-import ShineEffectWrapper from '@/shared/ui/shine-effect-wrapper.vue'
-
 defineProps<{
+    formData: Partial<TracksImportFormData>
+    formValid?: boolean
     loading: boolean
 }>()
 
 const opened = defineModel<boolean>('opened', { required: true })
 
 const emit = defineEmits<{
-    (event: 'submit', formData: Required<TracksImportFormData>): void
+    (event: 'update:formData', formData: Partial<TracksImportFormData>): void
+    (event: 'update:formValid', newValue: boolean): void
+    (event: 'submit'): void
 }>()
 
-const { defineField, errors, meta, handleSubmit } = useForm({
+const { defineField, errors, meta } = useForm({
     validationSchema: toTypedSchema(
         zod.object({
             playlistToImportUrl: zod
@@ -34,9 +36,27 @@ const { defineField, errors, meta, handleSubmit } = useForm({
         replaceExistingTracks: false,
     },
 })
+
+watch(
+    () => meta.value.valid,
+    () => {
+        emit('update:formValid', meta.value.valid)
+    },
+)
+
 const [playlistToImportUrl] = defineField('playlistToImportUrl')
 const [platform] = defineField('platform')
 const [replaceExistingTracks] = defineField('replaceExistingTracks')
+
+watch([playlistToImportUrl, platform, replaceExistingTracks], () => {
+    emit('update:formData', {
+        playlistToImportUrl: playlistToImportUrl.value,
+        platform: platform.value
+            ? Platform[platform.value as keyof typeof Platform]
+            : undefined,
+        replaceExistingTracks: replaceExistingTracks.value,
+    })
+})
 
 watch(playlistToImportUrl, () => {
     const matchedPlatform = platformSelectItems.find(platform =>
@@ -46,13 +66,6 @@ watch(playlistToImportUrl, () => {
     if (matchedPlatform && !platform.value) {
         platform.value = matchedPlatform
     }
-})
-
-const handleFormSubmit = handleSubmit(values => {
-    emit('submit', {
-        ...values,
-        platform: Platform[values.platform as keyof typeof Platform],
-    })
 })
 </script>
 
@@ -78,7 +91,7 @@ const handleFormSubmit = handleSubmit(values => {
                 </template>
 
                 <template #text>
-                    <VForm @submit.prevent="handleFormSubmit">
+                    <VForm @submit.prevent="emit('submit')">
                         <VTextField
                             v-model="playlistToImportUrl"
                             prepend-inner-icon="mdi-link-variant"
@@ -124,21 +137,10 @@ const handleFormSubmit = handleSubmit(values => {
                                 Import
                             </VBtn>
 
-                            <ShineEffectWrapper
-                                class="flex-grow-1"
-                                :shine-disabled="!meta.valid"
-                            >
-                                <VBtn
-                                    variant="flat"
-                                    color="primary"
-                                    prepend-icon="mdi-creation"
-                                    type="submit"
-                                    width="100%"
-                                    :disabled="!meta.valid"
-                                >
-                                    Setup sync
-                                </VBtn>
-                            </ShineEffectWrapper>
+                            <slot
+                                name="additional-action-buttons"
+                                :form-valid="meta.valid"
+                            ></slot>
 
                             <VBtn
                                 variant="flat"

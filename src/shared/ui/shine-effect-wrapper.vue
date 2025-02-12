@@ -14,7 +14,7 @@ onMounted(async () => {
         left: '120%',
         autoplay: true,
         duration: 650,
-        delay: 2900,
+        delay: 3150,
         loop: true,
         easing: 'easeInOutSine',
     })

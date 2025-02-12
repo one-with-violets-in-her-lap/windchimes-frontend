@@ -6,6 +6,7 @@ import { usePlaylistDeletionMutation } from '@/features/playlist-actions/api/pla
 import { usePlaylistUpdateMutation } from '@/features/playlist-actions/api/playlist-update-mutation'
 import { useTracksImportMutation } from '@/features/playlist-actions/api/tracks-import-mutation'
 import PlayPlaylistButton from '@/features/playlist-actions/play-button/ui/play-playlist-button.vue'
+import { SetupSyncButton } from '@/features/setup-sync-button'
 
 import { PlaylistFormData, PlaylistFormDialog } from '@/entities/playlists'
 import {
@@ -30,10 +31,22 @@ const emit = defineEmits<{
 const router = useRouter()
 const { showNotification } = useNotificationsStore()
 
-const tracksImportDialogOpened = ref(false)
+const tracksImportDialog = ref({
+    opened: false,
+    formValid: false,
+    formData: {},
+})
+
 const tracksImportMutation = useTracksImportMutation()
 
-async function importTracks(tracksImportFormData: Required<TracksImportFormData>) {
+async function importTracks() {
+    if (!tracksImportDialog.value.formValid) {
+        return
+    }
+
+    const tracksImportFormData = tracksImportDialog.value
+        .formData as Required<TracksImportFormData>
+
     const result = await tracksImportMutation.mutate({
         fromPlaylist: {
             platform: tracksImportFormData.platform,
@@ -53,7 +66,7 @@ async function importTracks(tracksImportFormData: Required<TracksImportFormData>
     } else if (result?.data?.importExternalPlaylistTracks === null) {
         emit('update')
         showNotification('success', 'Imported successfully')
-        tracksImportDialogOpened.value = false
+        tracksImportDialog.value.opened = false
     } else {
         showNotification('error', 'An unknown error occurred')
     }
@@ -106,10 +119,21 @@ async function updatePlaylist(formData: PlaylistFormData) {
 
         <TracksImportFormDialog
             v-if="userIsOwner"
-            v-model:opened="tracksImportDialogOpened"
+            v-model:opened="tracksImportDialog.opened"
+            v-model:form-data="tracksImportDialog.formData"
+            v-model:form-valid="tracksImportDialog.formValid"
             :loading="tracksImportMutation.loading.value"
             @submit="importTracks"
-        />
+        >
+            <template #additional-action-buttons="{ formValid }">
+                <SetupSyncButton
+                    :playlist-id="playlist.id"
+                    :tracks-import-form-data="tracksImportDialog.formData"
+                    :tracks-import-form-valid="tracksImportDialog.formValid"
+                    :disabled="!formValid"
+                />
+            </template>
+        </TracksImportFormDialog>
 
         <DropdownMenu v-if="userIsOwner">
             <template #activator="{ props: menuActivatorProps }">
