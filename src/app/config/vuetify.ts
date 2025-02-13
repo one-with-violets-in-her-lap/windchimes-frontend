@@ -22,7 +22,6 @@ export const vuetifyConfig: VuetifyOptions = {
         },
         VProgressCircular: {
             indeterminate: true,
-            size: 40,
         },
     },
 }
