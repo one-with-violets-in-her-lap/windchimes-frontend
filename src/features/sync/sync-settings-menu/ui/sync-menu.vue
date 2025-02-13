@@ -7,6 +7,8 @@ import ErrorAlert from '@/shared/ui/feedback/error-alert.vue'
 
 import { useDisableSyncMutation } from '../api/disable-sync-mutation'
 import { useLazyExternalPlaylistQuery } from '../api/external-playlist-query'
+import { usePerformSyncMutation } from '../api/perform-sync-mutation'
+import SyncButtonWithConfirmation from './sync-button-with-confirmation.vue'
 
 const props = defineProps<{
     playlist: PlaylistPageDataFragment
@@ -29,7 +31,6 @@ const externalPlaylist = computed(() =>
 )
 
 const disableSyncMutation = useDisableSyncMutation()
-
 async function handleSyncDisable(closeMenu: VoidFunction) {
     const result = await disableSyncMutation.mutate({ playlistId: props.playlist.id })
 
@@ -44,6 +45,36 @@ async function handleSyncDisable(closeMenu: VoidFunction) {
     }
 
     closeMenu()
+}
+
+const performSyncMutation = usePerformSyncMutation()
+async function handleSync(closeMenu: VoidFunction) {
+    const result = await performSyncMutation.mutate()
+
+    if (
+        result?.data?.syncPlaylistTracksWithExternalPlaylist.__typename ===
+        'ExternalPlaylistNotAvailableErrorGraphQL'
+    ) {
+        showNotification(
+            'error',
+            'Playlist on a platform you linked for sync ' +
+                'is no longer available. Perhaps it became private',
+        )
+    } else if (
+        result?.data?.syncPlaylistTracksWithExternalPlaylist &&
+        'isErrorResponse' in result.data.syncPlaylistTracksWithExternalPlaylist
+    ) {
+        showNotification('error', 'Something wrong happened while syncing')
+        console.error(
+            'Sync disabling failed:',
+            result.data.syncPlaylistTracksWithExternalPlaylist,
+        )
+    } else if (
+        result?.data?.syncPlaylistTracksWithExternalPlaylist.__typename ===
+        'TracksSyncResult'
+    ) {
+        showNotification('success', 'Sync completed')
+    }
 }
 </script>
 
@@ -168,14 +199,7 @@ async function handleSyncDisable(closeMenu: VoidFunction) {
                         </VCardText>
 
                         <VCardActions>
-                            <VBtn
-                                color="primary"
-                                variant="flat"
-                                prepend-icon="mdi-sync"
-                                class="flex-grow-1"
-                            >
-                                Sync
-                            </VBtn>
+                            <SyncButtonWithConfirmation />
 
                             <VBtn
                                 color="error"
