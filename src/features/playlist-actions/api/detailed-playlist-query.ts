@@ -32,6 +32,7 @@ const PLAYLIST_PAGE_DATA_FRAGMENT = gql`
         }
 
         externalPlaylistToSyncWith {
+            id
             platform
         }
     }

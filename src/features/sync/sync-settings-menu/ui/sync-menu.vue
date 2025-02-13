@@ -2,13 +2,17 @@
 import { computed } from 'vue'
 
 import { PlaylistPageDataFragment } from '@/shared/model/graphql-generated-types/graphql'
+import { useNotificationsStore } from '@/shared/model/notifications'
 import ErrorAlert from '@/shared/ui/feedback/error-alert.vue'
 
+import { useDisableSyncMutation } from '../api/disable-sync-mutation'
 import { useLazyExternalPlaylistQuery } from '../api/external-playlist-query'
 
 const props = defineProps<{
     playlist: PlaylistPageDataFragment
 }>()
+
+const { showNotification } = useNotificationsStore()
 
 const externalPlaylistLinkedQuery = useLazyExternalPlaylistQuery(props.playlist.id)
 const externalPlaylistQueryError = computed(() =>
@@ -23,6 +27,24 @@ const externalPlaylist = computed(() =>
         ? externalPlaylistLinkedQuery.result.value.externalPlaylistLinked
         : undefined,
 )
+
+const disableSyncMutation = useDisableSyncMutation()
+
+async function handleSyncDisable(closeMenu: VoidFunction) {
+    const result = await disableSyncMutation.mutate({ playlistId: props.playlist.id })
+
+    if (
+        result?.data?.disablePlaylistSync &&
+        'is_error_response' in result.data.disablePlaylistSync
+    ) {
+        showNotification('error', 'Something wrong happened while disabling the sync')
+        console.error('Sync disabling failed:', result.data.disablePlaylistSync)
+    } else {
+        showNotification('success', 'Sync disabled, playlist unlinked')
+    }
+
+    closeMenu()
+}
 </script>
 
 <template>
@@ -69,7 +91,7 @@ const externalPlaylist = computed(() =>
             </VChip>
         </template>
 
-        <template #default>
+        <template #default="{ isActive }">
             <VCard
                 variant="flat"
                 color="background"
@@ -97,10 +119,24 @@ const externalPlaylist = computed(() =>
                 <Transition name="scale-up" appear>
                     <div v-if="externalPlaylist">
                         <VImg
+                            v-show="externalPlaylist.pictureUrl"
                             :src="externalPlaylist.pictureUrl || undefined"
                             height="150px"
                             cover
                         />
+
+                        <VSheet
+                            v-show="!externalPlaylist.pictureUrl"
+                            color="surface"
+                            height="150px"
+                            class="d-flex align-center justify-center"
+                        >
+                            <VIcon
+                                icon="mdi-playlist-music"
+                                size="50px"
+                                color="surface-3"
+                            />
+                        </VSheet>
 
                         <VCardTitle>
                             <VIcon
@@ -146,6 +182,10 @@ const externalPlaylist = computed(() =>
                                 variant="tonal"
                                 prepend-icon="mdi-close"
                                 class="flex-grow-1"
+                                :loading="disableSyncMutation.loading.value"
+                                @click="
+                                    handleSyncDisable(() => (isActive.value = false))
+                                "
                             >
                                 Disable
                             </VBtn>

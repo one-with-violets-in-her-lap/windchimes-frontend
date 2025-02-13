@@ -2,13 +2,13 @@
 import { ApolloError } from '@apollo/client/core'
 import { computed } from 'vue'
 
-import { GraphQlApiError } from '@/shared/model/graphql-generated-types/graphql'
+import { ErrorFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { useNotificationsStore } from '@/shared/model/notifications'
 
 const props = withDefaults(
     defineProps<{
         title: string
-        error: ApolloError | GraphQlApiError
+        error: ApolloError | ErrorFragment
     }>(),
     { title: 'Error occurred' },
 )
