@@ -44,5 +44,8 @@ export function usePerformSyncMutation() {
 
     return useMutation<PerformSyncMutation, PerformSyncMutationVariables>(
         mutationDocument,
+        {
+            refetchQueries: ['GetDetailedPlaylist'],
+        },
     )
 }

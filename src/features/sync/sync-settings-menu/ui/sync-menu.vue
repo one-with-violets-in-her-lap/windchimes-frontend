@@ -3,6 +3,7 @@ import { computed } from 'vue'
 
 import { PlaylistPageDataFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { useNotificationsStore } from '@/shared/model/notifications'
+import { vAnime } from '@/shared/ui/animejs-directives'
 import ErrorAlert from '@/shared/ui/feedback/error-alert.vue'
 
 import { useDisableSyncMutation } from '../api/disable-sync-mutation'
@@ -49,7 +50,7 @@ async function handleSyncDisable(closeMenu: VoidFunction) {
 
 const performSyncMutation = usePerformSyncMutation()
 async function handleSync(closeMenu: VoidFunction) {
-    const result = await performSyncMutation.mutate()
+    const result = await performSyncMutation.mutate({ playlistId: props.playlist.id })
 
     if (
         result?.data?.syncPlaylistTracksWithExternalPlaylist.__typename ===
@@ -75,6 +76,8 @@ async function handleSync(closeMenu: VoidFunction) {
     ) {
         showNotification('success', 'Sync completed')
     }
+
+    closeMenu()
 }
 </script>
 
@@ -140,15 +143,18 @@ async function handleSync(closeMenu: VoidFunction) {
                     />
                 </VCardText>
 
-                <VCardText v-if="externalPlaylistQueryError">
+                <VCardText v-else-if="externalPlaylistQueryError">
                     <ErrorAlert
                         :error="externalPlaylistQueryError"
                         title="Failed to load playlist info"
+                        @retry="externalPlaylistLinkedQuery.restart()"
                     />
                 </VCardText>
 
-                <Transition name="scale-up" appear>
-                    <div v-if="externalPlaylist">
+                <Transition name="scale-up" appear mode="out-in">
+                    <div
+                        v-if="externalPlaylist && !performSyncMutation.loading.value"
+                    >
                         <VImg
                             v-show="externalPlaylist.pictureUrl"
                             :src="externalPlaylist.pictureUrl || undefined"
@@ -199,7 +205,11 @@ async function handleSync(closeMenu: VoidFunction) {
                         </VCardText>
 
                         <VCardActions>
-                            <SyncButtonWithConfirmation />
+                            <SyncButtonWithConfirmation
+                                @sync-confirm="
+                                    handleSync(() => (isActive.value = false))
+                                "
+                            />
 
                             <VBtn
                                 color="error"
@@ -215,10 +225,27 @@ async function handleSync(closeMenu: VoidFunction) {
                             </VBtn>
                         </VCardActions>
                     </div>
+
+                    <VCardText v-else-if="performSyncMutation.loading.value">
+                        <VIcon
+                            v-anime="{ rotate: 360, duration: 900, loop: true }"
+                            icon="mdi-sync"
+                            size="50px"
+                            class="sync-in-progress-icon"
+                        />
+                    </VCardText>
                 </Transition>
             </VCard>
         </template>
     </VMenu>
 </template>
 
-<style scoped></style>
+<style scoped>
+.sync-in-progress-icon {
+    margin: 0 auto;
+    transform-origin: center center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+</style>
