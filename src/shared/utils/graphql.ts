@@ -5,12 +5,12 @@ import type {
 } from '@apollo/client/core'
 import { useMutation } from '@vue/apollo-composable'
 
-import type { GraphQlApiError } from '@/shared/model/graphql-generated-types/graphql'
+import type { ErrorFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { useNotificationsStore } from '@/shared/model/notifications'
 
 export type ExcludeGraphQLError<TResult> = Exclude<
     NonNullable<TResult>,
-    GraphQlApiError
+    ErrorFragment
 >
 
 /**
