@@ -157,17 +157,20 @@ async function handleSync(closeMenu: VoidFunction) {
                         v-if="externalPlaylist && !performSyncMutation.loading.value"
                     >
                         <VImg
-                            v-show="externalPlaylist.pictureUrl"
+                            v-show="externalPlaylist.pictureUrl !== null"
                             :src="externalPlaylist.pictureUrl || undefined"
                             height="150px"
                             cover
                         />
 
                         <VSheet
-                            v-show="!externalPlaylist.pictureUrl"
                             color="surface"
                             height="150px"
-                            class="d-flex align-center justify-center"
+                            class="align-center justify-center"
+                            :class="{
+                                'd-none': externalPlaylist.pictureUrl !== null,
+                                'd-flex': externalPlaylist.pictureUrl === null
+                            }"
                         >
                             <VIcon
                                 icon="mdi-playlist-music"
