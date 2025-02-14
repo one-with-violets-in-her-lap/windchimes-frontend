@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ApolloError } from '@apollo/client/core'
 
-import {
-    ErrorFragment,
-} from '@/shared/model/graphql-generated-types/graphql'
+import { ErrorFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { VuetifySkeleton } from '@/shared/model/vuetify-skeleton'
 import ErrorAlert from '@/shared/ui/feedback/error-alert.vue'
 
