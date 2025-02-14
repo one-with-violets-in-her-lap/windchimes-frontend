@@ -1,6 +1,7 @@
 import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 
+import { ERROR_FRAGMENT } from '@/shared/api/error-fragment'
 import {
     SetPlaylistForTracksSyncMutation,
     SetPlaylistForTracksSyncMutationVariables,
@@ -8,6 +9,8 @@ import {
 
 export function useSetPlaylistForTracksSyncMutation() {
     const mutationDocument = gql`
+        ${ERROR_FRAGMENT}
+
         mutation SetPlaylistForTracksSync(
             $playlistToLinkToId: Int!
             $externalPlaylistPlatform: Platform!
@@ -28,22 +31,16 @@ export function useSetPlaylistForTracksSyncMutation() {
                 }
 
                 ... on GraphQLApiError {
-                    explanation
-                    name
-                    technicalExplanation
+                    ...Error
                 }
 
                 ... on ValidationErrorGraphQL {
+                    ...Error
                     dotSeparatedFieldLocation
-                    explanation
-                    name
-                    technicalExplanation
                 }
 
                 ... on ExternalPlaylistNotAvailableErrorGraphQL {
-                    explanation
-                    name
-                    technicalExplanation
+                    ...Error
                 }
             }
         }
