@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { VHover } from 'vuetify/components'
 
-import { PlaylistPageDataWithTracksFragment } from '@/shared/model/graphql-generated-types/graphql'
+import { PlaylistPageDataFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { useNotificationsStore } from '@/shared/model/notifications'
 import { useHoverAvailable } from '@/shared/utils/responsiveness'
 
@@ -12,7 +12,7 @@ import {
 } from '../api/playlist-picture-mutations'
 
 const props = defineProps<{
-    playlist: PlaylistPageDataWithTracksFragment
+    playlist: PlaylistPageDataFragment
     currentUserOwnsThePlaylist: boolean
 }>()
 
@@ -192,7 +192,7 @@ async function handlePictureDeletion() {
             max-width="700px"
             min-width="320px"
         >
-            <VCard title="Playlist picture" variant="flat">
+            <VCard title="Playlist picture" variant="flat" color="background">
                 <VCardItem v-if="pictureUrl">
                     <div class="d-flex justify-center">
                         <VImg

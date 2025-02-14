@@ -13,7 +13,7 @@ export function usePlaylistCreationMutation() {
 
         mutation CreatePlaylist($playlistData: PlaylistToCreateGraphQL!) {
             createPlaylist(playlist: $playlistData) {
-                ... on PlaylistToReadWithTracksGraphQL {
+                ... on PlaylistDetailedGraphQL {
                     id
                 }
 

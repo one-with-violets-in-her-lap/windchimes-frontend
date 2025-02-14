@@ -8,16 +8,20 @@ import { Platform, platformSelectItems } from '@/entities/platform/model/platfor
 import { TracksImportFormData } from '@/entities/tracks-import-form-dialog/model/tracks-import-form-data'
 
 defineProps<{
+    formData: Partial<TracksImportFormData>
+    formValid?: boolean
     loading: boolean
 }>()
 
 const opened = defineModel<boolean>('opened', { required: true })
 
 const emit = defineEmits<{
-    (event: 'submit', formData: Required<TracksImportFormData>): void
+    (event: 'update:formData', formData: Partial<TracksImportFormData>): void
+    (event: 'update:formValid', newValue: boolean): void
+    (event: 'submit'): void
 }>()
 
-const { defineField, errors, meta, handleSubmit } = useForm({
+const { defineField, errors, meta } = useForm({
     validationSchema: toTypedSchema(
         zod.object({
             playlistToImportUrl: zod
@@ -32,9 +36,27 @@ const { defineField, errors, meta, handleSubmit } = useForm({
         replaceExistingTracks: false,
     },
 })
+
+watch(
+    () => meta.value.valid,
+    () => {
+        emit('update:formValid', meta.value.valid)
+    },
+)
+
 const [playlistToImportUrl] = defineField('playlistToImportUrl')
 const [platform] = defineField('platform')
 const [replaceExistingTracks] = defineField('replaceExistingTracks')
+
+watch([playlistToImportUrl, platform, replaceExistingTracks], () => {
+    emit('update:formData', {
+        playlistToImportUrl: playlistToImportUrl.value,
+        platform: platform.value
+            ? Platform[platform.value as keyof typeof Platform]
+            : undefined,
+        replaceExistingTracks: replaceExistingTracks.value,
+    })
+})
 
 watch(playlistToImportUrl, () => {
     const matchedPlatform = platformSelectItems.find(platform =>
@@ -45,18 +67,11 @@ watch(playlistToImportUrl, () => {
         platform.value = matchedPlatform
     }
 })
-
-const handleFormSubmit = handleSubmit(values => {
-    emit('submit', {
-        ...values,
-        platform: Platform[values.platform as keyof typeof Platform],
-    })
-})
 </script>
 
 <template>
     <div>
-        <VDialog v-model="opened" max-width="600px">
+        <VDialog v-model="opened" max-width="600px" min-width="310px">
             <template #activator="{ props }">
                 <VBtn
                     color="background-contrast"
@@ -76,9 +91,10 @@ const handleFormSubmit = handleSubmit(values => {
                 </template>
 
                 <template #text>
-                    <VForm @submit.prevent="handleFormSubmit">
+                    <VForm @submit.prevent="emit('submit')">
                         <VTextField
                             v-model="playlistToImportUrl"
+                            prepend-inner-icon="mdi-link-variant"
                             label="Playlist to import url"
                             placeholder="https://..."
                             :error-messages="errors.playlistToImportUrl"
@@ -89,7 +105,13 @@ const handleFormSubmit = handleSubmit(values => {
                         <VSelect
                             v-model="platform"
                             variant="outlined"
+                            :prepend-inner-icon="
+                                platform
+                                    ? `mdi-${platform.toLowerCase()}`
+                                    : 'mdi-music-box-multiple'
+                            "
                             placeholder="Platform"
+                            clearable
                             label="Platform"
                             :items="platformSelectItems"
                             :error-messages="errors.platform"
@@ -108,16 +130,23 @@ const handleFormSubmit = handleSubmit(values => {
                                 color="primary"
                                 prepend-icon="mdi-check"
                                 type="submit"
+                                class="flex-grow-1"
                                 :disabled="!meta.valid"
                                 :loading="loading"
                             >
                                 Import
                             </VBtn>
 
+                            <slot
+                                name="additional-action-buttons"
+                                :form-valid="meta.valid"
+                            ></slot>
+
                             <VBtn
-                                variant="tonal"
+                                variant="flat"
                                 color="error"
                                 prepend-icon="mdi-close"
+                                class="flex-grow-1"
                                 @click="opened = false"
                             >
                                 Cancel

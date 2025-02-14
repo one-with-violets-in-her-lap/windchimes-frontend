@@ -2,13 +2,13 @@
 import { ApolloError } from '@apollo/client/core'
 import { computed } from 'vue'
 
-import { GraphQlApiError } from '@/shared/model/graphql-generated-types/graphql'
+import { ErrorFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { useNotificationsStore } from '@/shared/model/notifications'
 
 const props = withDefaults(
     defineProps<{
         title: string
-        error: ApolloError | GraphQlApiError
+        error: ApolloError | ErrorFragment
     }>(),
     { title: 'Error occurred' },
 )
@@ -64,7 +64,11 @@ async function copyMoreInfo(moreInfo: string) {
                 Try again
             </VBtn>
 
-            <VMenu v-if="errorData.moreInfo" max-width="500px">
+            <VMenu
+                v-if="errorData.moreInfo"
+                max-width="500px"
+                :close-on-content-click="false"
+            >
                 <template #activator="{ props: menuActivatorProps }">
                     <VBtn
                         v-bind="menuActivatorProps"
