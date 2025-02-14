@@ -9,3 +9,12 @@ export function truncateText(text: string, maxLength: number) {
         return text
     }
 }
+
+export function capitalizeText(text: string) {
+    if (text.length === 0) {
+        return ''
+    }
+
+    const lowerCaseText = text.toLowerCase()
+    return lowerCaseText[0].toUpperCase() + lowerCaseText.slice(1)
+}
