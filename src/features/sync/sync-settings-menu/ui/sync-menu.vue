@@ -86,7 +86,7 @@ async function handleSync(closeMenu: VoidFunction) {
         :open-delay="100"
         open-on-click
         offset="12px"
-        height="310px"
+        height="360px"
         :close-on-content-click="false"
         @update:model-value="
             newValue =>
@@ -169,7 +169,7 @@ async function handleSync(closeMenu: VoidFunction) {
                             class="align-center justify-center"
                             :class="{
                                 'd-none': externalPlaylist.pictureUrl !== null,
-                                'd-flex': externalPlaylist.pictureUrl === null
+                                'd-flex': externalPlaylist.pictureUrl === null,
                             }"
                         >
                             <VIcon
@@ -208,7 +208,7 @@ async function handleSync(closeMenu: VoidFunction) {
                             </time>
                         </VCardText>
 
-                        <VCardActions>
+                        <VCardActions class="flex-wrap gr-3">
                             <SyncButtonWithConfirmation
                                 @sync-confirm="
                                     handleSync(() => (isActive.value = false))
@@ -226,6 +226,18 @@ async function handleSync(closeMenu: VoidFunction) {
                                 "
                             >
                                 Disable
+                            </VBtn>
+
+                            <VBtn
+                                color="background-contrast"
+                                variant="outlined"
+                                prepend-icon="mdi-open-in-new"
+                                class="flex-grow-1 ml-0"
+                                target="_blank"
+                                :href="externalPlaylist.originalPageUrl"
+                            >
+                                Open on
+                                {{ playlist.externalPlaylistToSyncWith?.platform }}
                             </VBtn>
                         </VCardActions>
                     </div>

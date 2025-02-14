@@ -23,6 +23,7 @@ export function useSetPlaylistForTracksSyncMutation() {
                         description
                         name
                         pictureUrl
+                        originalPageUrl
                     }
                 }
 

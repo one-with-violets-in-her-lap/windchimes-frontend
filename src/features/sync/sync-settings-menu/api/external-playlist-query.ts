@@ -12,6 +12,7 @@ export function useLazyExternalPlaylistQuery(parentPlaylistId: number) {
             description
             name
             pictureUrl
+            originalPageUrl
         }
 
         query GetExternalPlaylistLinked($parentPlaylistId: Int!) {
