@@ -86,7 +86,7 @@ async function handleSync(closeMenu: VoidFunction) {
         :open-delay="100"
         open-on-click
         offset="12px"
-        height="360px"
+        height="350px"
         :close-on-content-click="false"
         @update:model-value="
             newValue =>
@@ -190,19 +190,26 @@ async function handleSync(closeMenu: VoidFunction) {
                             {{ externalPlaylist.name }}
                         </VCardTitle>
 
-                        <VCardSubtitle>
+                        <VCardSubtitle v-show="externalPlaylist.description">
                             {{ externalPlaylist.description }}
                         </VCardSubtitle>
 
-                        <VCardText class="d-flex align-center gc-1">
-                            <VIcon icon="mdi-clock" class="mr-1" />
+                        <VCardText class="d-flex align-center gc-1 py-3">
+                            <VIcon icon="mdi-clock" color="surface-4" class="mr-1" />
 
                             Last sync:
 
-                            <time :datetime="new Date().toString()">
+                            <time
+                                :datetime="
+                                    playlist.externalPlaylistToSyncWith?.lastSyncAt
+                                "
+                            >
                                 {{
-                                    new Date().toLocaleDateString(undefined, {
+                                    new Date(
+                                        playlist.externalPlaylistToSyncWith?.lastSyncAt,
+                                    ).toLocaleString(undefined, {
                                         dateStyle: 'medium',
+                                        timeStyle: 'short',
                                     })
                                 }}
                             </time>
