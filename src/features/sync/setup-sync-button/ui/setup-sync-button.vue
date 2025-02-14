@@ -29,26 +29,30 @@ async function handleSyncSetup() {
     const tracksImportFormData =
         props.tracksImportFormData as Required<TracksImportFormData>
 
-    const result = await setPlaylistForTracksSyncMutation.mutate({
-        externalPlaylistPlatform: tracksImportFormData.platform,
-        externalPlaylistUrl: tracksImportFormData.playlistToImportUrl,
-        playlistToLinkToId: props.playlistId,
-    })
+    try {
+        const result = await setPlaylistForTracksSyncMutation.mutate({
+            externalPlaylistPlatform: tracksImportFormData.platform,
+            externalPlaylistUrl: tracksImportFormData.playlistToImportUrl,
+            playlistToLinkToId: props.playlistId,
+        })
 
-    if (
-        result?.data?.setPlaylistForTracksSync.__typename ===
-        'SetPlaylistForTracksSyncMutationResult'
-    ) {
-        showNotification('success', 'Success. You can sync your playlists now')
-    } else if (
-        result?.data?.setPlaylistForTracksSync.__typename ===
-        'ExternalPlaylistNotAvailableErrorGraphQL'
-    ) {
-        showNotification(
-            'error',
-            'Error occurred. Perhaps you entered invalid or private url',
-        )
-    } else {
+        if (
+            result?.data?.setPlaylistForTracksSync.__typename ===
+            'SetPlaylistForTracksSyncMutationResult'
+        ) {
+            showNotification('success', 'Success. You can sync your playlists now')
+        } else if (
+            result?.data?.setPlaylistForTracksSync.__typename ===
+            'ExternalPlaylistNotAvailableErrorGraphQL'
+        ) {
+            showNotification(
+                'error',
+                'Error occurred. Perhaps you entered invalid or private url',
+            )
+        } else {
+            showNotification('error', 'Unknown error occurred')
+        }
+    } catch (error) {
         showNotification('error', 'Unknown error occurred')
     }
 
