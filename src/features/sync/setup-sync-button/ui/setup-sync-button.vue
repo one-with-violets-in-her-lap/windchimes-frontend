@@ -13,6 +13,10 @@ const props = defineProps<{
     disabled?: boolean
 }>()
 
+const emit = defineEmits<{
+    (event: 'sync-finished'): void
+}>()
+
 const { showNotification } = useNotificationsStore()
 
 const setPlaylistForTracksSyncMutation = useSetPlaylistForTracksSyncMutation()
@@ -47,6 +51,8 @@ async function handleSyncSetup() {
     } else {
         showNotification('error', 'Unknown error occurred')
     }
+
+    emit('sync-finished')
 }
 </script>
 

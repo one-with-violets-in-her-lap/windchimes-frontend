@@ -50,5 +50,7 @@ export function useSetPlaylistForTracksSyncMutation() {
     return useMutation<
         SetPlaylistForTracksSyncMutation,
         SetPlaylistForTracksSyncMutationVariables
-    >(mutationDocument)
+    >(mutationDocument, {
+        refetchQueries: ['GetDetailedPlaylist'],
+    })
 }

@@ -131,6 +131,7 @@ async function updatePlaylist(formData: PlaylistFormData) {
                     :tracks-import-form-data="tracksImportDialog.formData"
                     :tracks-import-form-valid="tracksImportDialog.formValid"
                     :disabled="!formValid"
+                    @sync-finished="tracksImportDialog.opened = false"
                 />
             </template>
         </TracksImportFormDialog>
