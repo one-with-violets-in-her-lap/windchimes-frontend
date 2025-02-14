@@ -86,6 +86,7 @@ async function handleSync(closeMenu: VoidFunction) {
         :open-delay="100"
         open-on-click
         offset="12px"
+        height="310px"
         :close-on-content-click="false"
         @update:model-value="
             newValue =>
@@ -139,7 +140,7 @@ async function handleSync(closeMenu: VoidFunction) {
                     <VProgressCircular
                         color="background-contrast"
                         size="32"
-                        class="d-block mx-auto py-5"
+                        class="d-block mx-auto py-14"
                     />
                 </VCardText>
 
@@ -243,9 +244,14 @@ async function handleSync(closeMenu: VoidFunction) {
 <style scoped>
 .sync-in-progress-icon {
     margin: 0 auto;
+    padding: 60px 0px;
     transform-origin: center center;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.scale-up-leave-active {
+    transition-duration: 0.15s;
 }
 </style>
