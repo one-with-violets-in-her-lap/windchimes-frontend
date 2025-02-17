@@ -35,12 +35,16 @@ export function useSetPlaylistForTracksSyncMutation() {
                 }
 
                 ... on ValidationErrorGraphQL {
-                    ...Error
+                    name
+                    explanation
+                    technicalExplanation
                     dotSeparatedFieldLocation
                 }
 
                 ... on ExternalPlaylistNotAvailableErrorGraphQL {
-                    ...Error
+                    name
+                    explanation
+                    technicalExplanation
                 }
             }
         }
