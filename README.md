@@ -6,7 +6,7 @@ UI for a multi-platform music player that lets you listen to the music from diff
 
 it fixes the problem of constant platform switching just to listen to some youtube exclusive podcast, for example
 
-[try the web app](https://windchimes.hopto.org) | [android app](https://github.com/crucials/windchimes-frontend/releases/download/v0.1.2/windchimes-v0.1.2.apk)
+[try the web app](https://windchimes.sorry.run) | [android app](https://github.com/crucials/windchimes-frontend/releases/download/v0.1.2/windchimes-v0.1.2.apk)
 
 https://github.com/user-attachments/assets/2e7b06ad-f6fa-4508-b300-c0539c76344c
 
