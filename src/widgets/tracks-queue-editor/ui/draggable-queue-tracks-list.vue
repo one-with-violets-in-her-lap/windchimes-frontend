@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { RecycleScroller } from 'vue-virtual-scroller'
 
 import DraggableQueueTrack from '@/widgets/tracks-queue-editor/ui/draggable-queue-track.vue'
@@ -10,12 +11,19 @@ import { LoadedQueueItem, QueueItem } from '@/entities/tracks-queue/model/queue-
 import { DragAndDropError } from '@/shared/model/errors'
 import { DragAndDropList } from '@/shared/ui/drag-and-drop'
 
+const TRACK_ITEM_HEIGHT = 100
+
 defineProps<{
     /**
      * actual tracks' data loaded with pagination (infinite scroll)
      */
     loadedQueueItems: LoadedQueueItem[]
     currentQueueItemId: number | undefined
+}>()
+
+const trackListVirtualScrollElement = ref<{
+    scrollToPosition: (y: number) => void
+    getScroll: () => { start: number; end: number }
 }>()
 
 const allQueueItems = defineModel<QueueItem[]>('allQueueItems', { required: true })
@@ -39,17 +47,30 @@ function moveBeforeTrack(trackToMoveId: string, beforeTrackId: string) {
 function deleteQueueItem(id: number) {
     allQueueItems.value = allQueueItems.value.filter(item => item.id !== id)
 }
+
+function scrollVirtualListBy(amount: number) {
+    if (!trackListVirtualScrollElement.value) {
+        return
+    }
+
+    trackListVirtualScrollElement.value.scrollToPosition(
+        trackListVirtualScrollElement.value.getScroll().start + amount,
+    )
+}
 </script>
 
 <template>
     <DragAndDropList
         :items="loadedQueueItems"
+        :item-height="TRACK_ITEM_HEIGHT"
         class="tracks-list-wrapper"
         @move-before="moveBeforeTrack"
+        @scroll-by="scrollVirtualListBy"
     >
         <RecycleScroller
+            ref="trackListVirtualScrollElement"
             :items="loadedQueueItems"
-            :item-size="100"
+            :item-size="TRACK_ITEM_HEIGHT"
             key-field="id"
             class="tracks-list"
         >
