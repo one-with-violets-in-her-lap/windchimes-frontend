@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="TItem extends { id: string | number }">
-import { useEventListener, usePointer } from '@vueuse/core'
+import { useElementSize, useEventListener, usePointer } from '@vueuse/core'
 import { computed, provide, ref } from 'vue'
 
 import {
@@ -7,13 +7,45 @@ import {
     dragAndDropContextProvideKey,
 } from '@/shared/ui/drag-and-drop/drag-and-drop-context'
 
+const DRAGGED_ITEM_GHOST_CLONE_OFFSET = 50
+
+const AUTO_SCROLL_AMOUNT_WHEN_DRAGGING = 6
+const AUTO_SCROLL_TRIGGER_BOUND_OFFSET = 10
+
 const emit = defineEmits<{
     (event: 'move-before', itemToMoveId: string, beforeItemId: string): void
+    (event: 'scroll-by', scrollAmount: number): void
 }>()
 
 const props = defineProps<{
     items: TItem[]
+    itemHeight: number
 }>()
+
+const dragAndDropListElement = ref<HTMLDivElement>()
+const { height: dragAndDropListHeight } = useElementSize(dragAndDropListElement)
+
+let scrollIntervalId: number
+
+function scrollIfAchievedViewportBound(pointerPositionY: number) {
+    window.clearInterval(scrollIntervalId)
+
+    if (
+        pointerPositionY + AUTO_SCROLL_TRIGGER_BOUND_OFFSET >=
+        dragAndDropListHeight.value
+    ) {
+        scrollIntervalId = window.setInterval(() => {
+            emit('scroll-by', AUTO_SCROLL_AMOUNT_WHEN_DRAGGING)
+        }, 20)
+    } else if (
+        pointerPositionY - AUTO_SCROLL_TRIGGER_BOUND_OFFSET <=
+        props.itemHeight
+    ) {
+        scrollIntervalId = window.setInterval(() => {
+            emit('scroll-by', -AUTO_SCROLL_AMOUNT_WHEN_DRAGGING)
+        }, 20)
+    }
+}
 
 const draggedItemId = ref<string | null>(null)
 const draggedItemIndex = computed(() =>
@@ -31,6 +63,8 @@ function handleDrop() {
         emit('move-before', draggedItemId.value, draggedOverItemId.value)
     }
 
+    window.clearInterval(scrollIntervalId)
+
     draggedItemId.value = null
     draggedOverItemId.value = null
 }
@@ -39,6 +73,8 @@ function handleDragOver(pointerX: number, pointerY: number) {
     if (!draggedItemId.value) {
         return
     }
+
+    scrollIfAchievedViewportBound(pointerY)
 
     const targetElement = document.elementFromPoint(pointerX, pointerY)
 
@@ -67,7 +103,7 @@ provide(dragAndDropContextProvideKey, {
 
 <template>
     <div
-        ref="element"
+        ref="dragAndDropListElement"
         class="drag-and-drop-list position-relative"
         draggable="false"
         @pointermove="event => handleDragOver(event.clientX, event.clientY)"
@@ -77,7 +113,7 @@ provide(dragAndDropContextProvideKey, {
         <Teleport to="body">
             <div
                 v-if="draggedItemIndex !== -1"
-                :style="`top: ${pointerY - 20}px;`"
+                :style="`top: ${pointerY - DRAGGED_ITEM_GHOST_CLONE_OFFSET}px;`"
                 class="dragged-item"
             >
                 <slot

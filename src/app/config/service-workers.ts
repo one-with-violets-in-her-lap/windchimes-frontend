@@ -1,3 +1,5 @@
 export function setupServiceWorkers() {
-    navigator.serviceWorker.register('/offline-handler-service-worker.js')
+    if (import.meta.env.PROD) {
+        navigator.serviceWorker.register('/offline-handler-service-worker.js')
+    }
 }
