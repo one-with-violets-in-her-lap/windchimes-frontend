@@ -108,61 +108,45 @@ async function loadMoreTracks() {
             draggable="false"
         >
             <div class="h-100">
-                <header>
-                    <div class="mb-1 d-flex align-center justify-start">
-                        <h2
-                            class="mr-auto flex-shrink-0"
-                            :class="smAndUp ? 'text-h4' : 'text-h6'"
-                        >
-                            Next up
-                        </h2>
-
-                        <div class="d-flex">
-                            <VBtn
-                                prepend-icon="mdi-shuffle"
-                                variant="text"
-                                color="primary"
-                                :size="smAndUp ? 'default' : 'small'"
-                                @click="
-                                    tracksQueue = shuffleQueue(
-                                        tracksQueue,
-                                        currentQueueItemId,
-                                    )
-                                "
-                            >
-                                Shuffle
-                            </VBtn>
-
-                            <VBtn
-                                prepend-icon="mdi-delete"
-                                variant="text"
-                                color="primary"
-                                :size="smAndUp ? 'default' : 'small'"
-                                @click="
-                                    tracksQueue = clearQueue(
-                                        tracksQueue,
-                                        currentQueueItemId,
-                                    )
-                                "
-                            >
-                                Clear
-                            </VBtn>
-                        </div>
-                    </div>
-
-                    <p
-                        class="text-text-secondary"
-                        :class="smAndUp ? 'text-body-1' : 'text-body-2'"
+                <header class="mb-2 d-flex align-center justify-start">
+                    <h2
+                        class="mr-auto flex-shrink-0"
+                        :class="smAndUp ? 'text-h5' : 'text-h6'"
                     >
-                        {{
-                            pluralizeEnglishNoun(
-                                tracksQueue.length,
-                                'track',
-                                'tracks',
-                                { includeCount: true },
-                            )
-                        }}
-                    </p>
+                        Next up
+                    </h2>
+
+                    <div class="d-flex">
+                        <VBtn
+                            prepend-icon="mdi-shuffle"
+                            variant="text"
+                            color="primary"
+                            :size="smAndUp ? 'default' : 'small'"
+                            @click="
+                                tracksQueue = shuffleQueue(
+                                    tracksQueue,
+                                    currentQueueItemId,
+                                )
+                            "
+                        >
+                            Shuffle
+                        </VBtn>
+
+                        <VBtn
+                            prepend-icon="mdi-delete"
+                            variant="text"
+                            color="primary"
+                            :size="smAndUp ? 'default' : 'small'"
+                            @click="
+                                tracksQueue = clearQueue(
+                                    tracksQueue,
+                                    currentQueueItemId,
+                                )
+                            "
+                        >
+                            Clear
+                        </VBtn>
+                    </div>
                 </header>
 
                 <DraggableQueueTracksList
@@ -170,6 +154,22 @@ async function loadMoreTracks() {
                     :current-queue-item-id="currentQueueItemId"
                     :loaded-queue-items="loadedTracks"
                 >
+                    <template #list-start>
+                        <p
+                            class="text-text-secondary mb-1"
+                            :class="smAndUp ? 'text-body-1' : 'text-body-2'"
+                        >
+                            {{
+                                pluralizeEnglishNoun(
+                                    tracksQueue.length,
+                                    'track',
+                                    'tracks',
+                                    { includeCount: true },
+                                )
+                            }}
+                        </p>
+                    </template>
+
                     <template #list-end>
                         <VProgressCircular
                             v-if="loadedTracks.length < tracksQueue.length"
@@ -196,15 +196,8 @@ async function loadMoreTracks() {
     height: 70%;
 }
 
-.queue-action-buttons {
-    display: flex;
-    gap: 12px;
-    padding: 10px 12px;
-    position: sticky;
-    top: 0;
-    margin-right: 20px;
+.queue-header {
     margin-bottom: 12px;
-    z-index: 2;
 }
 
 @media (max-width: 390px) {
