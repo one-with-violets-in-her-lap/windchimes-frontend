@@ -74,6 +74,10 @@ function scrollVirtualListBy(amount: number) {
             key-field="id"
             class="tracks-list"
         >
+            <template #before>
+                <slot name="list-start"></slot>
+            </template>
+
             <template #default="{ item, index }">
                 <DraggableQueueTrack
                     :queue-item="item"
@@ -103,7 +107,7 @@ function scrollVirtualListBy(amount: number) {
 <style scoped>
 .tracks-list-wrapper {
     /* TODO: replace calc with something more readable */
-    height: calc(100% - 56px - 12px);
+    height: calc(100% - 36px - 12px);
 }
 
 .tracks-list {

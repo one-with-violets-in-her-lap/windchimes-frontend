@@ -49,7 +49,7 @@ const responsivePosition = computed(() => (mobile.value ? 'bottom' : props.posit
 <style scoped>
 .responsive-drawer {
     padding: 20px;
-    background-color: rgba(var(--v-theme-background), 0.75);
+    background-color: rgba(var(--v-theme-background), 0.85);
     backdrop-filter: blur(3px);
     max-height: 90%;
 }

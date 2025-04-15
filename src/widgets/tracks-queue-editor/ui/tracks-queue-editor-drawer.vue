@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
+import { useDisplay } from 'vuetify'
 
 import { useLazyTracksQuery } from '@/widgets/tracks-queue-editor/api/tracks-query'
 import { insertLoadedTracks } from '@/widgets/tracks-queue-editor/model/insert-loaded-tracks'
@@ -15,12 +16,15 @@ import {
 } from '@/entities/tracks-queue'
 
 import DrawerWindow from '@/shared/ui/drawer-window.vue'
+import { pluralizeEnglishNoun } from '@/shared/utils/strings'
 
 defineProps<{
     openButtonVisible: boolean
 }>()
 
 const opened = ref(false)
+
+const { smAndUp } = useDisplay()
 
 const { tracksQueue, currentQueueItemId } = storeToRefs(useTracksQueueStore())
 
@@ -104,41 +108,68 @@ async function loadMoreTracks() {
             draggable="false"
         >
             <div class="h-100">
-                <VSheet
-                    color="primary"
-                    class="queue-action-buttons"
-                    rounded
-                    tag="header"
-                >
-                    <VBtn
-                        prepend-icon="mdi-notification-clear-all"
-                        variant="flat"
-                        @click="
-                            tracksQueue = clearQueue(tracksQueue, currentQueueItemId)
-                        "
+                <header class="mb-2 d-flex align-center justify-start">
+                    <h2
+                        class="mr-auto flex-shrink-0"
+                        :class="smAndUp ? 'text-h5' : 'text-h6'"
                     >
-                        Clear
-                    </VBtn>
+                        Next up
+                    </h2>
 
-                    <VBtn
-                        prepend-icon="mdi-shuffle"
-                        variant="outlined"
-                        @click="
-                            tracksQueue = shuffleQueue(
-                                tracksQueue,
-                                currentQueueItemId,
-                            )
-                        "
-                    >
-                        Shuffle
-                    </VBtn>
-                </VSheet>
+                    <div class="d-flex">
+                        <VBtn
+                            prepend-icon="mdi-shuffle"
+                            variant="text"
+                            color="primary"
+                            :size="smAndUp ? 'default' : 'small'"
+                            @click="
+                                tracksQueue = shuffleQueue(
+                                    tracksQueue,
+                                    currentQueueItemId,
+                                )
+                            "
+                        >
+                            Shuffle
+                        </VBtn>
+
+                        <VBtn
+                            prepend-icon="mdi-delete"
+                            variant="text"
+                            color="primary"
+                            :size="smAndUp ? 'default' : 'small'"
+                            @click="
+                                tracksQueue = clearQueue(
+                                    tracksQueue,
+                                    currentQueueItemId,
+                                )
+                            "
+                        >
+                            Clear
+                        </VBtn>
+                    </div>
+                </header>
 
                 <DraggableQueueTracksList
                     v-model:all-queue-items="tracksQueue"
                     :current-queue-item-id="currentQueueItemId"
                     :loaded-queue-items="loadedTracks"
                 >
+                    <template #list-start>
+                        <p
+                            class="text-text-secondary mb-1"
+                            :class="smAndUp ? 'text-body-1' : 'text-body-2'"
+                        >
+                            {{
+                                pluralizeEnglishNoun(
+                                    tracksQueue.length,
+                                    'track',
+                                    'tracks',
+                                    { includeCount: true },
+                                )
+                            }}
+                        </p>
+                    </template>
+
                     <template #list-end>
                         <VProgressCircular
                             v-if="loadedTracks.length < tracksQueue.length"
@@ -165,15 +196,8 @@ async function loadMoreTracks() {
     height: 70%;
 }
 
-.queue-action-buttons {
-    display: flex;
-    gap: 12px;
-    padding: 10px 12px;
-    position: sticky;
-    top: 0;
-    margin-right: 20px;
+.queue-header {
     margin-bottom: 12px;
-    z-index: 2;
 }
 
 @media (max-width: 390px) {
