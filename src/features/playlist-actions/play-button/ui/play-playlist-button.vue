@@ -7,6 +7,7 @@ import { usePlaylistWithTracksLazyQuery } from '@/features/playlist-actions/api/
 
 import {
     QueuePlaylistOperationError,
+    TrackLoadError,
     useTracksQueueStore,
 } from '@/entities/tracks-queue'
 
@@ -29,7 +30,8 @@ const playerStore = usePlayerStore()
 const { playItemFromQueue } = playerStore
 
 const tracksQueueStore = useTracksQueueStore()
-const { addPlaylistToQueue, replaceQueueWithPlaylist } = tracksQueueStore
+const { addPlaylistToQueue, replaceQueueWithPlaylist, playNextTrack } =
+    tracksQueueStore
 const { tracksQueue } = storeToRefs(tracksQueueStore)
 
 const { showNotification } = useNotificationsStore()
@@ -83,8 +85,6 @@ async function playRightAway() {
     try {
         const playlistTracksReferences = await handlePlaylistTracksLoading()
         replaceQueueWithPlaylist(playlistTracksReferences)
-
-        await playItemFromQueue(0)
     } catch (error) {
         if (error instanceof QueuePlaylistOperationError) {
             showNotification(
@@ -98,6 +98,8 @@ async function playRightAway() {
     } finally {
         loading.value = false
     }
+
+    await playNextTrack({ doNotLoop: true })
 }
 
 async function addToQueue() {
