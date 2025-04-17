@@ -3,40 +3,53 @@ import { readonly, ref } from 'vue'
 
 export type NotificationType = 'error' | 'success' | 'info'
 
+const MAX_NOTIFICATIONS_TO_DISPLAY = 2
+
 export interface Notification {
     id: number
     message: string
     type: NotificationType
-    visible: boolean
 }
 
 export const useNotificationsStore = defineStore('notifications', () => {
     const notifications = ref<Notification[]>([])
 
-    function showNotification(type: NotificationType, message: string) {
+    /**
+     * Adds a notification to the queue and schedules its removal after some time
+     *
+     * @param lifetimeMilliseconds Amount of milliseconds to wait before hiding the
+     * notification
+     *
+     * **Please, specify a larger number for notifications with a lot of info**
+     */
+    function showNotification(
+        type: NotificationType,
+        message: string,
+        lifetimeMilliseconds?: number,
+    ) {
         const lastNotification = notifications.value.at(-1)
         const newNotificationId = lastNotification ? lastNotification.id + 1 : 1
-
-        if (notifications.value.length === 4) {
-            notifications.value.splice(0, 1)
-        }
 
         notifications.value.push({
             id: newNotificationId,
             type,
             message,
-            visible: true,
         })
+
+        if (notifications.value.length > MAX_NOTIFICATIONS_TO_DISPLAY) {
+            notifications.value.shift()
+        }
+
+        setTimeout(
+            () => closeNotification(newNotificationId),
+            lifetimeMilliseconds || 4200,
+        )
     }
 
     function closeNotification(id: number) {
-        const notificationToClose = notifications.value.find(
-            notification => notification.id === id,
+        notifications.value = notifications.value.filter(
+            notification => notification.id !== id,
         )
-
-        if (notificationToClose) {
-            notificationToClose.visible = false
-        }
     }
 
     return {

@@ -15,7 +15,11 @@ const icons: Record<NotificationType, string> = {
 </script>
 
 <template>
-    <TransitionGroup tag="div" name="notification-slide-fade" class="notifications-queue">
+    <TransitionGroup
+        tag="div"
+        name="notification-slide-fade"
+        class="notifications-queue"
+    >
         <VCard
             v-for="notification in notifications"
             :key="notification.id"
@@ -60,7 +64,7 @@ const icons: Record<NotificationType, string> = {
     transform: translateX(-50%);
 
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     align-items: end;
     gap: 16px;
     width: 95%;
