@@ -15,19 +15,18 @@ const icons: Record<NotificationType, string> = {
 </script>
 
 <template>
-    <div>
-        <VSnackbar
+    <TransitionGroup tag="div" name="notification-slide-fade" class="notifications-queue">
+        <VCard
             v-for="notification in notifications"
             :key="notification.id"
-            :model-value="notification.visible"
+            tag="output"
             color="background"
-            min-width="300px"
-            max-width="460px"
-            variant="elevated"
-            content-class="border-sm elevation-2"
-            @update:model-value="closeNotification(notification.id)"
+            density="compact"
+            width="100%"
+            elevation="2"
+            class="border-sm d-flex"
         >
-            <div class="d-flex align-center gc-1">
+            <VCardText class="d-flex align-center gc-2 py-3">
                 <VIcon
                     :icon="icons[notification.type]"
                     :color="notification.type"
@@ -35,22 +34,52 @@ const icons: Record<NotificationType, string> = {
                     class="mr-2"
                 />
 
-                <p>
-                    {{ notification.message }}
-                </p>
-            </div>
+                {{ notification.message }}
+            </VCardText>
 
-            <template #actions>
+            <VCardActions class="py-0 pr-1">
                 <VBtn
                     color="background-contrast"
                     variant="text"
+                    density="comfortable"
                     icon="mdi-close"
                     @click="closeNotification(notification.id)"
                 >
                 </VBtn>
-            </template>
-        </VSnackbar>
-    </div>
+            </VCardActions>
+        </VCard>
+    </TransitionGroup>
 </template>
 
-<style scoped></style>
+<style scoped>
+.notifications-queue {
+    z-index: 2;
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 16px;
+    width: 95%;
+    max-width: 400px;
+}
+
+.notification-slide-fade-move,
+.notification-slide-fade-enter-active,
+.notification-slide-fade-leave-active {
+    transition: all 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.notification-slide-fade-enter-from,
+.notification-slide-fade-leave-to {
+    opacity: 0;
+    transform: scaleY(0.01) translate(30px, 0);
+}
+
+.notification-slide-fade-leave-active {
+    position: absolute;
+}
+</style>
