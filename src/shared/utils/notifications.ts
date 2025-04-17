@@ -15,18 +15,11 @@ export const useNotificationsStore = defineStore('notifications', () => {
     const notifications = ref<Notification[]>([])
 
     /**
-     * Adds a notification to the queue and schedules its removal after some time
+     * Adds notification to the store. Does not handle auto-hiding after some time
      *
-     * @param lifetimeMilliseconds Amount of milliseconds to wait before hiding the
-     * notification
-     *
-     * **Please, specify a larger number for notifications with a lot of info**
+     * Restricts max number of notifications ({@link MAX_NOTIFICATIONS_TO_DISPLAY})
      */
-    function showTemporaryNotification(
-        type: NotificationType,
-        message: string,
-        lifetimeMilliseconds?: number,
-    ) {
+    function addNotification(type: NotificationType, message: string) {
         const lastNotification = notifications.value.at(-1)
         const newNotificationId = lastNotification ? lastNotification.id + 1 : 1
 
@@ -40,13 +33,14 @@ export const useNotificationsStore = defineStore('notifications', () => {
             notifications.value.shift()
         }
 
-        setTimeout(
-            () => closeNotification(newNotificationId),
-            lifetimeMilliseconds || 4200,
-        )
+        return {
+            type,
+            message,
+            id: newNotificationId,
+        }
     }
 
-    function closeNotification(id: number) {
+    function removeNotification(id: number) {
         notifications.value = notifications.value.filter(
             notification => notification.id !== id,
         )
@@ -54,7 +48,29 @@ export const useNotificationsStore = defineStore('notifications', () => {
 
     return {
         notifications: readonly(notifications),
-        showTemporaryNotification,
-        closeNotification,
+        addNotification,
+        removeNotification,
     }
 })
+
+/**
+ * Adds a notification to the queue and schedules its removal after some time
+ *
+ * @param timeoutMilliseconds Amount of milliseconds to wait before hiding the
+ * notification
+ *
+ * **Please, specify a larger number for notifications with a lot of info**
+ */
+export function showTemporaryNotification(
+    type: NotificationType,
+    message: string,
+    timeoutMilliseconds = 3600,
+) {
+    const { addNotification, removeNotification } = useNotificationsStore()
+
+    const newNotification = addNotification(type, message)
+
+    setTimeout(() => {
+        removeNotification(newNotification.id)
+    }, timeoutMilliseconds)
+}

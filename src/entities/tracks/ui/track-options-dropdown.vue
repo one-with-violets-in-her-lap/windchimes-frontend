@@ -11,7 +11,7 @@ import DeleteFromPlaylistSheet from '@/entities/tracks/ui/delete-from-playlist-s
 import { PlaylistBasicInfoFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { DropdownButton, DropdownMenu } from '@/shared/ui/dropdown-menu'
 import { IgnoreTypename } from '@/shared/utils/graphql'
-import { useNotificationsStore } from '@/shared/utils/notifications'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 const props = defineProps<{
     track: PlaylistTrack
@@ -19,8 +19,6 @@ const props = defineProps<{
 }>()
 
 const { user } = useAuth0()
-
-const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const tracksQueueStore = useTracksQueueStore()
 const { createQueueItem } = tracksQueueStore
@@ -40,13 +38,13 @@ async function playNext() {
 
         tracksQueue.value = newTracksQueue
 
-        showNotification('success', 'Track will be played next')
+        showTemporaryNotification('success', 'Track will be played next')
     }
 }
 
 async function addToQueue() {
     tracksQueue.value = [...tracksQueue.value, createQueueItem(props.track)]
-    showNotification('success', 'Track will be played next')
+    showTemporaryNotification('success', 'Track will be played next')
 }
 </script>
 

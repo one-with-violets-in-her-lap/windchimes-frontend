@@ -17,7 +17,7 @@ import {
 import { GetDetailedPlaylistQuery } from '@/shared/model/graphql-generated-types/graphql'
 import { DropdownMenu } from '@/shared/ui/dropdown-menu'
 import { ExcludeGraphQLError } from '@/shared/utils/graphql'
-import { useNotificationsStore } from '@/shared/utils/notifications'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 const props = defineProps<{
     playlist: ExcludeGraphQLError<GetDetailedPlaylistQuery['playlist']>
@@ -29,7 +29,6 @@ const emit = defineEmits<{
 }>()
 
 const router = useRouter()
-const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const tracksImportDialog = ref({
     opened: false,
@@ -59,16 +58,16 @@ async function importTracks() {
     if (
         result?.data?.importExternalPlaylistTracks?.__typename === 'GraphQLApiError'
     ) {
-        showNotification(
+        showTemporaryNotification(
             'error',
             result.data.importExternalPlaylistTracks.explanation,
         )
     } else if (result?.data?.importExternalPlaylistTracks === null) {
         emit('update')
-        showNotification('success', 'Imported successfully')
+        showTemporaryNotification('success', 'Imported successfully')
         tracksImportDialog.value.opened = false
     } else {
-        showNotification('error', 'An unknown error occurred')
+        showTemporaryNotification('error', 'An unknown error occurred')
     }
 }
 
@@ -79,12 +78,11 @@ async function deletePlaylist() {
     })
 
     if (result?.data?.deletePlaylist?.__typename === 'GraphQLApiError') {
-        showNotification('error', result.data.deletePlaylist.explanation)
+        showTemporaryNotification('error', result.data.deletePlaylist.explanation)
         return
     }
 
-    showNotification('success', 'Deleted the playlist')
-
+    showTemporaryNotification('success', 'Deleted the playlist')
     router.push('/')
 }
 
@@ -97,11 +95,11 @@ async function updatePlaylist(formData: PlaylistFormData) {
     })
 
     if (result?.data?.updatePlaylist?.__typename === 'GraphQLApiError') {
-        showNotification('error', result.data.updatePlaylist.explanation)
+        showTemporaryNotification('error', result.data.updatePlaylist.explanation)
         return
     }
 
-    showNotification('success', 'Updated the playlist')
+    showTemporaryNotification('success', 'Updated the playlist')
 
     emit('update')
 

@@ -12,7 +12,7 @@ import {
 
 import { TrackReferenceToReadGraphQl } from '@/shared/model/graphql-generated-types/graphql'
 import { DropdownButton, DropdownMenu } from '@/shared/ui/dropdown-menu'
-import { useNotificationsStore } from '@/shared/utils/notifications'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 const PLAYLIST_QUERY_ERROR_MESSAGE =
     "Couldn't request playlist tracks from the server"
@@ -30,8 +30,6 @@ const { playNextTrack } = usePlayerStore()
 const tracksQueueStore = useTracksQueueStore()
 const { addPlaylistToQueue, replaceQueueWithPlaylist } = tracksQueueStore
 const { tracksQueue } = storeToRefs(tracksQueueStore)
-
-const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const playlistWithTracksLazyQuery = usePlaylistWithTracksLazyQuery(
     props.playlistId,
@@ -84,13 +82,16 @@ async function playRightAway() {
         replaceQueueWithPlaylist(playlistTracksReferences)
     } catch (error) {
         if (error instanceof QueuePlaylistOperationError) {
-            showNotification(
+            showTemporaryNotification(
                 'error',
                 error.message || 'Error occurred when playing the playlist',
             )
         } else {
             console.error(error)
-            showNotification('error', 'Error occurred when playing the playlist')
+            showTemporaryNotification(
+                'error',
+                'Error occurred when playing the playlist',
+            )
         }
     } finally {
         loading.value = false
@@ -104,16 +105,19 @@ async function addToQueue() {
 
     try {
         addPlaylistToQueue(await handlePlaylistTracksLoading())
-        showNotification('success', 'Added to the end of the queue')
+        showTemporaryNotification('success', 'Added to the end of the queue')
     } catch (error) {
         if (error instanceof QueuePlaylistOperationError) {
-            showNotification(
+            showTemporaryNotification(
                 'error',
                 error.message || 'Error occurred when playing the playlist',
             )
         } else {
             console.error(error)
-            showNotification('error', 'Error occurred when playing the playlist')
+            showTemporaryNotification(
+                'error',
+                'Error occurred when playing the playlist',
+            )
         }
     } finally {
         loading.value = false

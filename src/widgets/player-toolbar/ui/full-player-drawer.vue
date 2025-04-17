@@ -16,7 +16,7 @@ import TrackOptionsDropdown from '@/entities/tracks/ui/track-options-dropdown.vu
 
 import DrawerWindow from '@/shared/ui/drawer-window.vue'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
-import { useNotificationsStore } from '@/shared/utils/notifications'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 const opened = defineModel<boolean>('opened', { required: true })
 
@@ -27,8 +27,6 @@ const { currentSecond, loopMode, paused, newTrackLoading } = storeToRefs(playerS
 
 const { tracksQueue, currentQueueItem, currentTrack } =
     storeToRefs(useTracksQueueStore())
-
-const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 let pulseAnimation: anime.AnimeInstance | undefined = undefined
 watch(newTrackLoading, () => {
@@ -58,7 +56,10 @@ async function handleNextTrackPlaying() {
         await playNextTrack({ doNotLoop: true })
     } catch (error) {
         console.log(error)
-        showNotification('error', 'Something went wrong while loading the track')
+        showTemporaryNotification(
+            'error',
+            'Something went wrong while loading the track',
+        )
     }
 }
 async function handlePreviousTrackPlaying() {
@@ -66,13 +67,16 @@ async function handlePreviousTrackPlaying() {
         await playPreviousTrack()
     } catch (error) {
         console.log(error)
-        showNotification('error', 'Something went wrong while loading the track')
+        showTemporaryNotification(
+            'error',
+            'Something went wrong while loading the track',
+        )
     }
 }
 
 function shuffleTracksQueue() {
     tracksQueue.value = shuffleQueue(tracksQueue.value, currentQueueItem.value?.id)
-    showNotification('success', 'Next tracks will appear in random order')
+    showTemporaryNotification('success', 'Next tracks will appear in random order')
 }
 </script>
 

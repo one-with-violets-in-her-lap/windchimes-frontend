@@ -6,7 +6,7 @@ import type {
 import { useMutation } from '@vue/apollo-composable'
 
 import type { ErrorFragment } from '@/shared/model/graphql-generated-types/graphql'
-import { useNotificationsStore } from '@/shared/utils/notifications'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 export type ExcludeGraphQLError<TResult> = Exclude<
     NonNullable<TResult>,
@@ -48,11 +48,9 @@ export function useMutationWithErrorNotification<
     TResult = any,
     TVariables extends OperationVariables = any,
 >(document: DocumentNode, options?: Partial<MutationOptions<TResult, TVariables>>) {
-    const { showTemporaryNotification: showNotification } = useNotificationsStore()
-
     const mutation = useMutation<TResult, TVariables>(document, options)
     mutation.onError(error => {
-        showNotification('error', `Unexpected error: "${error.message}"`)
+        showTemporaryNotification('error', `Unexpected error: "${error.message}"`)
     })
 
     return mutation

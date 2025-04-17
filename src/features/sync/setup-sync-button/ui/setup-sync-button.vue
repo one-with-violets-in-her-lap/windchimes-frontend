@@ -4,7 +4,7 @@ import { useSetPlaylistForTracksSyncMutation } from '@/features/sync/setup-sync-
 import { TracksImportFormData } from '@/entities/tracks-import-form-dialog'
 
 import ShineEffectWrapper from '@/shared/ui/shine-effect-wrapper.vue'
-import { useNotificationsStore } from '@/shared/utils/notifications'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 const props = defineProps<{
     playlistId: number
@@ -16,8 +16,6 @@ const props = defineProps<{
 const emit = defineEmits<{
     (event: 'sync-finished'): void
 }>()
-
-const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const setPlaylistForTracksSyncMutation = useSetPlaylistForTracksSyncMutation()
 
@@ -40,20 +38,23 @@ async function handleSyncSetup() {
             result?.data?.setPlaylistForTracksSync.__typename ===
             'SetPlaylistForTracksSyncMutationResult'
         ) {
-            showNotification('success', 'Success. You can sync your playlists now')
+            showTemporaryNotification(
+                'success',
+                'Success. You can sync your playlists now',
+            )
         } else if (
             result?.data?.setPlaylistForTracksSync.__typename ===
             'ExternalPlaylistNotAvailableErrorGraphQL'
         ) {
-            showNotification(
+            showTemporaryNotification(
                 'error',
                 'Error occurred. Perhaps you entered invalid or private url',
             )
         } else {
-            showNotification('error', 'Unknown error occurred')
+            showTemporaryNotification('error', 'Unknown error occurred')
         }
     } catch (error) {
-        showNotification('error', 'Unknown error occurred')
+        showTemporaryNotification('error', 'Unknown error occurred')
     }
 
     emit('sync-finished')

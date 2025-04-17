@@ -6,10 +6,9 @@ import { usePlaylistCreationMutation } from '@/features/playlist-creation-dialog
 
 import { PlaylistFormData, PlaylistFormDialog } from '@/entities/playlists'
 
-import { useNotificationsStore } from '@/shared/utils/notifications'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 const router = useRouter()
-const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const dialogVisible = ref(false)
 
@@ -21,7 +20,7 @@ async function createPlaylist(formData: PlaylistFormData) {
     })
 
     if (result?.data?.createPlaylist.__typename === 'GraphQLApiError') {
-        showNotification('error', result.data.createPlaylist.explanation)
+        showTemporaryNotification('error', result.data.createPlaylist.explanation)
     } else if (
         result?.data?.createPlaylist.__typename === 'PlaylistDetailedGraphQL'
     ) {

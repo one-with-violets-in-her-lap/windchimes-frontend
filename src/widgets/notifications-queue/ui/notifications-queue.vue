@@ -5,7 +5,7 @@ import { NotificationType, useNotificationsStore } from '@/shared/utils/notifica
 
 const notificationStore = useNotificationsStore()
 const { notifications } = storeToRefs(notificationStore)
-const { closeNotification } = notificationStore
+const { removeNotification } = notificationStore
 
 const icons: Record<NotificationType, string> = {
     error: 'mdi-alert',
@@ -47,7 +47,7 @@ const icons: Record<NotificationType, string> = {
                     variant="text"
                     density="comfortable"
                     icon="mdi-close"
-                    @click="closeNotification(notification.id)"
+                    @click="removeNotification(notification.id)"
                 >
                 </VBtn>
             </VCardActions>

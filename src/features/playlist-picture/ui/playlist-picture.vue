@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { VHover } from 'vuetify/components'
 
 import { PlaylistPageDataFragment } from '@/shared/model/graphql-generated-types/graphql'
-import { useNotificationsStore } from '@/shared/utils/notifications'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 import { useHoverAvailable } from '@/shared/utils/responsiveness'
 
 import {
@@ -15,8 +15,6 @@ const props = defineProps<{
     playlist: PlaylistPageDataFragment
     currentUserOwnsThePlaylist: boolean
 }>()
-
-const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const hoverAvailable = useHoverAvailable()
 
@@ -69,7 +67,7 @@ async function handleNewPictureUpload() {
     }
 
     if (!fileInput.value.files || !fileInput.value.files[0]) {
-        showNotification(
+        showTemporaryNotification(
             'error',
             'You must select a file to change the playlist picture',
         )
@@ -88,7 +86,7 @@ async function handleNewPictureUpload() {
             pictureUploadResult?.data?.updatePlaylistPicture.__typename ===
             'GraphQLApiError'
         ) {
-            showNotification(
+            showTemporaryNotification(
                 'error',
                 pictureUploadResult?.data?.updatePlaylistPicture.explanation,
             )
@@ -97,7 +95,10 @@ async function handleNewPictureUpload() {
 
         refreshPictureCache()
     } catch (error) {
-        showNotification('error', 'Something went wrong while uploading your picture')
+        showTemporaryNotification(
+            'error',
+            'Something went wrong while uploading your picture',
+        )
     }
 }
 
@@ -113,13 +114,16 @@ async function handlePictureDeletion() {
             pictureDeletionResult?.data?.deletePlaylistPicture?.__typename ===
             'GraphQLApiError'
         ) {
-            showNotification(
+            showTemporaryNotification(
                 'error',
                 pictureDeletionResult?.data?.deletePlaylistPicture.explanation,
             )
         }
     } catch (error) {
-        showNotification('error', 'Something went wrong while deleting the picture')
+        showTemporaryNotification(
+            'error',
+            'Something went wrong while deleting the picture',
+        )
     }
 }
 </script>
