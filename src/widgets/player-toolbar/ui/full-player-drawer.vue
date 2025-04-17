@@ -14,9 +14,9 @@ import { CurrentTrackThumbnail } from '@/entities/tracks'
 import { shuffleQueue, useTracksQueueStore } from '@/entities/tracks-queue'
 import TrackOptionsDropdown from '@/entities/tracks/ui/track-options-dropdown.vue'
 
-import { useNotificationsStore } from '@/shared/utils/notifications'
 import DrawerWindow from '@/shared/ui/drawer-window.vue'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 
 const opened = defineModel<boolean>('opened', { required: true })
 

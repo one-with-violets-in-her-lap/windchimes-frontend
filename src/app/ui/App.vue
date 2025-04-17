@@ -10,8 +10,6 @@ import { useFatalErrorStore } from '@/app/model/fatal-error-store'
 import { NotificationsQueue } from '@/widgets/notifications-queue'
 import PlayerToolbar from '@/widgets/player-toolbar/ui/player-toolbar.vue'
 
-import { useNotificationsStore } from '@/shared/utils/notifications'
-
 import AppBar from './app-bar.vue'
 
 const fatalErrorStore = useFatalErrorStore()
@@ -30,15 +28,6 @@ App.addListener('appUrlOpen', async event => {
         apolloClient.resetStore()
     }
 })
-
-const { showNotification } = useNotificationsStore()
-showNotification('error', 'Test')
-setTimeout(() => {
-    showNotification('success', 'Test2')
-    setTimeout(() => {
-        showNotification('info', 'Test2')
-    }, 1000)
-}, 1000)
 </script>
 
 <template>

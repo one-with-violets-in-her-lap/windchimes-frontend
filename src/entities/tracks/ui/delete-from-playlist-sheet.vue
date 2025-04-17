@@ -7,9 +7,9 @@ import { useLazyPlaylistsBasicInfoQuery } from '@/entities/tracks/api/playlists-
 import { PlaylistTrack } from '@/entities/tracks/model/track'
 
 import { PlaylistBasicInfoFragment } from '@/shared/model/graphql-generated-types/graphql'
-import { useNotificationsStore } from '@/shared/utils/notifications'
 import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
 import { IgnoreTypename } from '@/shared/utils/graphql'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 
 const props = defineProps<{
     track: PlaylistTrack

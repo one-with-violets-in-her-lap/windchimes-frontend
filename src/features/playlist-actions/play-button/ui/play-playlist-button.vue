@@ -7,13 +7,12 @@ import { usePlaylistWithTracksLazyQuery } from '@/features/playlist-actions/api/
 
 import {
     QueuePlaylistOperationError,
-    TrackLoadError,
     useTracksQueueStore,
 } from '@/entities/tracks-queue'
 
 import { TrackReferenceToReadGraphQl } from '@/shared/model/graphql-generated-types/graphql'
-import { useNotificationsStore } from '@/shared/utils/notifications'
 import { DropdownButton, DropdownMenu } from '@/shared/ui/dropdown-menu'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 
 const PLAYLIST_QUERY_ERROR_MESSAGE =
     "Couldn't request playlist tracks from the server"
@@ -26,12 +25,10 @@ const props = defineProps<{
     tracksReferences?: TrackReferenceToReadGraphQl[]
 }>()
 
-const playerStore = usePlayerStore()
-const { playItemFromQueue } = playerStore
+const { playNextTrack } = usePlayerStore()
 
 const tracksQueueStore = useTracksQueueStore()
-const { addPlaylistToQueue, replaceQueueWithPlaylist, playNextTrack } =
-    tracksQueueStore
+const { addPlaylistToQueue, replaceQueueWithPlaylist } = tracksQueueStore
 const { tracksQueue } = storeToRefs(tracksQueueStore)
 
 const { showNotification } = useNotificationsStore()

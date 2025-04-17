@@ -15,9 +15,9 @@ import {
     PlaylistBasicInfoFragment,
     TrackReferenceToReadGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
-import { useNotificationsStore } from '@/shared/utils/notifications'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import { IgnoreTypename } from '@/shared/utils/graphql'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 
 class AudioFileObtainingError extends Error {}
 

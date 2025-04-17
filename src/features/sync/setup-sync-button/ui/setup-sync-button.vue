@@ -3,8 +3,8 @@ import { useSetPlaylistForTracksSyncMutation } from '@/features/sync/setup-sync-
 
 import { TracksImportFormData } from '@/entities/tracks-import-form-dialog'
 
-import { useNotificationsStore } from '@/shared/utils/notifications'
 import ShineEffectWrapper from '@/shared/ui/shine-effect-wrapper.vue'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 
 const props = defineProps<{
     playlistId: number

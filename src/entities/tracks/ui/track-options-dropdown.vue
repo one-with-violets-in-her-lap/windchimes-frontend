@@ -9,9 +9,9 @@ import AddToPlaylistSheet from '@/entities/tracks/ui/add-to-playlist-sheet.vue'
 import DeleteFromPlaylistSheet from '@/entities/tracks/ui/delete-from-playlist-sheet.vue'
 
 import { PlaylistBasicInfoFragment } from '@/shared/model/graphql-generated-types/graphql'
-import { useNotificationsStore } from '@/shared/utils/notifications'
 import { DropdownButton, DropdownMenu } from '@/shared/ui/dropdown-menu'
 import { IgnoreTypename } from '@/shared/utils/graphql'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 
 const props = defineProps<{
     track: PlaylistTrack

@@ -12,8 +12,8 @@ import PlaylistCreationDialog from '@/features/playlist-creation-dialog/ui/playl
 
 import { usePreferencesStore } from '@/entities/preferences'
 
-import { useNotificationsStore } from '@/shared/utils/notifications'
 import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 
 const { user } = useAuth0()
 
