@@ -24,7 +24,7 @@ const icons: Record<NotificationType, string> = {
             min-width="300px"
             max-width="460px"
             variant="elevated"
-            content-class="border-sm elevation-5"
+            content-class="border-sm elevation-2"
             @update:model-value="closeNotification(notification.id)"
         >
             <div class="d-flex align-center gc-1">
