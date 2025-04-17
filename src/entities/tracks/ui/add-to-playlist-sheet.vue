@@ -5,8 +5,8 @@ import { computed, ref, watch } from 'vue'
 import { useLazyPlaylistsBasicInfoQuery } from '@/entities/tracks/api/playlists-basic-info-query'
 import { PlaylistTrack } from '@/entities/tracks/model/track'
 
-import { useNotificationsStore } from '@/shared/model/notifications'
 import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 import { useAddTrackToPlaylistMutation } from '../api/playlist-tracks-mutations'
 
@@ -16,8 +16,6 @@ const props = defineProps<{
 }>()
 
 const opened = defineModel<boolean>('opened')
-
-const { showNotification } = useNotificationsStore()
 
 const playlistsQuery = useLazyPlaylistsBasicInfoQuery({
     ownerUserId: props.currentUserId,
@@ -59,7 +57,7 @@ async function addToSelectedPlaylists() {
             mutationResult?.data?.addTracksToPlaylists?.__typename ===
             'GraphQLApiError'
         ) {
-            showNotification(
+            showTemporaryNotification(
                 'error',
                 mutationResult.data.addTracksToPlaylists.explanation,
             )
@@ -77,10 +75,10 @@ async function addToSelectedPlaylists() {
 
         opened.value = false
 
-        showNotification('success', 'Added to playlists')
+        showTemporaryNotification('success', 'Added to playlists')
     } catch (error) {
         console.error(error)
-        showNotification('error', 'Failed to add the track to playlists')
+        showTemporaryNotification('error', 'Failed to add the track to playlists')
     }
 }
 </script>

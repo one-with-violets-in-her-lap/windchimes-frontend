@@ -7,9 +7,9 @@ import { useLazyPlaylistsBasicInfoQuery } from '@/entities/tracks/api/playlists-
 import { PlaylistTrack } from '@/entities/tracks/model/track'
 
 import { PlaylistBasicInfoFragment } from '@/shared/model/graphql-generated-types/graphql'
-import { useNotificationsStore } from '@/shared/model/notifications'
 import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
 import { IgnoreTypename } from '@/shared/utils/graphql'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 const props = defineProps<{
     track: PlaylistTrack
@@ -18,8 +18,6 @@ const props = defineProps<{
 }>()
 
 const opened = defineModel<boolean>('opened')
-
-const { showNotification } = useNotificationsStore()
 
 const playlistsQuery = useLazyPlaylistsBasicInfoQuery({
     ownerUserId: props.currentUserId,
@@ -66,7 +64,7 @@ async function deleteFromSelectedPlaylists() {
             mutationResult?.data?.deleteTrackFromPlaylists?.__typename ===
             'GraphQLApiError'
         ) {
-            showNotification(
+            showTemporaryNotification(
                 'error',
                 mutationResult.data?.deleteTrackFromPlaylists.explanation,
             )
@@ -84,10 +82,13 @@ async function deleteFromSelectedPlaylists() {
 
         opened.value = false
 
-        showNotification('success', 'Deleted from playlists')
+        showTemporaryNotification('success', 'Deleted from playlists')
     } catch (error) {
         console.error(error)
-        showNotification('error', 'Failed to delete the track from playlists')
+        showTemporaryNotification(
+            'error',
+            'Failed to delete the track from playlists',
+        )
     }
 }
 </script>

@@ -3,15 +3,13 @@ import { storeToRefs } from 'pinia'
 
 import { usePlayerStore } from '@/features/player'
 
-import { useNotificationsStore } from '@/shared/model/notifications'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 export function usePlayerShortcuts() {
     const playerStore = usePlayerStore()
     const { pause, play, playNextTrack, playPreviousTrack, rewind, setVolume } =
         playerStore
     const { paused, currentSecond, volume } = storeToRefs(playerStore)
-
-    const { showNotification } = useNotificationsStore()
 
     onKeyStroke(
         ' ',
@@ -45,7 +43,10 @@ export function usePlayerShortcuts() {
             await playNextTrack({ doNotLoop: true })
         } catch (error) {
             console.log(error)
-            showNotification('error', 'Something went wrong while loading the track')
+            showTemporaryNotification(
+                'error',
+                'Something went wrong while loading the track',
+            )
         }
     })
 
@@ -59,7 +60,10 @@ export function usePlayerShortcuts() {
             await playPreviousTrack()
         } catch (error) {
             console.log(error)
-            showNotification('error', 'Something went wrong while loading the track')
+            showTemporaryNotification(
+                'error',
+                'Something went wrong while loading the track',
+            )
         }
     })
 
@@ -70,7 +74,7 @@ export function usePlayerShortcuts() {
 
         setVolume(volume.value + 0.1)
 
-        showNotification(
+        showTemporaryNotification(
             'success',
             `Volume set to ${Math.round(volume.value * 100)}%`,
         )
@@ -83,7 +87,7 @@ export function usePlayerShortcuts() {
 
         setVolume(volume.value - 0.1)
 
-        showNotification(
+        showTemporaryNotification(
             'success',
             `Volume set to ${Math.round(volume.value * 100)}%`,
         )

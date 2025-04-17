@@ -15,9 +15,9 @@ import {
     PlaylistBasicInfoFragment,
     TrackReferenceToReadGraphQl,
 } from '@/shared/model/graphql-generated-types/graphql'
-import { useNotificationsStore } from '@/shared/model/notifications'
 import DurationTimestamp from '@/shared/ui/duration-timestamp.vue'
 import { IgnoreTypename } from '@/shared/utils/graphql'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 class AudioFileObtainingError extends Error {}
 
@@ -134,8 +134,6 @@ function playQueueItem(queueItem: LoadedQueueItem, audioFileUrl: string) {
     })
 }
 
-const { showNotification } = useNotificationsStore()
-
 async function handleTrackPlaying() {
     if (isCurrentTrack.value) {
         play()
@@ -157,7 +155,7 @@ async function handleTrackPlaying() {
         }
     } catch (error) {
         console.error(error)
-        showNotification('error', 'Failed to load track data')
+        showTemporaryNotification('error', 'Failed to load track data')
     }
 }
 </script>

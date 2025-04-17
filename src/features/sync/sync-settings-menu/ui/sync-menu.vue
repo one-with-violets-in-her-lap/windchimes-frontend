@@ -2,9 +2,9 @@
 import { computed } from 'vue'
 
 import { PlaylistPageDataFragment } from '@/shared/model/graphql-generated-types/graphql'
-import { useNotificationsStore } from '@/shared/model/notifications'
 import { vAnime } from '@/shared/ui/animejs-directives'
 import ErrorAlert from '@/shared/ui/feedback/error-alert.vue'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 import { useDisableSyncMutation } from '../api/disable-sync-mutation'
 import { useLazyExternalPlaylistQuery } from '../api/external-playlist-query'
@@ -14,8 +14,6 @@ import SyncButtonWithConfirmation from './sync-button-with-confirmation.vue'
 const props = defineProps<{
     playlist: PlaylistPageDataFragment
 }>()
-
-const { showNotification } = useNotificationsStore()
 
 const externalPlaylistLinkedQuery = useLazyExternalPlaylistQuery(props.playlist.id)
 const externalPlaylistQueryError = computed(() =>
@@ -39,10 +37,13 @@ async function handleSyncDisable(closeMenu: VoidFunction) {
         result?.data?.disablePlaylistSync &&
         'is_error_response' in result.data.disablePlaylistSync
     ) {
-        showNotification('error', 'Something wrong happened while disabling the sync')
+        showTemporaryNotification(
+            'error',
+            'Something wrong happened while disabling the sync',
+        )
         console.error('Sync disabling failed:', result.data.disablePlaylistSync)
     } else {
-        showNotification('success', 'Sync disabled, playlist unlinked')
+        showTemporaryNotification('success', 'Sync disabled, playlist unlinked')
     }
 
     closeMenu()
@@ -56,7 +57,7 @@ async function handleSync(closeMenu: VoidFunction) {
         result?.data?.syncPlaylistTracksWithExternalPlaylist.__typename ===
         'ExternalPlaylistNotAvailableErrorGraphQL'
     ) {
-        showNotification(
+        showTemporaryNotification(
             'error',
             'Playlist on a platform you linked for sync ' +
                 'is no longer available. Perhaps it became private',
@@ -65,7 +66,7 @@ async function handleSync(closeMenu: VoidFunction) {
         result?.data?.syncPlaylistTracksWithExternalPlaylist &&
         'isErrorResponse' in result.data.syncPlaylistTracksWithExternalPlaylist
     ) {
-        showNotification('error', 'Something wrong happened while syncing')
+        showTemporaryNotification('error', 'Something wrong happened while syncing')
         console.error(
             'Sync disabling failed:',
             result.data.syncPlaylistTracksWithExternalPlaylist,
@@ -74,7 +75,7 @@ async function handleSync(closeMenu: VoidFunction) {
         result?.data?.syncPlaylistTracksWithExternalPlaylist.__typename ===
         'TracksSyncResult'
     ) {
-        showNotification('success', 'Sync completed')
+        showTemporaryNotification('success', 'Sync completed')
     }
 
     closeMenu()

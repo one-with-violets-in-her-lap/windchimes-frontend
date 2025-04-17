@@ -3,11 +3,11 @@ import { ApolloError } from '@apollo/client/core'
 import { computed } from 'vue'
 
 import { ErrorFragment } from '@/shared/model/graphql-generated-types/graphql'
-import { useNotificationsStore } from '@/shared/model/notifications'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 const props = withDefaults(
     defineProps<{
-        title: string
+        title?: string
         error: ApolloError | ErrorFragment
     }>(),
     { title: 'Error occurred' },
@@ -16,8 +16,6 @@ const props = withDefaults(
 const emit = defineEmits<{
     (event: 'retry'): void
 }>()
-
-const { showNotification } = useNotificationsStore()
 
 const errorData = computed(() => {
     if (props.error instanceof ApolloError) {
@@ -37,9 +35,9 @@ const errorData = computed(() => {
 async function copyMoreInfo(moreInfo: string) {
     try {
         await navigator.clipboard.writeText(moreInfo)
-        showNotification('success', 'Error copied')
+        showTemporaryNotification('success', 'Error copied')
     } catch (error) {
-        showNotification(
+        showTemporaryNotification(
             'error',
             'Failed to copy, check that this website has proper permissions',
         )

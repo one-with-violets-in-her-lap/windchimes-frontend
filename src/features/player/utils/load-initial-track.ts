@@ -4,12 +4,11 @@ import { usePlayerStore } from '@/features/player/model/player-store'
 
 import { queryTrackAudioFile } from '@/entities/tracks'
 
-import { useNotificationsStore } from '@/shared/model/notifications'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 export async function loadInitialTrackAudioFile() {
     const playerStore = usePlayerStore()
     const { client: apolloClient } = useApolloClient()
-    const { showNotification } = useNotificationsStore()
 
     if (playerStore.currentQueueItem) {
         const audioFileResponse = await queryTrackAudioFile(
@@ -27,7 +26,7 @@ export async function loadInitialTrackAudioFile() {
             audioFileResponse.data.trackAudioFile?.__typename === 'GraphQLApiError'
         ) {
             console.error(audioFileResponse.data.trackAudioFile.explanation)
-            showNotification(
+            showTemporaryNotification(
                 'error',
                 'Error while loading current track data: ' +
                     audioFileResponse.data.trackAudioFile.explanation,
@@ -37,7 +36,10 @@ export async function loadInitialTrackAudioFile() {
                 audioFileResponse.error?.message ||
                     'Failed to load initial track audio file url',
             )
-            showNotification('error', 'Error while loading current track data')
+            showTemporaryNotification(
+                'error',
+                'Error while loading current track data',
+            )
         }
     }
 }

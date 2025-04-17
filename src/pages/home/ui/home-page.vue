@@ -12,12 +12,10 @@ import PlaylistCreationDialog from '@/features/playlist-creation-dialog/ui/playl
 
 import { usePreferencesStore } from '@/entities/preferences'
 
-import { useNotificationsStore } from '@/shared/model/notifications'
 import LoadingContent from '@/shared/ui/feedback/loading-content.vue'
+import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 const { user } = useAuth0()
-
-const { showNotification } = useNotificationsStore()
 
 const { hideDiscoverSectionOnHomePage } = storeToRefs(usePreferencesStore())
 watch(hideDiscoverSectionOnHomePage, () => {
@@ -32,7 +30,7 @@ watch(hideDiscoverSectionOnHomePage, () => {
 })
 function hideDiscoverSectionWithNotification() {
     hideDiscoverSectionOnHomePage.value = true
-    showNotification(
+    showTemporaryNotification(
         'success',
         'Section is hidden now. To make it appear back, go to preferences (top bar right corner)',
     )
