@@ -27,7 +27,7 @@ const icons: Record<NotificationType, string> = {
             color="background"
             density="compact"
             width="100%"
-            elevation="2"
+            elevation="6"
             class="border-sm d-flex"
         >
             <VCardText class="d-flex align-center gc-2 py-3">
