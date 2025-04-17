@@ -3,7 +3,7 @@ import { ApolloError } from '@apollo/client/core'
 import { computed } from 'vue'
 
 import { ErrorFragment } from '@/shared/model/graphql-generated-types/graphql'
-import { useNotificationsStore } from '@/shared/model/notifications'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 
 const props = withDefaults(
     defineProps<{

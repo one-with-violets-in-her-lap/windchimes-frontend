@@ -10,7 +10,7 @@ import { useFatalErrorStore } from '@/app/model/fatal-error-store'
 import { NotificationsQueue } from '@/widgets/notifications-queue'
 import PlayerToolbar from '@/widgets/player-toolbar/ui/player-toolbar.vue'
 
-import { useNotificationsStore } from '@/shared/model/notifications'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 
 import AppBar from './app-bar.vue'
 

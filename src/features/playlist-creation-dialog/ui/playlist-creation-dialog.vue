@@ -6,7 +6,7 @@ import { usePlaylistCreationMutation } from '@/features/playlist-creation-dialog
 
 import { PlaylistFormData, PlaylistFormDialog } from '@/entities/playlists'
 
-import { useNotificationsStore } from '@/shared/model/notifications'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 
 const router = useRouter()
 const { showNotification } = useNotificationsStore()

@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia'
 
 import { usePlayerStore } from '@/features/player'
 
-import { useNotificationsStore } from '@/shared/model/notifications'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 
 export function usePlayerShortcuts() {
     const playerStore = usePlayerStore()

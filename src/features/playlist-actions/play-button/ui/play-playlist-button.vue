@@ -12,7 +12,7 @@ import {
 } from '@/entities/tracks-queue'
 
 import { TrackReferenceToReadGraphQl } from '@/shared/model/graphql-generated-types/graphql'
-import { useNotificationsStore } from '@/shared/model/notifications'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 import { DropdownButton, DropdownMenu } from '@/shared/ui/dropdown-menu'
 
 const PLAYLIST_QUERY_ERROR_MESSAGE =

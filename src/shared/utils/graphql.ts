@@ -6,7 +6,7 @@ import type {
 import { useMutation } from '@vue/apollo-composable'
 
 import type { ErrorFragment } from '@/shared/model/graphql-generated-types/graphql'
-import { useNotificationsStore } from '@/shared/model/notifications'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 
 export type ExcludeGraphQLError<TResult> = Exclude<
     NonNullable<TResult>,

@@ -4,7 +4,7 @@ import { usePlayerStore } from '@/features/player/model/player-store'
 
 import { queryTrackAudioFile } from '@/entities/tracks'
 
-import { useNotificationsStore } from '@/shared/model/notifications'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 
 export async function loadInitialTrackAudioFile() {
     const playerStore = usePlayerStore()

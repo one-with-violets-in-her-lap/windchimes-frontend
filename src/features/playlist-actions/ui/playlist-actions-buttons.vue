@@ -15,7 +15,7 @@ import {
 } from '@/entities/tracks-import-form-dialog'
 
 import { GetDetailedPlaylistQuery } from '@/shared/model/graphql-generated-types/graphql'
-import { useNotificationsStore } from '@/shared/model/notifications'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 import { DropdownMenu } from '@/shared/ui/dropdown-menu'
 import { ExcludeGraphQLError } from '@/shared/utils/graphql'
 

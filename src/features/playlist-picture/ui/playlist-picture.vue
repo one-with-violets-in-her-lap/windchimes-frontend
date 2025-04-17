@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { VHover } from 'vuetify/components'
 
 import { PlaylistPageDataFragment } from '@/shared/model/graphql-generated-types/graphql'
-import { useNotificationsStore } from '@/shared/model/notifications'
+import { useNotificationsStore } from '@/shared/utils/notifications'
 import { useHoverAvailable } from '@/shared/utils/responsiveness'
 
 import {
