@@ -7,7 +7,7 @@ const notificationStore = useNotificationsStore()
 const { notifications } = storeToRefs(notificationStore)
 const { removeNotification } = notificationStore
 
-const icons: Record<NotificationType, string> = {
+const ICONS: Record<NotificationType, string> = {
     error: 'mdi-alert',
     info: 'mdi-information',
     success: 'mdi-check-circle',
@@ -32,7 +32,7 @@ const icons: Record<NotificationType, string> = {
         >
             <VCardText class="d-flex align-center gc-2 py-3">
                 <VIcon
-                    :icon="icons[notification.type]"
+                    :icon="ICONS[notification.type]"
                     :color="notification.type"
                     size="26"
                     class="mr-2"
