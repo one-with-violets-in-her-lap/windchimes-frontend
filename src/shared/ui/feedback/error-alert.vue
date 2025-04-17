@@ -7,7 +7,7 @@ import { useNotificationsStore } from '@/shared/utils/notifications'
 
 const props = withDefaults(
     defineProps<{
-        title: string
+        title?: string
         error: ApolloError | ErrorFragment
     }>(),
     { title: 'Error occurred' },
