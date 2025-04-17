@@ -17,7 +17,7 @@ const props = defineProps<{
 
 const opened = defineModel<boolean>('opened')
 
-const { showNotification } = useNotificationsStore()
+const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const playlistsQuery = useLazyPlaylistsBasicInfoQuery({
     ownerUserId: props.currentUserId,

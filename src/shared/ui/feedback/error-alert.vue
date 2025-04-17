@@ -17,7 +17,7 @@ const emit = defineEmits<{
     (event: 'retry'): void
 }>()
 
-const { showNotification } = useNotificationsStore()
+const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const errorData = computed(() => {
     if (props.error instanceof ApolloError) {

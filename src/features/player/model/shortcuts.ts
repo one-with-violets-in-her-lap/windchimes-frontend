@@ -11,7 +11,7 @@ export function usePlayerShortcuts() {
         playerStore
     const { paused, currentSecond, volume } = storeToRefs(playerStore)
 
-    const { showNotification } = useNotificationsStore()
+    const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
     onKeyStroke(
         ' ',

@@ -29,7 +29,7 @@ const emit = defineEmits<{
 }>()
 
 const router = useRouter()
-const { showNotification } = useNotificationsStore()
+const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const tracksImportDialog = ref({
     opened: false,

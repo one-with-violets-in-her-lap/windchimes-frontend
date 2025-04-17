@@ -15,7 +15,7 @@ const props = defineProps<{
     playlist: PlaylistPageDataFragment
 }>()
 
-const { showNotification } = useNotificationsStore()
+const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const externalPlaylistLinkedQuery = useLazyExternalPlaylistQuery(props.playlist.id)
 const externalPlaylistQueryError = computed(() =>

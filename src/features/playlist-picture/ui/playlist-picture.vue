@@ -16,7 +16,7 @@ const props = defineProps<{
     currentUserOwnsThePlaylist: boolean
 }>()
 
-const { showNotification } = useNotificationsStore()
+const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const hoverAvailable = useHoverAvailable()
 

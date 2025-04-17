@@ -9,7 +9,7 @@ import { PlaylistFormData, PlaylistFormDialog } from '@/entities/playlists'
 import { useNotificationsStore } from '@/shared/utils/notifications'
 
 const router = useRouter()
-const { showNotification } = useNotificationsStore()
+const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const dialogVisible = ref(false)
 

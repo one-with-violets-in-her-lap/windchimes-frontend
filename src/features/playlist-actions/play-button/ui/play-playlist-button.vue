@@ -31,7 +31,7 @@ const tracksQueueStore = useTracksQueueStore()
 const { addPlaylistToQueue, replaceQueueWithPlaylist } = tracksQueueStore
 const { tracksQueue } = storeToRefs(tracksQueueStore)
 
-const { showNotification } = useNotificationsStore()
+const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const playlistWithTracksLazyQuery = usePlaylistWithTracksLazyQuery(
     props.playlistId,

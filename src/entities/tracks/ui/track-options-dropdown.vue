@@ -20,7 +20,7 @@ const props = defineProps<{
 
 const { user } = useAuth0()
 
-const { showNotification } = useNotificationsStore()
+const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const tracksQueueStore = useTracksQueueStore()
 const { createQueueItem } = tracksQueueStore

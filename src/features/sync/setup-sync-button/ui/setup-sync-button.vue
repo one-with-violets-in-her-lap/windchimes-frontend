@@ -17,7 +17,7 @@ const emit = defineEmits<{
     (event: 'sync-finished'): void
 }>()
 
-const { showNotification } = useNotificationsStore()
+const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const setPlaylistForTracksSyncMutation = useSetPlaylistForTracksSyncMutation()
 

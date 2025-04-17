@@ -9,7 +9,7 @@ import { useNotificationsStore } from '@/shared/utils/notifications'
 export async function loadInitialTrackAudioFile() {
     const playerStore = usePlayerStore()
     const { client: apolloClient } = useApolloClient()
-    const { showNotification } = useNotificationsStore()
+    const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
     if (playerStore.currentQueueItem) {
         const audioFileResponse = await queryTrackAudioFile(

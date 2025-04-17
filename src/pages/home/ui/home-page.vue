@@ -17,7 +17,7 @@ import { useNotificationsStore } from '@/shared/utils/notifications'
 
 const { user } = useAuth0()
 
-const { showNotification } = useNotificationsStore()
+const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 const { hideDiscoverSectionOnHomePage } = storeToRefs(usePreferencesStore())
 watch(hideDiscoverSectionOnHomePage, () => {

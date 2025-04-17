@@ -134,7 +134,7 @@ function playQueueItem(queueItem: LoadedQueueItem, audioFileUrl: string) {
     })
 }
 
-const { showNotification } = useNotificationsStore()
+const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 async function handleTrackPlaying() {
     if (isCurrentTrack.value) {

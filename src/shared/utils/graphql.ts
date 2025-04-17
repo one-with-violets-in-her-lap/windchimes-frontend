@@ -48,7 +48,7 @@ export function useMutationWithErrorNotification<
     TResult = any,
     TVariables extends OperationVariables = any,
 >(document: DocumentNode, options?: Partial<MutationOptions<TResult, TVariables>>) {
-    const { showNotification } = useNotificationsStore()
+    const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
     const mutation = useMutation<TResult, TVariables>(document, options)
     mutation.onError(error => {

@@ -22,7 +22,7 @@ export const useNotificationsStore = defineStore('notifications', () => {
      *
      * **Please, specify a larger number for notifications with a lot of info**
      */
-    function showNotification(
+    function showTemporaryNotification(
         type: NotificationType,
         message: string,
         lifetimeMilliseconds?: number,
@@ -54,7 +54,7 @@ export const useNotificationsStore = defineStore('notifications', () => {
 
     return {
         notifications: readonly(notifications),
-        showNotification,
+        showTemporaryNotification,
         closeNotification,
     }
 })

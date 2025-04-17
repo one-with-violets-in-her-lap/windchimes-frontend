@@ -28,7 +28,7 @@ const { currentSecond, loopMode, paused, newTrackLoading } = storeToRefs(playerS
 const { tracksQueue, currentQueueItem, currentTrack } =
     storeToRefs(useTracksQueueStore())
 
-const { showNotification } = useNotificationsStore()
+const { showTemporaryNotification: showNotification } = useNotificationsStore()
 
 let pulseAnimation: anime.AnimeInstance | undefined = undefined
 watch(newTrackLoading, () => {
