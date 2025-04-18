@@ -57,7 +57,7 @@ const ICONS: Record<NotificationType, string> = {
 
 <style scoped>
 .notifications-queue {
-    z-index: 2;
+    z-index: 3000;
     position: fixed;
     bottom: 90px;
     left: 50%;
