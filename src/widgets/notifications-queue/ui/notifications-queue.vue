@@ -23,8 +23,8 @@ const ICONS: Record<NotificationType, string> = {
         <VCard
             v-for="notification in notifications"
             :key="notification.id"
-            tag="output"
             color="background"
+            :role="notification.type === 'error' ? 'alert' : 'status'"
             density="compact"
             width="100%"
             elevation="6"
