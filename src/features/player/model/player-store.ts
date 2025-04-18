@@ -1,12 +1,11 @@
 import { defineStore, storeToRefs } from 'pinia'
-import { onMounted, readonly, ref, toRef } from 'vue'
+import { readonly, ref, toRef, watch } from 'vue'
 
 import { usePlayerVolume } from '@/features/player'
-import { loadInitialTrackAudioFile } from '@/features/player/utils/load-initial-track'
 
 import { LoadedQueueItem, useTracksQueueStore } from '@/entities/tracks-queue'
 
-import { useAudio } from '@/shared/model/reactive-audio'
+import { AudioNotInitializedError, useAudio } from '@/shared/model/reactive-audio'
 import { useLocalStorageItem } from '@/shared/utils/local-storage'
 import { getTypedObjectKeys } from '@/shared/utils/objects'
 
@@ -28,7 +27,15 @@ export const usePlayerStore = defineStore('player', () => {
 
     const newTrackLoading = ref(false)
 
-    const { audio, currentSecond, pauseAudio, paused, playAudio, rewind } = useAudio(
+    const {
+        initializeAudio,
+        currentSecond,
+        pauseAudio,
+        paused,
+        playAudio,
+        rewind,
+        audioElement,
+    } = useAudio(
         toRef(() => currentQueueItem.value?.track.secondsDuration),
         {
             playNext: playNextTrack,
@@ -36,14 +43,15 @@ export const usePlayerStore = defineStore('player', () => {
         },
     )
 
-    const { volume, setVolume } = usePlayerVolume(audio)
-
-    onMounted(() => {
-        loadInitialTrackAudioFile()
-    })
+    const { volume, setVolume } = usePlayerVolume()
+    watch(volume, () =>
+        audioElement.value ? (audioElement.value.volume = volume.value) : {},
+    )
 
     /**
-     * resumes the current track or plays a new one if `queueItemToPlay` param is specified
+     * Resumes the current track or plays a new one if `queueItemToPlay` param is specified
+     *
+     * @throws {AudioNotInitializedError} if audio was not initialized
      */
     function play(queueItemToPlay?: QueueItemWithAudioFileUrl) {
         if (!queueItemToPlay) {
@@ -92,8 +100,7 @@ export const usePlayerStore = defineStore('player', () => {
         currentSecond,
         loopMode: readonly(loopMode),
 
-        audio,
-
+        initializeAudio,
         pause: pauseAudio,
         play,
         rewind,

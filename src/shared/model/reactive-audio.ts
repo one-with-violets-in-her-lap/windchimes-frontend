@@ -6,9 +6,12 @@ export interface AudioActionHandlers {
     playPrevious: () => void
 }
 
-export class FailedToInitializeAudioError extends Error {
+export class AudioNotInitializedError extends Error {
     constructor() {
-        super('html audio element was not initialize due to some error')
+        super(
+            'HTML audio element was not initialize due to some error, so the action ' +
+                'cannot be performed',
+        )
     }
 }
 
@@ -25,67 +28,102 @@ export function useAudio(
     const paused = ref(true)
     const currentSecond = ref(0)
 
-    const audio = new Audio()
+    const audioElement = ref<HTMLAudioElement>()
 
-    audio.addEventListener('pause', () => {
-        paused.value = true
-        MediaSession.setPlaybackState({ playbackState: 'paused' })
-    })
+    function initializeAudio() {
+        audioElement.value = new Audio()
 
-    audio.addEventListener('play', () => {
-        paused.value = false
-        MediaSession.setPlaybackState({ playbackState: 'playing' })
-    })
+        audioElement.value.addEventListener('pause', () => {
+            paused.value = true
+            MediaSession.setPlaybackState({ playbackState: 'paused' })
+        })
 
-    audio.addEventListener('timeupdate', async () => {
-        currentSecond.value = audio.currentTime
+        audioElement.value.addEventListener('play', () => {
+            paused.value = false
+            MediaSession.setPlaybackState({ playbackState: 'playing' })
+        })
 
-        try {
-            await MediaSession.setPositionState({
-                duration: secondsDuration.value,
-                position: currentSecond.value,
-            })
-        } catch (error) {
-            console.log('end of track has been reached')
-        }
-    })
+        audioElement.value.addEventListener('timeupdate', async () => {
+            if (!audioElement.value) {
+                return
+            }
 
-    audio.addEventListener('ended', () => actionHandlers.playNext())
+            currentSecond.value = audioElement.value.currentTime
 
-    MediaSession.setActionHandler({ action: 'nexttrack' }, () =>
-        actionHandlers.playNext(),
-    )
-    MediaSession.setActionHandler({ action: 'previoustrack' }, () =>
-        actionHandlers.playPrevious(),
-    )
+            try {
+                await MediaSession.setPositionState({
+                    duration: secondsDuration.value,
+                    position: currentSecond.value,
+                })
+            } catch (error) {
+                console.log('end of track has been reached')
+            }
+        })
 
-    MediaSession.setActionHandler({ action: 'play' }, () => playAudio())
-    MediaSession.setActionHandler({ action: 'pause' }, () => pauseAudio())
+        audioElement.value.addEventListener('ended', () => actionHandlers.playNext())
 
-    MediaSession.setActionHandler({ action: 'seekto' }, event => {
-        if (event.seekTime) {
-            rewind(event.seekTime)
-        }
-    })
+        MediaSession.setActionHandler({ action: 'nexttrack' }, () =>
+            actionHandlers.playNext(),
+        )
+        MediaSession.setActionHandler({ action: 'previoustrack' }, () =>
+            actionHandlers.playPrevious(),
+        )
 
+        MediaSession.setActionHandler({ action: 'play' }, () => playAudio())
+        MediaSession.setActionHandler({ action: 'pause' }, () => pauseAudio())
+
+        MediaSession.setActionHandler({ action: 'seekto' }, event => {
+            if (event.seekTime) {
+                rewind(event.seekTime)
+            }
+        })
+    }
+
+    /**
+     * Plays audio
+     *
+     * @throws {AudioNotInitializedError} if audio was not initialized
+     */
     function playAudio(src?: string, metadata?: MetadataOptions) {
+        if (!audioElement.value) {
+            throw new AudioNotInitializedError()
+        }
+
         if (src) {
-            audio.src = src
+            audioElement.value.src = src
         }
 
         if (metadata) {
             MediaSession.setMetadata(metadata)
         }
 
-        audio.play()
+        audioElement.value.play()
     }
 
+    /**
+     * Pauses audio
+     *
+     * @throws {AudioNotInitializedError} if audio was not initialized
+     */
     function pauseAudio() {
-        audio.pause()
+        if (!audioElement.value) {
+            throw new AudioNotInitializedError()
+        }
+
+        audioElement.value.pause()
     }
 
+    /**
+     * Rewinds the audio, causing it to resume
+     *
+     * @throws {AudioNotInitializedError} if audio was not initialized
+     */
     function rewind(secondToRewindTo: number) {
-        audio.currentTime = secondToRewindTo
+        if (!audioElement.value) {
+            throw new AudioNotInitializedError()
+        }
+
+        audioElement.value.currentTime = secondToRewindTo
         playAudio()
     }
 
@@ -94,7 +132,8 @@ export function useAudio(
     }
 
     return {
-        audio,
+        audioElement,
+        initializeAudio,
 
         paused: readonly(paused),
         currentSecond: readonly(currentSecond),
