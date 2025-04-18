@@ -21,7 +21,7 @@ import { showTemporaryNotification } from '@/shared/utils/notifications'
 const opened = defineModel<boolean>('opened', { required: true })
 
 const playerStore = usePlayerStore()
-const { playNextTrack, playPreviousTrack, pause, play, audio, toggleLoopMode } =
+const { playNextTrack, playPreviousTrack, pause, play, toggleLoopMode } =
     playerStore
 const { currentSecond, loopMode, paused, newTrackLoading } = storeToRefs(playerStore)
 
@@ -96,7 +96,6 @@ function shuffleTracksQueue() {
 
                 <CurrentTrackThumbnail
                     :paused="paused"
-                    :audio="audio"
                     :current-track="currentTrack"
                     @click="paused ? play() : pause()"
                 />

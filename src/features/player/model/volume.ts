@@ -6,7 +6,7 @@ import { useLocalStorageItem } from '@/shared/utils/local-storage'
 
 /**
  * Creates reactive volume state bound to local storage
- * 
+ *
  * **This is not a global volume state**, use {@link usePlayerStore} to change
  * current player volume
  */
