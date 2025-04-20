@@ -1,4 +1,5 @@
 import { MediaSession, MetadataOptions } from '@jofr/capacitor-media-session'
+import { useEventListener } from '@vueuse/core'
 import Hls from 'hls.js'
 import { Ref, readonly, ref } from 'vue'
 
@@ -34,17 +35,17 @@ export function useAudio(
     const audioElement = ref<HTMLAudioElement>()
     const hlsPlayer = new Hls()
 
-    function handleAudioPlay() {
-        paused.value = false
-        MediaSession.setPlaybackState({ playbackState: 'playing' })
-    }
-
-    function handleAudioPause() {
+    useEventListener(audioElement, 'pause', () => {
         paused.value = true
         MediaSession.setPlaybackState({ playbackState: 'paused' })
-    }
+    })
 
-    async function handleAudioTimeUpdate() {
+    useEventListener(audioElement, 'play', () => {
+        paused.value = false
+        MediaSession.setPlaybackState({ playbackState: 'playing' })
+    })
+
+    useEventListener(audioElement, 'timeupdate', async () => {
         if (!audioElement.value) {
             return
         }
@@ -59,18 +60,12 @@ export function useAudio(
         } catch (error) {
             console.log('end of track has been reached')
         }
-    }
+    })
+
+    useEventListener(audioElement, 'ended', () => actionHandlers.playNext())
 
     function initializeAudio() {
         audioElement.value = new Audio()
-
-        audioElement.value.addEventListener('pause', handleAudioPause)
-
-        audioElement.value.addEventListener('play', handleAudioPlay)
-
-        audioElement.value.addEventListener('timeupdate', handleAudioTimeUpdate)
-
-        audioElement.value.addEventListener('ended', actionHandlers.playNext)
 
         MediaSession.setActionHandler(
             { action: 'nexttrack' },
@@ -97,14 +92,6 @@ export function useAudio(
         if (!audioElement.value) {
             throw new AudioNotInitializedError()
         }
-
-        audioElement.value.removeEventListener('pause', handleAudioPause)
-
-        audioElement.value.removeEventListener('play', handleAudioPlay)
-
-        audioElement.value.removeEventListener('timeupdate', handleAudioTimeUpdate)
-
-        audioElement.value.removeEventListener('ended', actionHandlers.playNext)
 
         hlsPlayer.detachMedia()
 
