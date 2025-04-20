@@ -67,8 +67,6 @@ export const usePlayerStore = defineStore('player', () => {
             return
         }
 
-        console.log(queueItemToPlay.track.platform)
-
         currentQueueItemId.value = queueItemToPlay.id
 
         playAudio(
