@@ -97,6 +97,8 @@ export function useAudio(
     }
 
     function destroyAudio() {
+        // TODO: reset playback state (e.g. paused, currentSecond)
+
         if (!audioElement.value) {
             throw new AudioNotInitializedError()
         }
