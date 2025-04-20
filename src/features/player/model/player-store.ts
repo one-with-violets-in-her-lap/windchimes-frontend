@@ -3,9 +3,10 @@ import { readonly, ref, toRef, watch } from 'vue'
 
 import { usePlayerVolume } from '@/features/player'
 
+import { Platform } from '@/entities/platform/model/platform'
 import { LoadedQueueItem, useTracksQueueStore } from '@/entities/tracks-queue'
 
-import { AudioNotInitializedError, useAudio } from '@/shared/model/reactive-audio'
+import { useAudio } from '@/shared/utils/audio'
 import { useLocalStorageItem } from '@/shared/utils/local-storage'
 import { getTypedObjectKeys } from '@/shared/utils/objects'
 
@@ -16,6 +17,13 @@ export enum LoopMode {
     LoopCurrentTrack = 'Loop current track',
     LoopPlaylist = 'Loop playlist/queue',
 }
+
+/**
+ * List of platforms that only provide `*.m3u8` files, thus only can be played
+ * using HTTP Live Streaming
+ * ([**HLS**](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Audio_and_video_delivery/Live_streaming_web_audio_and_video))
+ */
+const PLATFORMS_TO_PLAY_AS_HLS = [Platform.Youtube.toString()]
 
 export const usePlayerStore = defineStore('player', () => {
     const tracksQueueStore = useTracksQueueStore()
@@ -59,13 +67,23 @@ export const usePlayerStore = defineStore('player', () => {
             return
         }
 
+        console.log(queueItemToPlay.track.platform)
+
         currentQueueItemId.value = queueItemToPlay.id
 
-        playAudio(queueItemToPlay.audioFileUrl, {
-            title: currentQueueItem.value?.track.name,
-            artist: currentQueueItem.value?.track.owner.name,
-            artwork: [{ src: currentQueueItem.value?.track.pictureUrl || '' }],
-        })
+        playAudio(
+            queueItemToPlay.audioFileUrl,
+            {
+                title: currentQueueItem.value?.track.name,
+                artist: currentQueueItem.value?.track.owner.name,
+                artwork: [{ src: currentQueueItem.value?.track.pictureUrl || '' }],
+            },
+            {
+                playAsHls: PLATFORMS_TO_PLAY_AS_HLS.includes(
+                    queueItemToPlay.track.platform,
+                ),
+            },
+        )
     }
 
     /**

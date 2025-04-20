@@ -1,4 +1,5 @@
 import { MediaSession, MetadataOptions } from '@jofr/capacitor-media-session'
+import Hls from 'hls.js'
 import { Ref, readonly, ref } from 'vue'
 
 export interface AudioActionHandlers {
@@ -16,9 +17,9 @@ export class AudioNotInitializedError extends Error {
 }
 
 /**
- * creates reactive playback state that is bound to html audio
+ * Creates a reactive playback state that is bound to html audio
  *
- * the {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaSession|media session}
+ * The {@link https://developer.mozilla.org/en-US/docs/Web/API/MediaSession|media session}
  * is also synchronized
  */
 export function useAudio(
@@ -29,6 +30,7 @@ export function useAudio(
     const currentSecond = ref(0)
 
     const audioElement = ref<HTMLAudioElement>()
+    const hlsPlayer = new Hls()
 
     function initializeAudio() {
         audioElement.value = new Audio()
@@ -77,20 +79,38 @@ export function useAudio(
                 rewind(event.seekTime)
             }
         })
+
+        hlsPlayer.attachMedia(audioElement.value)
     }
 
     /**
-     * Plays audio
+     * Plays audio and updates
+     * [media session](https://developer.mozilla.org/en-US/docs/Web/API/MediaSession)
+     *
+     * If `src` is not specified, it just resumes the playback
+     *
+     * Supports
+     * [**HLS**](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Audio_and_video_delivery/Live_streaming_web_audio_and_video)
+     *
+     * @param metadata Track metadata to set for media session
      *
      * @throws {AudioNotInitializedError} if audio was not initialized
      */
-    function playAudio(src?: string, metadata?: MetadataOptions) {
+    function playAudio(
+        src?: string,
+        metadata?: MetadataOptions,
+        { playAsHls }: { playAsHls: boolean } = { playAsHls: false },
+    ) {
         if (!audioElement.value) {
             throw new AudioNotInitializedError()
         }
 
         if (src) {
-            audioElement.value.src = src
+            if (playAsHls) {
+                hlsPlayer.loadSource(src)
+            } else {
+                audioElement.value.src = src
+            }
         }
 
         if (metadata) {
