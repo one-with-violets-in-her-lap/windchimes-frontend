@@ -34,6 +34,7 @@ export function useAudio(
 
     const audioElement = ref<HTMLAudioElement>()
     const hlsPlayer = new Hls()
+    const mediaLoadError = ref<string | null>()
 
     useEventListener(audioElement, 'pause', () => {
         paused.value = true
@@ -64,8 +65,20 @@ export function useAudio(
 
     useEventListener(audioElement, 'ended', () => actionHandlers.playNext())
 
+    useEventListener(
+        audioElement,
+        'error',
+        event => (mediaLoadError.value = `${event.error}`),
+    )
+
     function initializeAudio() {
         audioElement.value = new Audio()
+
+        hlsPlayer.on(
+            Hls.Events.ERROR,
+            (_, error) =>
+                (mediaLoadError.value = `HLS audio error: ${error.details}`),
+        )
 
         MediaSession.setActionHandler(
             { action: 'nexttrack' },
@@ -174,6 +187,7 @@ export function useAudio(
         audioElement,
         initializeAudio,
         destroyAudio,
+        mediaLoadError,
 
         paused: readonly(paused),
         currentSecond: readonly(currentSecond),
