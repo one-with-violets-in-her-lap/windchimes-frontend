@@ -6,7 +6,7 @@ import { usePlayerVolume } from '@/features/player'
 import { Platform } from '@/entities/platform/model/platform'
 import { LoadedQueueItem, useTracksQueueStore } from '@/entities/tracks-queue'
 
-import { useAudio } from '@/shared/utils/audio'
+import { useAudio, AudioNotInitializedError } from '@/shared/utils/audio'
 import { useLocalStorageItem } from '@/shared/utils/local-storage'
 import { getTypedObjectKeys } from '@/shared/utils/objects'
 

@@ -21,8 +21,7 @@ import { showTemporaryNotification } from '@/shared/utils/notifications'
 const opened = defineModel<boolean>('opened', { required: true })
 
 const playerStore = usePlayerStore()
-const { playNextTrack, playPreviousTrack, pause, play, toggleLoopMode } =
-    playerStore
+const { playNextTrack, playPreviousTrack, pause, play, toggleLoopMode } = playerStore
 const { currentSecond, loopMode, paused, newTrackLoading } = storeToRefs(playerStore)
 
 const { tracksQueue, currentQueueItem, currentTrack } =
