@@ -1,7 +1,4 @@
-import {
-    MediaSession,
-    MetadataOptions,
-} from '@jofr/capacitor-media-session'
+import { MediaSession, MetadataOptions } from '@jofr/capacitor-media-session'
 import Hls from 'hls.js'
 import { Ref, readonly, ref } from 'vue'
 
@@ -92,8 +89,6 @@ export function useAudio(
                 rewind(event.seekTime)
             }
         })
-
-        hlsPlayer.attachMedia(audioElement.value)
     }
 
     function destroyAudio() {
@@ -139,9 +134,13 @@ export function useAudio(
         }
 
         if (src) {
+            audioElement.value.currentTime = 0
+
             if (playAsHls) {
+                hlsPlayer.attachMedia(audioElement.value)
                 hlsPlayer.loadSource(src)
             } else {
+                hlsPlayer.detachMedia()
                 audioElement.value.src = src
             }
         }
