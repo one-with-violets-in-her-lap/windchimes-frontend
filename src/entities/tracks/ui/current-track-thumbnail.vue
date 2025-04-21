@@ -3,7 +3,6 @@ import { PlaylistTrack } from '@/entities/tracks'
 
 defineProps<{
     currentTrack: PlaylistTrack
-    audio: HTMLAudioElement
     paused: boolean
 }>()
 </script>

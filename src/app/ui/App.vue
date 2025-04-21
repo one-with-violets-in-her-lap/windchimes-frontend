@@ -3,12 +3,17 @@ import { useAuth0 } from '@auth0/auth0-vue'
 import { App } from '@capacitor/app'
 import { useApolloClient } from '@vue/apollo-composable'
 import { storeToRefs } from 'pinia'
-import { onErrorCaptured } from 'vue'
+import { onErrorCaptured, onMounted } from 'vue'
 
 import { useFatalErrorStore } from '@/app/model/fatal-error-store'
 
 import { NotificationsQueue } from '@/widgets/notifications-queue'
 import PlayerToolbar from '@/widgets/player-toolbar/ui/player-toolbar.vue'
+
+import {
+    initializePlayer,
+    usePlayerMediaLoadErrorNotifications,
+} from '@/features/player'
 
 import AppBar from './app-bar.vue'
 
@@ -28,6 +33,11 @@ App.addListener('appUrlOpen', async event => {
         apolloClient.resetStore()
     }
 })
+
+onMounted(() => {
+    initializePlayer()
+})
+usePlayerMediaLoadErrorNotifications()
 </script>
 
 <template>
