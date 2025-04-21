@@ -1,3 +1,5 @@
+import { initializePlayerWithErrorNotifications } from '@/features/player/utils/initialize-player'
+
 import {
     LoopMode,
     type QueueItemWithAudioFileUrl,
@@ -14,6 +16,7 @@ export {
     usePlayerStore,
     usePlayerShortcuts,
     usePlayerVolume,
+    initializePlayerWithErrorNotifications,
     QueueItemWithAudioFileUrl as TrackWithAudioFileUrl,
     LoopMode,
 }

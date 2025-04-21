@@ -1,14 +1,25 @@
+import { watch } from 'vue'
+
 import { usePlayerStore } from '@/features/player/model/player-store'
 
 import { useTracksQueueStore } from '@/entities/tracks-queue'
 
 import { showTemporaryNotification } from '@/shared/utils/notifications'
 
-export async function initializePlayer() {
+export async function initializePlayerWithErrorNotifications() {
     const playerStore = usePlayerStore()
     const tracksQueue = useTracksQueueStore()
 
     playerStore.initializeAudio()
+
+    watch(
+        () => playerStore.mediaLoadError,
+        () => {
+            if (playerStore.mediaLoadError !== null) {
+                showTemporaryNotification('error', 'Failed to load the track')
+            }
+        },
+    )
 
     if (playerStore.currentQueueItem) {
         try {

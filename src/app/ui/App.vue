@@ -10,7 +10,7 @@ import { useFatalErrorStore } from '@/app/model/fatal-error-store'
 import { NotificationsQueue } from '@/widgets/notifications-queue'
 import PlayerToolbar from '@/widgets/player-toolbar/ui/player-toolbar.vue'
 
-import { initializePlayer } from '@/features/player/utils/initialize-player'
+import { initializePlayerWithErrorNotifications } from '@/features/player'
 
 import AppBar from './app-bar.vue'
 
@@ -32,7 +32,7 @@ App.addListener('appUrlOpen', async event => {
 })
 
 onMounted(() => {
-    initializePlayer()
+    initializePlayerWithErrorNotifications()
 })
 </script>
 

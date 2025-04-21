@@ -133,6 +133,8 @@ export function useAudio(
             throw new AudioNotInitializedError()
         }
 
+        mediaLoadError.value = null
+
         if (src) {
             audioElement.value.currentTime = 0
 

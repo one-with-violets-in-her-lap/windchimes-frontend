@@ -6,7 +6,7 @@ import { usePlayerVolume } from '@/features/player'
 import { Platform } from '@/entities/platform/model/platform'
 import { LoadedQueueItem, useTracksQueueStore } from '@/entities/tracks-queue'
 
-import { useAudio, AudioNotInitializedError } from '@/shared/utils/audio'
+import { AudioNotInitializedError, useAudio } from '@/shared/utils/audio'
 import { useLocalStorageItem } from '@/shared/utils/local-storage'
 import { getTypedObjectKeys } from '@/shared/utils/objects'
 
@@ -37,6 +37,7 @@ export const usePlayerStore = defineStore('player', () => {
 
     const {
         initializeAudio,
+        mediaLoadError,
         currentSecond,
         pauseAudio,
         paused,
@@ -117,6 +118,7 @@ export const usePlayerStore = defineStore('player', () => {
         loopMode: readonly(loopMode),
 
         initializeAudio,
+        mediaLoadError,
         pause: pauseAudio,
         play,
         rewind,
