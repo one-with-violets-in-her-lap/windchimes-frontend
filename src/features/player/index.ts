@@ -1,5 +1,3 @@
-import { initializePlayerWithErrorNotifications } from '@/features/player/utils/initialize-player'
-
 import {
     LoopMode,
     type QueueItemWithAudioFileUrl,
@@ -9,6 +7,10 @@ import { usePlayerShortcuts } from './model/shortcuts'
 import { usePlayerVolume } from './model/volume'
 import TrackProgressBar from './ui/track-progress-bar.vue'
 import VolumeMenuButton from './ui/volume-menu-button.vue'
+import {
+    initializePlayer,
+    usePlayerMediaLoadErrorNotifications,
+} from './utils/player-initialization'
 
 export {
     VolumeMenuButton,
@@ -16,7 +18,8 @@ export {
     usePlayerStore,
     usePlayerShortcuts,
     usePlayerVolume,
-    initializePlayerWithErrorNotifications,
+    usePlayerMediaLoadErrorNotifications,
+    initializePlayer,
     QueueItemWithAudioFileUrl as TrackWithAudioFileUrl,
     LoopMode,
 }

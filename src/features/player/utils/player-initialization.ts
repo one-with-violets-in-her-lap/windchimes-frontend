@@ -6,20 +6,16 @@ import { useTracksQueueStore } from '@/entities/tracks-queue'
 
 import { showTemporaryNotification } from '@/shared/utils/notifications'
 
-export async function initializePlayerWithErrorNotifications() {
+/**
+ * Initializes player audio and loads last played track
+ * 
+ * Shows notification on error
+ */
+export async function initializePlayer() {
     const playerStore = usePlayerStore()
     const tracksQueue = useTracksQueueStore()
 
     playerStore.initializeAudio()
-
-    watch(
-        () => playerStore.mediaLoadError,
-        () => {
-            if (playerStore.mediaLoadError !== null) {
-                showTemporaryNotification('error', 'Failed to load the track')
-            }
-        },
-    )
 
     if (playerStore.currentQueueItem) {
         try {
@@ -37,4 +33,17 @@ export async function initializePlayerWithErrorNotifications() {
             )
         }
     }
+}
+
+export function usePlayerMediaLoadErrorNotifications() {
+    const playerStore = usePlayerStore()
+
+    watch(
+        () => playerStore.mediaLoadError,
+        () => {
+            if (playerStore.mediaLoadError !== null) {
+                showTemporaryNotification('error', 'Failed to load the track')
+            }
+        },
+    )
 }
