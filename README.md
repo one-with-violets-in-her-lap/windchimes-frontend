@@ -21,6 +21,10 @@ https://github.com/user-attachments/assets/2e7b06ad-f6fa-4508-b300-c0539c76344c
 frontend was built using **vue**, **vueuse**, **anime.js** for animations, **zod** & **veevalidate** for form validation
 and **pinia** for the global state. there's also **vuetify** to not bother with UI too much.
 
+browse some of custom UI elements in [windchimes storybook](https://windchimes-storybook.vercel.app)
+
+---
+
 server communication implemented with **grahpql** using cool typescript codegen
 
 can be used as a mobile app with **capacitor.js**
