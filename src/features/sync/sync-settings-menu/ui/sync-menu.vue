@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 import { PlaylistPageDataFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { vAnime } from '@/shared/ui/animejs-directives'
-import ErrorAlert from '@/shared/ui/feedback/error-alert.vue'
+import ErrorAlert from '@/shared/ui/feedback/error-alert/error-alert.vue'
 import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 import { useDisableSyncMutation } from '../api/disable-sync-mutation'

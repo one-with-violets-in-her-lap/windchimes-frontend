@@ -5,7 +5,7 @@ import { TrackItem } from '@/entities/tracks'
 import { LoadedQueueItem, QueueItem } from '@/entities/tracks-queue/model/queue-item'
 
 import DragAndDropItem from '@/shared/ui/drag-and-drop/drag-and-drop-item.vue'
-import SwipableElement from '@/shared/ui/swipable-element.vue'
+import SwipableElement from '@/shared/ui/swipable-element/swipable-element.vue'
 
 defineProps<{
     queueItem: LoadedQueueItem
