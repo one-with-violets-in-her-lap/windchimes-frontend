@@ -2,9 +2,13 @@
 import anime from 'animejs'
 import { onMounted, ref } from 'vue'
 
-defineProps<{
-    shineDisabled?: boolean
-}>()
+const props = withDefaults(
+    defineProps<{
+        duration?: number
+        shineDisabled?: boolean
+    }>(),
+    { duration: 650 },
+)
 
 const shineLightElement = ref<HTMLElement>()
 
@@ -13,7 +17,7 @@ onMounted(async () => {
         targets: shineLightElement.value,
         left: '120%',
         autoplay: true,
-        duration: 650,
+        duration: props.duration,
         delay: 3150,
         loop: true,
         easing: 'easeInOutSine',

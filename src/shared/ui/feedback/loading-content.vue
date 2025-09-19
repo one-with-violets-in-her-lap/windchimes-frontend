@@ -3,7 +3,7 @@ import { ApolloError } from '@apollo/client/core'
 
 import { ErrorFragment } from '@/shared/model/graphql-generated-types/graphql'
 import { VuetifySkeleton } from '@/shared/model/vuetify-skeleton'
-import ErrorAlert from '@/shared/ui/feedback/error-alert.vue'
+import ErrorAlert from '@/shared/ui/feedback/error-alert/error-alert.vue'
 
 defineProps<{
     loading: boolean

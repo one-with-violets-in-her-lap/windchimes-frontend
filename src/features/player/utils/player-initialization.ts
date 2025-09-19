@@ -8,7 +8,7 @@ import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 /**
  * Initializes player audio and loads last played track
- * 
+ *
  * Shows notification on error
  */
 export async function initializePlayer() {
