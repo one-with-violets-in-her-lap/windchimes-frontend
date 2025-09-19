@@ -3,7 +3,7 @@ import { useSetPlaylistForTracksSyncMutation } from '@/features/sync/setup-sync-
 
 import { TracksImportFormData } from '@/entities/tracks-import-form-dialog'
 
-import ShineEffectWrapper from '@/shared/ui/shine-effect-wrapper.vue'
+import ShineEffectWrapper from '@/shared/ui/shine-effect-wrapper/shine-effect-wrapper.vue'
 import { showTemporaryNotification } from '@/shared/utils/notifications'
 
 const props = defineProps<{

@@ -31,7 +31,7 @@ const draggedOver = computed(() => draggedOverItemId.value === props.id)
         <slot></slot>
 
         <div
-            class="drag-handle flex-shrink-0"
+            class="drag-handle flex-shrink-0 d-flex justify-center items-center"
             @mousedown.stop="handleDrag(props.id)"
             @touchstart.prevent.stop="handleDrag(props.id)"
         >
