@@ -34,7 +34,7 @@ function moveItemBefore(itemId: string, itemToMoveBeforeId: string) {
             v-for="item in items"
             :id="item.id"
             :key="item.id"
-            class="pa-3 bg-surface text-h5 rounded-lg d-flex items-center justify-space-between"
+            class="pa-3 bg-background border text-h6 rounded-lg d-flex items-center justify-space-between"
         >
             <div>
                 {{ item.title }}
