@@ -27,13 +27,13 @@ function moveItemBefore(itemId: string, itemToMoveBeforeId: string) {
     <DragAndDropList
         :items
         :item-height="100"
-        @move-before="moveItemBefore"
         class="d-flex flex-column ga-4"
+        @move-before="moveItemBefore"
     >
         <DragAndDropItem
             v-for="item in items"
-            :key="item.id"
             :id="item.id"
+            :key="item.id"
             class="pa-3 bg-surface text-h5 rounded-lg d-flex items-center justify-space-between"
         >
             <div>
@@ -42,7 +42,10 @@ function moveItemBefore(itemId: string, itemToMoveBeforeId: string) {
         </DragAndDropItem>
 
         <template #dragged-item="{ draggedItem }">
-            <div class="pa-3 bg-surface text-h5 rounded-lg" style="width: 1000px; left: 1000px">
+            <div
+                class="pa-3 bg-surface text-h5 rounded-lg"
+                style="width: 1000px; left: 1000px"
+            >
                 {{ draggedItem.title }}
             </div>
         </template>

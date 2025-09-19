@@ -2,10 +2,13 @@
 import anime from 'animejs'
 import { onMounted, ref } from 'vue'
 
-const props = withDefaults(defineProps<{
-    duration?: number
-    shineDisabled?: boolean
-}>(), { duration: 650 })
+const props = withDefaults(
+    defineProps<{
+        duration?: number
+        shineDisabled?: boolean
+    }>(),
+    { duration: 650 },
+)
 
 const shineLightElement = ref<HTMLElement>()
 
