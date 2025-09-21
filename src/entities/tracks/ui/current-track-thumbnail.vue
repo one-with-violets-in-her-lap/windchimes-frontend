@@ -62,7 +62,7 @@ defineProps<{
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.15);
+    background-color: rgba(0, 0, 0, 0.18);
 }
 
 .scale-up-leave-active,
