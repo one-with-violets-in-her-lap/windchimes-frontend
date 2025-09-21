@@ -5,7 +5,7 @@ import WaveformVisualizer from '@/shared/ui/waveform-visualizer.vue'
 
 defineProps<{
     currentTrack: PlaylistTrack
-    audioElement: HTMLAudioElement
+    audioElement?: HTMLAudioElement
     paused: boolean
 }>()
 </script>

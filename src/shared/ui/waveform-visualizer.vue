@@ -39,7 +39,7 @@ onMounted(() => {
 
             const amplitude =
                 byteTimeDomainData.reduce((acc, y) => Math.max(acc, y), 128) - 128
-            waveform.setAmplitude((amplitude / 128))
+            waveform.setAmplitude(amplitude / 128)
 
             requestAnimationFrame(updateWaveformAmplitude)
         }
