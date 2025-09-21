@@ -22,7 +22,8 @@ const opened = defineModel<boolean>('opened', { required: true })
 
 const playerStore = usePlayerStore()
 const { playNextTrack, playPreviousTrack, pause, play, toggleLoopMode } = playerStore
-const { currentSecond, loopMode, paused, newTrackLoading } = storeToRefs(playerStore)
+const { currentSecond, loopMode, paused, newTrackLoading, audioElement } =
+    storeToRefs(playerStore)
 
 const { tracksQueue, currentQueueItem, currentTrack } =
     storeToRefs(useTracksQueueStore())
@@ -94,7 +95,8 @@ function shuffleTracksQueue() {
                 </VBtn>
 
                 <CurrentTrackThumbnail
-                    :paused="paused"
+                    :paused
+                    :audio-element
                     :current-track="currentTrack"
                     @click="paused ? play() : pause()"
                 />

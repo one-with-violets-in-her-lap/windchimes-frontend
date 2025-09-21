@@ -28,6 +28,9 @@ export class AudioNotInitializedError extends Error {
 export function useAudio(
     secondsDuration: Ref<number | undefined>,
     actionHandlers: AudioActionHandlers,
+    options: { crossOrigin: 'anonymous' | 'use-credentials' } = {
+        crossOrigin: 'use-credentials',
+    },
 ) {
     const paused = ref(true)
     const currentSecond = ref(0)
@@ -73,6 +76,7 @@ export function useAudio(
 
     function initializeAudio() {
         audioElement.value = new Audio()
+        audioElement.value.crossOrigin = options.crossOrigin
 
         hlsPlayer.on(
             Hls.Events.ERROR,
