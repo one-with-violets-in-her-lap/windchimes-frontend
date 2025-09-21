@@ -50,6 +50,7 @@ export const usePlayerStore = defineStore('player', () => {
             playNext: playNextTrack,
             playPrevious: playPreviousTrack,
         },
+        { crossOrigin: 'anonymous' },
     )
 
     const { volume, setVolume } = usePlayerVolume()
@@ -109,6 +110,8 @@ export const usePlayerStore = defineStore('player', () => {
         currentQueueItem,
         currentQueueItemId,
         currentTrack,
+
+        audioElement,
 
         volume,
         setVolume,
