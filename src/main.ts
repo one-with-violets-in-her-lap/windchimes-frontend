@@ -1,4 +1,4 @@
-import '@/assets/styles/main.css'
+import '@/app/ui/styles/main.css'
 import '@mdi/font/css/materialdesignicons.css'
 import { DefaultApolloClient } from '@vue/apollo-composable'
 import { createPinia } from 'pinia'
