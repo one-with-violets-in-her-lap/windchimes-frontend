@@ -24,12 +24,7 @@ defineProps<{
             <VIcon v-else icon="mdi-music" size="100px" />
         </VAvatar>
 
-        <VOverlay
-            :model-value="true"
-            theme="light"
-            contained
-            content-class="d-flex justify-center align-center w-100 h-100"
-        >
+        <div class="overlay">
             <Transition name="scale-up">
                 <VIcon v-show="paused" icon="mdi-pause" color="white" size="60" />
             </Transition>
@@ -41,7 +36,7 @@ defineProps<{
                     class="w-100"
                 />
             </Transition>
-        </VOverlay>
+        </div>
     </button>
 </template>
 
@@ -56,6 +51,18 @@ defineProps<{
 .current-track-picture {
     height: auto;
     aspect-ratio: 1/1;
+}
+
+.overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.15);
 }
 
 .scale-up-leave-active,
