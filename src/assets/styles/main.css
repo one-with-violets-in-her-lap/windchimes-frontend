@@ -1,5 +1,6 @@
 @import url('@/assets/styles/transitions.css');
 @import url('@/assets/styles/scrollbar.css');
+@import url('@/shared/ui/design-tokens.css');
 
 @font-face {
     font-family: 'Geist';

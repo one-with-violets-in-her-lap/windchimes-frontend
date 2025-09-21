@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import SiriWave from 'siriwave'
-import { onMounted, onUnmounted, ref, watch } from 'vue'
-import { useTheme } from 'vuetify'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 const WAVEFORM_SIZE = 170
 
 const props = defineProps<{
     audio?: HTMLAudioElement
 }>()
-
-const theme = useTheme()
 
 const waveformContainer = ref<HTMLDivElement>()
 let waveform: SiriWave | undefined = undefined
@@ -52,7 +49,6 @@ onUnmounted(async () => {
     await audioContext.close()
 })
 
-watch(theme.current, initializeWaveform)
 function initializeWaveform() {
     if (waveformContainer.value) {
         if (waveform) {
@@ -63,7 +59,7 @@ function initializeWaveform() {
             container: waveformContainer.value,
             width: WAVEFORM_SIZE,
             height: WAVEFORM_SIZE,
-            color: theme.current.value.colors.background,
+            color: '#FFFFFF',
             autostart: true,
             curveDefinition: [
                 { attenuation: -2, lineWidth: 2, opacity: 0.1 },
