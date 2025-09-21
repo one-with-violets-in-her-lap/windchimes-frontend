@@ -1,0 +1,6 @@
+:root {
+    --color-primary: #13af67;
+    --color-secondary: #33a3ff;
+
+    /* TODO: move more variables from Vuetify theme */
+}

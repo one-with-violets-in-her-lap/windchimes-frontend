@@ -5,7 +5,7 @@ import { createVuetify } from 'vuetify'
 import 'vuetify/styles'
 
 import { vuetifyConfig } from '../src/app/config/vuetify'
-import '../src/assets/styles/main.css'
+import '../src/app/ui/styles/main.css'
 
 const preview: Preview = {
     parameters: {

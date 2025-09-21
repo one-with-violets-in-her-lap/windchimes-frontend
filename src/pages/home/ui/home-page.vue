@@ -114,8 +114,8 @@ const { mdAndUp } = useDisplay()
     right: 0px;
     width: 140px;
     height: 140px;
-    background: rgb(125, 128, 218, 0.85);
-    filter: blur(68px);
+    background-color: color-mix(in srgb, var(--color-primary), transparent 60%);
+    filter: blur(88px);
 }
 
 .secondary-lighting {
@@ -124,8 +124,8 @@ const { mdAndUp } = useDisplay()
     right: 200px;
     width: 80px;
     height: 80px;
-    filter: blur(62px);
-    background: rgb(255, 119, 89, 0.9);
+    filter: blur(122px);
+    background: color-mix(in srgb, var(--color-primary), transparent 80%);
 }
 
 .primary-lighting.lighting-desktop {
@@ -133,7 +133,7 @@ const { mdAndUp } = useDisplay()
     height: 241px;
     right: 0px;
     top: 15px;
-    filter: blur(120px);
+    filter: blur(150px);
 }
 
 .secondary-lighting.lighting-desktop {
@@ -141,6 +141,6 @@ const { mdAndUp } = useDisplay()
     height: 157px;
     right: 400px;
     top: -30px;
-    filter: blur(120px);
+    filter: blur(150px);
 }
 </style>
