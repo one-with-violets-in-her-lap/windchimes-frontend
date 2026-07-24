@@ -11,42 +11,55 @@ const props = defineProps<{
 const waveformContainer = ref<HTMLDivElement>()
 let waveform: SiriWave | undefined = undefined
 
-const audioContext = new AudioContext()
+let audioContext: AudioContext | undefined = undefined
+
+const abortController = new AbortController()
 
 onMounted(() => {
-    if (!waveformContainer.value || !props.audio) {
-        return
-    }
+    props.audio?.addEventListener(
+        'play',
+        () => {
+            audioContext = new AudioContext()
 
-    const audioSource = audioContext.createMediaElementSource(props.audio)
-    const analyser = audioContext.createAnalyser()
-    audioSource.connect(analyser)
+            if (!waveformContainer.value || !props.audio) {
+                return
+            }
 
-    const totalNumberOfSamples = audioContext.sampleRate / 5
-    analyser.fftSize = 2 ** Math.floor(Math.log2(totalNumberOfSamples))
+            const audioSource = audioContext.createMediaElementSource(props.audio)
+            const analyser = audioContext.createAnalyser()
+            audioSource.connect(analyser)
 
-    analyser.connect(audioContext.destination)
-    const byteTimeDomainData = new Uint8Array(analyser.frequencyBinCount)
+            const totalNumberOfSamples = audioContext.sampleRate / 5
+            analyser.fftSize = 2 ** Math.floor(Math.log2(totalNumberOfSamples))
 
-    initializeWaveform()
+            analyser.connect(audioContext.destination)
+            const byteTimeDomainData = new Uint8Array(analyser.frequencyBinCount)
 
-    function updateWaveformAmplitude() {
-        if (waveform) {
-            analyser.getByteTimeDomainData(byteTimeDomainData)
+            initializeWaveform()
 
-            const amplitude =
-                byteTimeDomainData.reduce((acc, y) => Math.max(acc, y), 128) - 128
-            waveform.setAmplitude(amplitude / 128)
+            function updateWaveformAmplitude() {
+                if (waveform) {
+                    analyser.getByteTimeDomainData(byteTimeDomainData)
+
+                    const amplitude =
+                        byteTimeDomainData.reduce((acc, y) => Math.max(acc, y), 128) -
+                        128
+                    waveform.setAmplitude(amplitude / 128)
+
+                    requestAnimationFrame(updateWaveformAmplitude)
+                }
+            }
 
             requestAnimationFrame(updateWaveformAmplitude)
-        }
-    }
-
-    requestAnimationFrame(updateWaveformAmplitude)
+        },
+        { once: true, signal: abortController.signal },
+    )
 })
 
 onUnmounted(async () => {
-    await audioContext.close()
+    await audioContext?.close()
+    abortController.abort()
+    waveform?.dispose()
 })
 
 function initializeWaveform() {
