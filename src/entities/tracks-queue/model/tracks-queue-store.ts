@@ -5,6 +5,7 @@ import { computed } from 'vue'
 
 import {
     LoopMode,
+    type TrackWithAudioFileUrl,
     usePlayerStore, // for jsdoc
 } from '@/features/player'
 
@@ -148,14 +149,17 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
     }
 
     /**
-     * Plays queue item with specified index
+     * Loads track data and its audio file url for the queue item with the
+     * specified index, returning everything the player needs to load or play it
      *
      * @throws {TrackLoadError} if queue item's track audio file failed to load
      *
      * @throws {TracksQueueBoundsReachedError} if queue item couldn't be found by
      * specified index
      */
-    async function playItemFromQueue(queueItemIndex: number) {
+    async function resolveQueueItemAudio(
+        queueItemIndex: number,
+    ): Promise<TrackWithAudioFileUrl> {
         const playerStore = usePlayerStore()
 
         const queueItem = tracksQueue.value[queueItemIndex]
@@ -194,11 +198,11 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
                 throw new TrackLoadError("couldn't obtain audio file url of a track")
             }
 
-            playerStore.play({
+            return {
                 id: queueItem.id,
                 track: track,
                 audioFileUrl: audioFileUrlQuery.data.trackAudioFile.url,
-            })
+            }
         } catch (error) {
             throw new TrackLoadError(
                 `failed to load track data or its audio file. more info: ${error}`,
@@ -206,6 +210,38 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
         } finally {
             playerStore.newTrackLoading = false
         }
+    }
+
+    /**
+     * Loads queue item with the specified index into the player **without
+     * starting the playback**
+     *
+     * Useful for restoring the last played track on page load, where autoplay is
+     * not allowed until the user interacts with the page
+     *
+     * @throws {TrackLoadError} if queue item's track audio file failed to load
+     *
+     * @throws {TracksQueueBoundsReachedError} if queue item couldn't be found by
+     * specified index
+     */
+    async function loadItemFromQueue(queueItemIndex: number) {
+        const playerStore = usePlayerStore()
+
+        playerStore.load(await resolveQueueItemAudio(queueItemIndex))
+    }
+
+    /**
+     * Loads and plays queue item with the specified index
+     *
+     * @throws {TrackLoadError} if queue item's track audio file failed to load
+     *
+     * @throws {TracksQueueBoundsReachedError} if queue item couldn't be found by
+     * specified index
+     */
+    async function playItemFromQueue(queueItemIndex: number) {
+        const playerStore = usePlayerStore()
+
+        playerStore.play(await resolveQueueItemAudio(queueItemIndex))
     }
 
     function addPlaylistToQueue(playlistTracks: TrackReferenceToReadGraphQl[]) {
@@ -247,6 +283,7 @@ export const useTracksQueueStore = defineStore('tracksQueue', () => {
 
         playNextTrack,
         playPreviousTrack,
+        loadItemFromQueue,
         playItemFromQueue,
         addPlaylistToQueue,
         replaceQueueWithPlaylist,

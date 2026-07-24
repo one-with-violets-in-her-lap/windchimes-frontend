@@ -116,10 +116,15 @@ export function useAudio(
     }
 
     /**
-     * Plays audio and updates
+     * Loads audio into the html audio element (sets its `src`) and updates the
      * [media session](https://developer.mozilla.org/en-US/docs/Web/API/MediaSession)
+     * metadata **without starting the playback**
      *
-     * If `src` is not specified, it just resumes the playback
+     * Use it to prepare a track that should not play yet, e.g. restoring the last
+     * played track on page load, where calling `play()` would throw a
+     * `NotAllowedError` because there was no user interaction yet
+     *
+     * If `src` is not specified, only the media session metadata is updated
      *
      * Supports
      * [**HLS**](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Audio_and_video_delivery/Live_streaming_web_audio_and_video)
@@ -128,7 +133,7 @@ export function useAudio(
      *
      * @throws {AudioNotInitializedError} if audio was not initialized
      */
-    function playAudio(
+    function loadAudio(
         src?: string,
         metadata?: MetadataOptions,
         { playAsHls }: { playAsHls: boolean } = { playAsHls: false },
@@ -153,6 +158,31 @@ export function useAudio(
 
         if (metadata) {
             MediaSession.setMetadata(metadata)
+        }
+    }
+
+    /**
+     * Loads audio (see {@link loadAudio}) and starts the playback, updating the
+     * [media session](https://developer.mozilla.org/en-US/docs/Web/API/MediaSession)
+     *
+     * If `src` is not specified, it just resumes the playback
+     *
+     * Supports
+     * [**HLS**](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Audio_and_video_delivery/Live_streaming_web_audio_and_video)
+     *
+     * @param metadata Track metadata to set for media session
+     *
+     * @throws {AudioNotInitializedError} if audio was not initialized
+     */
+    function playAudio(
+        src?: string,
+        metadata?: MetadataOptions,
+        { playAsHls }: { playAsHls: boolean } = { playAsHls: false },
+    ) {
+        loadAudio(src, metadata, { playAsHls })
+
+        if (!audioElement.value) {
+            throw new AudioNotInitializedError()
         }
 
         audioElement.value.play()
@@ -199,6 +229,7 @@ export function useAudio(
         currentSecond: readonly(currentSecond),
 
         pauseAudio,
+        loadAudio,
         playAudio,
         rewind,
         setMetadata,

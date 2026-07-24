@@ -41,6 +41,7 @@ export const usePlayerStore = defineStore('player', () => {
         currentSecond,
         pauseAudio,
         paused,
+        loadAudio,
         playAudio,
         rewind,
         audioElement,
@@ -59,7 +60,34 @@ export const usePlayerStore = defineStore('player', () => {
     )
 
     /**
-     * Resumes the current track or plays a new one if `queueItemToPlay` param is specified
+     * Loads a queue item into the player **without starting the playback**
+     *
+     * Use it to prepare a track that should not play yet, e.g. restoring the last
+     * played track on page load
+     *
+     * @throws {AudioNotInitializedError} if audio was not initialized
+     */
+    function load(queueItemToLoad: QueueItemWithAudioFileUrl) {
+        currentQueueItemId.value = queueItemToLoad.id
+
+        loadAudio(
+            queueItemToLoad.audioFileUrl,
+            {
+                title: currentQueueItem.value?.track.name,
+                artist: currentQueueItem.value?.track.owner.name,
+                artwork: [{ src: currentQueueItem.value?.track.pictureUrl || '' }],
+            },
+            {
+                playAsHls: PLATFORMS_TO_PLAY_AS_HLS.includes(
+                    queueItemToLoad.track.platform,
+                ),
+            },
+        )
+    }
+
+    /**
+     * Resumes the current track or loads and plays a new one if `queueItemToPlay`
+     * param is specified
      *
      * @throws {AudioNotInitializedError} if audio was not initialized
      */
@@ -69,21 +97,8 @@ export const usePlayerStore = defineStore('player', () => {
             return
         }
 
-        currentQueueItemId.value = queueItemToPlay.id
-
-        playAudio(
-            queueItemToPlay.audioFileUrl,
-            {
-                title: currentQueueItem.value?.track.name,
-                artist: currentQueueItem.value?.track.owner.name,
-                artwork: [{ src: currentQueueItem.value?.track.pictureUrl || '' }],
-            },
-            {
-                playAsHls: PLATFORMS_TO_PLAY_AS_HLS.includes(
-                    queueItemToPlay.track.platform,
-                ),
-            },
-        )
+        load(queueItemToPlay)
+        playAudio()
     }
 
     /**
@@ -123,6 +138,7 @@ export const usePlayerStore = defineStore('player', () => {
         initializeAudio,
         mediaLoadError,
         pause: pauseAudio,
+        load,
         play,
         rewind,
         playNextTrack,

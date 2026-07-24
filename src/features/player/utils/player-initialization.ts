@@ -19,12 +19,15 @@ export async function initializePlayer() {
 
     if (playerStore.currentQueueItem) {
         try {
-            await tracksQueue.playItemFromQueue(
+            // Only load the last played track without starting the playback.
+            // Calling `play()` here would throw a `NotAllowedError` because the
+            // browser does not allow autoplay before the user interacts with the
+            // page
+            await tracksQueue.loadItemFromQueue(
                 tracksQueue.tracksQueue.findIndex(
                     queueItem => queueItem.id === playerStore.currentQueueItemId,
                 ),
             )
-            playerStore.pause()
         } catch (error) {
             console.error('Failed to load initial track:', error)
             showTemporaryNotification(
