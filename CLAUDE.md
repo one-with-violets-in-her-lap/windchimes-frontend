@@ -23,7 +23,7 @@ architectural changes or refactors** unless explicitly requested.
 
 - **Vue 3** (Composition API, `<script setup>`) + **Vue Router**
 - **Pinia** for global state
-- **Vuetify 3** UI, **@mdi/font** icons, **anime.js** / **siriwave** for animation
+- **Vuetify 3** UI
 - **Apollo Client** (`@vue/apollo-composable`) for GraphQL, with **graphql-codegen** typed operations
 - **Auth0** (`@auth0/auth0-vue`) for auth
 - **Capacitor 6** for the Android app (media session, haptics, browser, app plugins)
@@ -31,20 +31,6 @@ architectural changes or refactors** unless explicitly requested.
 - **vee-validate** + **zod** for form validation
 - **@vueuse/core** for reactive utilities (heavily used, esp. localStorage)
 - Tests: **Cypress** (e2e), **Storybook** + **Vitest** (component/browser via Playwright)
-
-## Commands
-
-> Per environment rules, the agent generally should **not** run `npm`/`yarn`. These are for
-> reference / for the user to run.
-
-- `npm run dev` — Vite dev server
-- `npm run build` — type-check (`vue-tsc`) + build
-- `npm run type-check` — `vue-tsc --build --force`
-- `npm run lint` — ESLint (`--fix`)
-- `npm run format` — Prettier over `src/`
-- `npm run graphql-codegen` — regenerate GraphQL types (see below)
-- `npm run storybook` — Storybook on :6006
-- `npm run capacitor:dev` / `capacitor:build` — build + run/package the Android app
 
 ## Architecture: Feature-Sliced Design (FSD)
 
@@ -78,11 +64,6 @@ Conventions:
 - `steiger` (FSD linter) is installed but **boundaries are treated loosely / aspirationally** —
   follow the structure by convention; don't obsess over strict lint rules.
 - `@` is aliased to `src/` (see `vite.config.ts` / `tsconfig.json`).
-
-## GraphQL
-
-- Backend is a **separate service**; the frontend only knows its URL via
-  `VITE_GRAPHQL_API_URL`.
 
 ### GraphQL error handling pattern (important)
 
@@ -125,13 +106,6 @@ Key behaviors to preserve:
 - `initializePlayer()` (`features/player/utils`) restores the last-played track on startup
   (paused) from persisted state.
 
-## State persistence
-
-Player/queue state survives reloads via **localStorage**, using
-`shared/utils/local-storage.ts` (`useLocalStorageItem`, built on `@vueuse/core`). Persisted
-keys include: `tracks-queue`, `current-queue-item-id`, `loop`, volume. When changing the shape
-of persisted data, consider existing stored values.
-
 ## Error handling & notifications
 
 - **Fatal errors** → `shared/model/errors.ts` (`FatalError`, `NotFoundError`). `main.ts` wires
@@ -140,34 +114,3 @@ of persisted data, consider existing stored values.
 - **Transient errors** → `showTemporaryNotification('error', …)` (`shared/utils/notifications.ts`),
   rendered by the `notifications-queue` widget. This is the standard way to surface recoverable
   failures (media load errors, mutation errors, etc.).
-
-## Auth0
-
-Configured in `app/config/auth0.ts`; redirect handled by the `/auth-callback` route and
-`shared/config/auth0-redirect-uri.ts`. Login/logout helpers in `shared/utils/login-and-logout.ts`.
-Requires `VITE_AUTH0_*` env vars.
-
-## Capacitor / Android
-
-- Config: `capacitor.config.ts` (appId `io.windchimes`, `webDir: dist`). Native project under
-  `android/`.
-- Build a signed APK via `npm run capacitor:build` (runs `build-apk.sh`, which prompts for
-  keystore path/password/alias). A debug build is `capacitor:build-debug`.
-- App/splash icons generated with `@capacitor/assets` (`capacitor:generate-splash-icons`);
-  source assets in `assets/`, `icons/`.
-
-## Environment variables
-
-Copy `.env.example`. Notable vars (all `VITE_`-prefixed so they reach the client):
-
-- `VITE_GRAPHQL_API_URL` — backend GraphQL endpoint (also the codegen schema source)
-- `VITE_AUTH0_CLIENT_ID` (+ related Auth0 config)
-
-## Conventions & tooling
-
-- **Prettier** (4-space indent, import sorting via `@trivago/prettier-plugin-sort-imports`) +
-  **ESLint** (Vue 3 recommended, TS, JSDoc). Match existing style; run `format`/`lint` after edits.
-- Public/reusable UI elements are documented in **Storybook**
-  (https://windchimes-storybook.vercel.app).
-- Prefer JSDoc on non-trivial functions/stores — the codebase documents thrown errors and
-  behaviors in JSDoc (see the player/queue stores as the model to follow).
